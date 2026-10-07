@@ -9,7 +9,8 @@ People will voluntarily scan another receipt when capture/extraction is quick, c
 - iOS only; native Swift and SwiftUI.
 - Initial retailers: No Frills, Costco and T&T. Accuracy claims require real receipts.
 - Build on the Mac and iPhone simulator first, using imported images. Physical iPhone 15 Pro camera work follows the finalized simulator test version.
-- Wallet-inspired UI: receipt can pull out of a pocket. Detailed appearance and organization remain preferences to resolve with two concepts. Do not commit to multiple wallets.
+- Minimalist native iOS 27 appearance with subtle depth. Wallet-inspired interaction: a receipt can pull out of a pocket. Compare two restrained concepts; do not commit to multiple wallets.
+- All stores use the same simplified digital receipt layout, with predictable merchant/date, items, discounts, tax and total sections. Preserve the original receipt separately and make it easy to open for verification; do not reproduce each retailer's paper format in the main detail view.
 - Local-first, offline core workflow; no mandatory account, backend or cloud AI.
 - Evaluate Apple Vision and Foundation Models with deterministic receipt parsing, and verify APIs against the installed SDK.
 
@@ -25,4 +26,4 @@ Money uses integer minor units. Financial calculations are deterministic. Preser
 Camera until the simulator version is ready; accounts/cloud sync; warranty/tax/rebate/insurance features; bank/email integrations; subscriptions; semantic search; AI chat; live collaborative splitting.
 
 ## Pending preferences and inputs
-Wallet concept choice; private receipt corpus location/consent; exact phone iOS version before device testing. Mac Apple Intelligence readiness and simulator Foundation Models functionality are unverified.
+Wallet concept choice; exact phone iOS version before device testing. Five private HEIC receipt images supplied in `private-receipts/` on 2026-10-07; exclusion from Git verified. Retailer coverage and ground truth remain to be checked in T03. Simulator local Foundation Models generation and synthetic Vision OCR were verified in T01; real-receipt accuracy and phone performance remain unverified.

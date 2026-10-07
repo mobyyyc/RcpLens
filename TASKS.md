@@ -17,15 +17,16 @@ The main chat coordinates these task chats. The user approves one task at a time
 
 ## T02 — 02 · Wallet interface concepts
 
-- Status: queued
+- Status: design artifacts complete and accepted after main-chat review; user concept choice pending (2026-10-07)
 - Goal: Resolve the wallet interaction and receipt organization before implementing the main screens.
 - Why: The user wants receipts to pull out of a wallet, with usable navigation when there are many receipts.
 - Dependencies: none
 - Implementation scope: Develop two reviewable concepts: a restrained wallet pocket and a more tactile paper/wallet version. Show recent receipts, opening a receipt, editing, processing/error states, all-receipts browsing, empty states and search. Check collections containing 5, 50 and 500 synthetic receipts. Use month grouping and merchant filters as the starting organization; multiple named wallets remain exploratory. Provide accessible tap alternatives to dragging, Dynamic Type, VoiceOver labels and Reduce Motion behaviour. Save standalone design artifacts and recommendations under docs/design; do not modify production app source. Ask the user to choose the direction before production UI implementation.
 - Acceptance criteria: Both concepts are reviewable, large-collection browsing is clear, primary actions remain accessible, and a design choice or pending preference is recorded.
 - Tests: Visual review at small/large screen and text sizes, reduced-motion interaction review, 5/50/500-receipt navigation walkthrough.
-- Risk/notes: Use synthetic receipt content. No logo, colour, texture or multiple-wallet decision is approved yet. Initial retailer scope is No Frills, Costco and T&T.
-- Chat: 01a117d0-a6c8-7d91-bc1c-86b6ad3e6a14 (local; queued)
+- Acceptance evidence: Two interactive browser concepts, Pocket and Paper lift, share a consistent simplified receipt layout. 124 focused browser checks passed across collection sizes, search/filter/source access, edit/reconciliation, recovery, keyboard/tap/pull and reduced motion; final screenshots visually reviewed. Native Dynamic Type/VoiceOver and device performance remain T05/T07 checks. [Design preview and handoff](docs/design/README.md). Recommendation: Pocket; user choice is pending and required before T05.
+- Risk/notes: Use synthetic receipt content. User approved a minimalist native iOS 27 direction with subtle depth and one simplified, consistent digital receipt format across stores. The two concepts explore interaction within that direction. Original evidence remains separately accessible. No logo or multiple-wallet decision is approved yet. Initial retailer scope is No Frills, Costco and T&T.
+- Chat: 01a117d0-a6c8-7d91-bc1c-86b6ad3e6a14 (local; design artifacts complete)
 
 ## T03 — 03 · Apple receipt extraction evaluation
 

@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <title>RcpLens · Wallet concepts</title>
+  <link rel="stylesheet" href="concepts.css">
+  <script src="concepts.js" defer></script>
+</head>
+<body>
+  <main class="studio">
+    <header class="intro">
+      <div class="eyebrow">RcpLens / Interface study</div>
+      <h1>A little depth.<br>A clear place for every receipt.</h1>
+      <p>Two wallet interactions. One simple digital receipt, across every store.</p>
+      <div class="study-note">Interactive design study · synthetic content only · no uploads or storage</div>
+    </header>
+    <form class="review-controls" aria-label="Design review settings" onsubmit="return false">
+      <label>Collection<select id="collection"><option value="5">5 receipts</option><option value="50" selected>50 receipts</option><option value="500">500 receipts</option></select></label>
+      <label>Screen<select id="screen-size"><option value="small">Small · 320 × 690</option><option value="regular" selected>Regular · 393 × 852</option><option value="large">Large · 430 × 932</option></select></label>
+      <label>Text size<select id="text-size"><option value="1">Default</option><option value="1.5">Large · 150%</option><option value="2">Accessibility · 200%</option></select></label>
+      <label>Appearance<select id="appearance"><option value="light">Light</option><option value="dark">Dark</option></select></label>
+      <label class="check"><input type="checkbox" id="reduce-motion"> Reduce Motion</label>
+      <label>Preview state<select id="scenario"><option value="home">Wallet</option><option value="library">All receipts</option><option value="detail">Opened receipt</option><option value="edit">Edit receipt</option><option value="review">Review import</option><option value="processing">Processing</option><option value="error">Reading failed</option><option value="empty">Empty wallet</option><option value="search">Search “milk”</option><option value="nomatch">No search results</option></select></label>
+      <div id="outcome-controls" hidden><label>Demo import outcome<select id="import-outcome"><option value="review">Ready for review</option><option value="error">Could not read</option></select></label><button type="button" id="finish-reading">Finish simulated reading</button></div>
+    </form>
+    <div class="concepts">
+      <section class="concept" aria-labelledby="pocket-title">
+        <div class="concept-heading"><span class="concept-number">A</span><div><h2 id="pocket-title">Pocket</h2><p>A quiet pocket. A short, straight lift.</p></div></div>
+        <div id="pocket" class="phone light" data-concept="pocket" aria-label="Pocket interactive prototype"></div>
+      </section>
+      <section class="concept" aria-labelledby="paper-title">
+        <div class="concept-heading"><span class="concept-number">B</span><div><h2 id="paper-title">Paper lift</h2><p>A soft fold. A slightly more tactile opening.</p></div></div>
+        <div id="paper" class="phone light" data-concept="paper" aria-label="Paper lift interactive prototype"></div>
+      </section>
+    </div>
+    <footer class="review-footer"><p><strong>Direction pending.</strong> Compare a pull or a tap, open All receipts, and try a search. Tell the main chat <strong>Pocket</strong> or <strong>Paper lift</strong> before production UI work.</p><p>Text-size controls approximate reflow; this is a browser prototype, not native Dynamic Type or a simulator build. Import results are advanced using the demo control above.</p></footer>
+  </main>
+</body>
+</html>
