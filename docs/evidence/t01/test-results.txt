@@ -1,0 +1,23 @@
+Test Suite 'All tests' started at 2026-10-07 15:51:57.875.
+Test Suite 'RcpLensTests.xctest' started at 2026-10-07 15:51:57.875.
+Test Suite 'FoundationTests' started at 2026-10-07 15:51:57.875.
+Test Case '-[RcpLensTests.FoundationTests testActualLocalModelAndDiagnosticReport]' started.
+Test Case '-[RcpLensTests.FoundationTests testActualLocalModelAndDiagnosticReport]' passed (2.518 seconds).
+Test Case '-[RcpLensTests.FoundationTests testVisionRecognizesImportedSyntheticPNG]' started.
+Test Case '-[RcpLensTests.FoundationTests testVisionRecognizesImportedSyntheticPNG]' passed (0.663 seconds).
+Test Case '-[RcpLensTests.FoundationTests testVisionRejectsMalformedImage]' started.
+Test Case '-[RcpLensTests.FoundationTests testVisionRejectsMalformedImage]' passed (0.012 seconds).
+Test Suite 'FoundationTests' passed at 2026-10-07 15:52:01.085.
+	 Executed 3 tests, with 0 failures (0 unexpected) in 3.192 (3.210) seconds
+Test Suite 'RcpLensTests.xctest' passed at 2026-10-07 15:52:01.086.
+	 Executed 3 tests, with 0 failures (0 unexpected) in 3.192 (3.210) seconds
+Test Suite 'All tests' passed at 2026-10-07 15:52:01.086.
+	 Executed 3 tests, with 0 failures (0 unexpected) in 3.192 (3.211) seconds
+2026-10-07 15:52:01.379 xcodebuild[22219:1738117] [MT] IDETestOperationsObserverDebug: 7.954 elapsed -- Testing started completed.
+2026-10-07 15:52:01.379 xcodebuild[22219:1738117] [MT] IDETestOperationsObserverDebug: 0.000 sec, +0.000 sec -- start
+2026-10-07 15:52:01.379 xcodebuild[22219:1738117] [MT] IDETestOperationsObserverDebug: 7.954 sec, +7.954 sec -- end
+
+Test session results, code coverage, and logs:
+	/tmp/RcpLens-T01-tests.xcresult
+
+** TEST SUCCEEDED **

@@ -27,7 +27,7 @@ Exit: a saved real receipt produces an exact split and is findable by purchased 
 Physical iPhone 15 Pro camera capture, phone-specific performance/privacy validation, repeated personal dogfood, reliability hardening and eventual trusted testers.
 
 ## Execution
-Tasks are separate user-owned chats in the RcpLens project. They are initially queued: inspect prerequisites on their first turn, then wait for the user to start implementation. This prevents concurrent edits to the same new app. Start T01 after the runtime download completes. T02 can proceed independently with standalone artifacts. Run T03 and T04 after T01, initially sequentially. T05 requires T02 design approval plus T03/T04. T06/T07 follow T05. Each task updates its status, evidence and next step in PROGRESS.md and TASKS.md only when implementing, and preserves other task entries.
+Tasks are separate user-owned chats in the RcpLens project, coordinated from the original planning chat. The user approves one next task at a time here; the main chat starts and follows its execution chat, verifies acceptance, commits/pushes verified changes, then reports completion, current milestone, commit message/hash and next task and asks for approval. Stop before starting another task. T01 is approved and the runtime is installed. Default order is T01, T02, T03, T04, T05, T06, T07. T05 requires T02 design approval plus T03/T04. T06/T07 follow T05. Each task updates its status and evidence in TASKS.md and PROGRESS.md while preserving other entries.
 
 Detailed acceptance criteria and test requirements are in TASKS.md. Keep the registry concise; do not create distant-roadmap tasks.
 

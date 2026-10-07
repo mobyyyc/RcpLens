@@ -4,9 +4,9 @@ Use the original planning chat as the main point of contact. The seven task chat
 
 ## Starting
 
-After the iOS simulator runtime download completes, the user can tell the main chat: "Xcode finished downloading. Manage the seven task chats and build the demo in order."
+The user approves one task at a time in this main chat. Saying "approved" in response to the proposed next task authorizes the main chat to start that task in its existing task chat and send the follow-ups necessary to complete it. The user approved T01 on 2026-10-07.
 
-This explicitly authorizes the main chat to send implementation instructions and necessary follow-ups to the seven existing task chats for this demo. Until that instruction, do not infer permission to message another chat from a request merely to explain the workflow. Do not create additional chats or background schedules without a user request.
+Approval applies to the named next task, including its implementation, verification and relevant corrections. It does not authorize starting the following task. Do not create additional chats or background schedules without a user request.
 
 ## Coordination after authorization
 
@@ -15,11 +15,20 @@ This explicitly authorizes the main chat to send implementation instructions and
 3. Start that task in its existing chat with current constraints and handoff context.
 4. Follow progress using compact task-status waits while the main chat is actively working. Bring material preferences and missing inputs back to the user here.
 5. Inspect the changes and acceptance evidence; completion in a chat is not sufficient proof of acceptance. Resolve relevant failures before dependent implementation.
-6. Keep TASKS.md and PROGRESS.md current and continue to the next ready task within the authorized demo scope.
+6. Keep TASKS.md and PROGRESS.md current. Commit and push verified task changes to the existing GitHub repository using the configured SSH signing identity; preserve existing history and avoid committing unrelated work.
+7. Report what the completed task delivered, current milestone, actual commit message/hash and push status, and the proposed next task. Ask for approval and stop before dispatching that next task.
 
 Default to one implementation task at a time in the shared checkout. Standalone design exploration can be separate, but multiple app-source writers must not run together.
 
-The main chat should not promise ongoing background monitoring after its turn ends without an explicitly requested automation. If work has stopped, the user can say "Continue" here; the main chat checks state rather than making the user identify a task.
+The main chat should not promise ongoing background monitoring after its turn ends without an explicitly requested automation. If an approved task is interrupted, the user can say "Continue" here to resume it. Starting a new task requires the next approval; the user does not need to identify or visit its execution chat.
+
+## Required completion report
+
+- Completed task: what changed and how acceptance was verified; material limitations if any.
+- Current milestone: milestone name and status.
+- Commit: actual message, hash and whether it was pushed.
+- Next task: task ID/title, goal and any unmet prerequisites.
+- Approval question: ask whether to start the proposed next task; wait for the user's answer.
 
 ## User input
 

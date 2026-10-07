@@ -1,18 +1,19 @@
 # Near-term task registry
 
-All tasks are queued. User approval authorizes their creation; implementation starts in each chat when the user starts that task. Dependencies must be verified from actual files/results, not assumed from a chat title.
+The main chat coordinates these task chats. The user approves one task at a time in the main chat; the main chat verifies, commits/pushes and reports the result before requesting approval for the next task. Dependencies must be verified from actual files/results, not assumed from a chat title.
 
 ## T01 — 01 · Xcode and SwiftUI foundation
 
-- Status: queued
+- Status: complete and accepted after main-chat review (2026-10-07)
 - Goal: Verify the Mac development environment and build the smallest native app foundation.
 - Why: Simulator AI availability and the toolchain must be demonstrated before relying on them.
 - Dependencies: none
 - Implementation scope: Verify full Xcode 27, iOS 27 runtime and toolchain selection. Check current Apple guidance before changing toolchain configuration. After the runtime finishes, create a single SwiftUI iPhone app and test target. Add a privacy-safe debug harness that checks Foundation Models availability and generates a response from a synthetic prompt. Confirm an imported synthetic image can run through Vision. Define logical domain, recognition, parsing, persistence and UI folders; avoid a monorepo. Add minimal build/test instructions. Use stable supported APIs and verify against the installed SDK. Initialize Git with private-data exclusions if no Git repository exists.
 - Acceptance criteria: App builds and launches in the simulator; Foundation Models either demonstrably generates a synthetic response or produces a precisely documented unavailability reason; Vision accepts a synthetic image; a basic test runs; build commands and versions are recorded.
 - Tests: Simulator build and launch, synthetic Vision/Foundation Models smoke checks, test-target execution. Do not log receipt content.
-- Risk/notes: Runtime is downloading. Xcode exists at /Applications/Xcode.app, version 27.0; xcode-select currently points to /Library/Developer/CommandLineTools. Mac previously checked as M5 Pro, 24 GB, macOS 27.0.1; recheck as needed. Do not install software, update macOS or change Apple Intelligence settings without the user's explicit instruction.
-- Chat: 01a117d0-a07f-7ec2-8b4a-4d20ec8fcc67 (local; queued)
+- Risk/notes: iOS 27.0 runtime installation verified (build 24A434). Xcode exists at /Applications/Xcode.app, version 27.0; xcode-select still points to /Library/Developer/CommandLineTools, so use DEVELOPER_DIR or explicit tool paths. Host availability and actual simulator generation are verified available; simulator evidence is recorded below. Mac: M5 Pro, 24 GB, macOS 27.0.1. Do not install software, update macOS or change Apple Intelligence settings without the user's explicit instruction.
+- Acceptance evidence: Debug/Release simulator builds and launch passed on iPhone 18 Pro, iOS 27.0 (24A434); local Foundation Models available and generated 39 characters; synthetic Vision PNG matched expected text; 3 XCTest tests passed, 0 failures/skips. Commands, limitations and evidence: [docs/FOUNDATION.md](docs/FOUNDATION.md).
+- Chat: 01a117d0-a07f-7ec2-8b4a-4d20ec8fcc67 (local; implementation complete)
 
 ## T02 — 02 · Wallet interface concepts
 

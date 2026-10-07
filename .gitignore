@@ -4,6 +4,8 @@
 # Xcode user settings and generated build output
 xcuserdata/
 *.xcuserstate
+*.xcresult
+*.xcactivitylog
 DerivedData/
 build/
 .build/
