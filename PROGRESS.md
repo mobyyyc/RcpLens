@@ -1,7 +1,7 @@
 # Progress
 
 ## Current milestone
-M0 — environment, design and extraction validation: complete and accepted. M1 — store purchase records: next, awaiting T04 approval.
+M0 — environment, design and extraction validation: complete and accepted. M1 — store purchase records: complete and accepted. M2 — usable imported-image receipt demo: next, awaiting T05 approval.
 
 ## Completed
 - Full source brief read and empty repository inspected.
@@ -18,27 +18,29 @@ M0 — environment, design and extraction validation: complete and accepted. M1 
 - T02: two interactive wallet concepts with a shared digital receipt layout; 124 focused browser checks passed. Main-chat review verified final wallet/detail/large-text/dark screenshots and source scope. [Design preview and handoff](docs/design/README.md).
 - Paper lift selected, with restrained layer shadows and native Liquid Glass navigation/buttons for the future native interface.
 - T03: isolated local extraction harness, five independently human-verified receipts (2 Costco, 2 No Frills, 1 T&T), six fictional image fixtures and a measured recognition decision. Main-chat review passed 14 regression tests, matched final source hashes and independently reproduced the public human-scored aggregate. Runtime and synthetic browser checks passed. [Report](docs/OCR_EVALUATION.md), [ADR 002](docs/adr/002-receipt-recognition.md).
+- T04: validated exact-money/evidence models, append-only corrections and transactional encrypted receipt/image storage with real Keychain and schema migrations. Main-chat review matched final source hashes, inspected the actual xcresult (27 passed, 0 failed, 1 hardware skip), verified simulator entitlements and the Release signature. Synthetic process relaunch, hot-journal recovery and complete deletion passed. [Storage report](docs/STORAGE.md), [ADR 003](docs/adr/003-local-receipt-storage.md).
 
 ## Current task
-T03 complete and accepted on 2026-10-07. T04 — receipt schema and local storage — is the proposed next task; it has not started.
+T04 complete and accepted on 2026-10-07. T05 — import, review and save receipts — is next and has not started.
 
 ## Task status
-T01–T03: complete and accepted. T04: next, awaiting approval. T05–T07: queued, each awaiting its own approval. The main chat handles all task dispatch and handoffs; IDs are recorded in TASKS.md.
+T01–T04: complete and accepted. T05: next, awaiting approval. T06/T07: queued, each awaiting its own approval. The main chat handles all task dispatch and handoffs; IDs are recorded in TASKS.md.
 
 ## Blockers and pending inputs
 - xcode-select points to standalone Command Line Tools; verified build commands use DEVELOPER_DIR to select full Xcode per shell/command.
 - Simulator local Foundation Models availability and generation verified; physical-phone availability remains unverified until its later phase.
 - Five private HEIC images and independently checked human labels are present, matched to original hashes and Git-ignored. No additional reference-label input is pending.
 - Apple's OCRTool image-model path is unavailable in Simulator; the actual comparison ran on the Mac. The selected Vision route and manual review are suitable for the next simulator demo.
+- No user input is required to close T04. Physical file-protection/lock enforcement is a later iPhone check; one hardware XCTest is explicitly skipped in Simulator. T05 must wire protected-data lifecycle and explain excluded backup/no restore.
 
 ## Decisions
-Native Swift/SwiftUI; Mac/simulator first; Paper lift with layer shadows and native Liquid Glass navigation/controls; one simplified digital receipt layout across stores; original evidence preserved; local processing/storage; deterministic money; Vision plus deterministic parsing with mandatory source correction and reconciliation. Local model variants remain evaluation-only; cloud and physical camera deferred.
+Native Swift/SwiftUI; Mac/simulator first; Paper lift with layer shadows and native Liquid Glass navigation/controls; one simplified digital receipt layout across stores; original evidence preserved; local processing/storage; deterministic money; Vision plus deterministic parsing with mandatory source correction and reconciliation. Storage uses system SQLite with authenticated encrypted receipt/image payloads and a non-sync Keychain key, with ordinary backup excluded. Local model variants remain evaluation-only; cloud and physical camera deferred.
 
 ## Known issues
-The app remains a foundation scaffold with synthetic diagnostics; the extraction harness is separate. No production receipt workflow or verified storage-security claims yet. The five-receipt pilot recovered 57/66 exact purchase amounts with the selected route, but matched only 2/5 totals and reconciled 0/5 without correction. Correction-operation counts are proxies; human correction time and broader retailer accuracy remain unmeasured. Current deployment target is iOS 27.0; device OS/signing must be checked later.
+The visible app remains a foundation screen with synthetic diagnostics. Storage is implemented but not integrated into a production import/review flow; extraction evaluation stays separate. Encrypted contents/Keychain are verified in Simulator; SQLite structural metadata is visible, physical lock enforcement unverified, and backup/export/restore unavailable. The five-receipt pilot recovered 57/66 exact purchase amounts with the selected route, but matched only 2/5 totals and reconciled 0/5 without correction. Correction-operation counts are proxies; human correction time and broader retailer accuracy remain unmeasured. Current deployment target is iOS 27.0; device OS/signing must be checked later.
 
 ## Next recommended action
-Request approval for T04 — receipt schema and local storage. Verify persistence, migrations, exact-money models, evidence/edit provenance, deletion and actual storage protections before T05 integrates the native import/review workflow. Do not dispatch T04 automatically.
+Request approval for T05 — import, review and save receipts. Build the real simulator workflow with the chosen Paper lift design, shadows and native Liquid Glass controls, chosen Vision/parser/manual-review route and T04 storage/lifecycle. T01–T04 dependencies are accepted; do not start T05 automatically.
 
 ## Latest task commit
-T03 handoff commit message: `feat: add verified local receipt extraction evaluation`. The exact signed commit hash and GitHub synchronization are verified after the commit and reported in the main chat; use Git history for the hash. Prior design-selection commit: `1939192` — `docs: select Paper lift and native Liquid Glass controls`.
+T04 handoff commit message: `feat: add encrypted local receipt storage and provenance`. The exact signed commit hash and GitHub synchronization are verified after the commit and reported in the main chat; use Git history for the hash. Previous task commit: `4ef2f25` — `feat: add verified local receipt extraction evaluation`.

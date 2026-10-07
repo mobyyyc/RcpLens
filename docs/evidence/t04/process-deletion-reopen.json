@@ -1,0 +1,14 @@
+{
+  "assetCount": 0,
+  "correctedAmountMatched": false,
+  "imageMatched": false,
+  "noOrphanedAssets": true,
+  "originalEvidenceMatched": false,
+  "passed": true,
+  "phase": "deletionVerified",
+  "receiptCount": 0,
+  "remainsDraft": false,
+  "revisionCount": 0,
+  "sqliteIntegrityOK": true,
+  "unknownOriginalAmountPreserved": false
+}

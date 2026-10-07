@@ -1,0 +1,73 @@
+Test Suite 'All tests' started at 2026-10-07 18:05:59.298.
+Test Suite 'RcpLensTests.xctest' started at 2026-10-07 18:05:59.299.
+Test Suite 'FoundationTests' started at 2026-10-07 18:05:59.299.
+Test Case '-[RcpLensTests.FoundationTests testActualLocalModelAndDiagnosticReport]' started.
+Test Case '-[RcpLensTests.FoundationTests testActualLocalModelAndDiagnosticReport]' passed (1.438 seconds).
+Test Case '-[RcpLensTests.FoundationTests testVisionRecognizesImportedSyntheticPNG]' started.
+Test Case '-[RcpLensTests.FoundationTests testVisionRecognizesImportedSyntheticPNG]' passed (0.434 seconds).
+Test Case '-[RcpLensTests.FoundationTests testVisionRejectsMalformedImage]' started.
+Test Case '-[RcpLensTests.FoundationTests testVisionRejectsMalformedImage]' passed (0.001 seconds).
+Test Suite 'FoundationTests' passed at 2026-10-07 18:06:01.173.
+	 Executed 3 tests, with 0 failures (0 unexpected) in 1.873 (1.875) seconds
+Test Suite 'PersistenceTests' started at 2026-10-07 18:06:01.173.
+Test Case '-[RcpLensTests.PersistenceTests testCiphertextBindsPurposeReceiptAndAssetOwnerAndDetectsTampering]' started.
+Test Case '-[RcpLensTests.PersistenceTests testCiphertextBindsPurposeReceiptAndAssetOwnerAndDetectsTampering]' passed (0.004 seconds).
+Test Case '-[RcpLensTests.PersistenceTests testCreateEditCloseReopenPreservesOriginalAndUnknowns]' started.
+Test Case '-[RcpLensTests.PersistenceTests testCreateEditCloseReopenPreservesOriginalAndUnknowns]' passed (0.011 seconds).
+Test Case '-[RcpLensTests.PersistenceTests testCreateFailureRollsBackReceiptAndAssetAtBothBoundaries]' started.
+Test Case '-[RcpLensTests.PersistenceTests testCreateFailureRollsBackReceiptAndAssetAtBothBoundaries]' passed (0.008 seconds).
+Test Case '-[RcpLensTests.PersistenceTests testDatabaseDirectoryAndLiveJournalProtectionAndBackupExclusion]' started.
+Test Case '-[RcpLensTests.PersistenceTests testDatabaseDirectoryAndLiveJournalProtectionAndBackupExclusion]' passed (0.006 seconds).
+Test Case '-[RcpLensTests.PersistenceTests testDeleteCascadesAssetAndRemovesCiphertextFromLiveFile]' started.
+Test Case '-[RcpLensTests.PersistenceTests testDeleteCascadesAssetAndRemovesCiphertextFromLiveFile]' passed (0.007 seconds).
+Test Case '-[RcpLensTests.PersistenceTests testEmptyInterruptedBootstrapResumesOnlyWithExistingKey]' started.
+Test Case '-[RcpLensTests.PersistenceTests testEmptyInterruptedBootstrapResumesOnlyWithExistingKey]' passed (0.003 seconds).
+Test Case '-[RcpLensTests.PersistenceTests testExplicitLocalPurgeAndClosedStore]' started.
+Test Case '-[RcpLensTests.PersistenceTests testExplicitLocalPurgeAndClosedStore]' passed (0.009 seconds).
+Test Case '-[RcpLensTests.PersistenceTests testFailedDeletionRetainsReceiptAndAssetOnReopen]' started.
+Test Case '-[RcpLensTests.PersistenceTests testFailedDeletionRetainsReceiptAndAssetOnReopen]' passed (0.009 seconds).
+Test Case '-[RcpLensTests.PersistenceTests testFailedMigrationRollsBackAndKeepsVersionOne]' started.
+Test Case '-[RcpLensTests.PersistenceTests testFailedMigrationRollsBackAndKeepsVersionOne]' passed (0.008 seconds).
+Test Case '-[RcpLensTests.PersistenceTests testGeometryAndRevisionReferencesPreserveProvenance]' started.
+Test Case '-[RcpLensTests.PersistenceTests testGeometryAndRevisionReferencesPreserveProvenance]' passed (0.009 seconds).
+Test Case '-[RcpLensTests.PersistenceTests testHardwareFileProtectionRequiresDeviceVerification]' started.
+/Users/moby/Desktop/cs/RcpLens/RcpLensTests/PersistenceTests.swift:373: -[RcpLensTests.PersistenceTests testHardwareFileProtectionRequiresDeviceVerification] : Test skipped - iOS Simulator returns no NSFileProtection attribute; device lock protection is unverified.
+Test Case '-[RcpLensTests.PersistenceTests testHardwareFileProtectionRequiresDeviceVerification]' skipped (0.002 seconds).
+Test Case '-[RcpLensTests.PersistenceTests testMissingAssetFailsListAndDetailWithoutSilentlySkipping]' started.
+Test Case '-[RcpLensTests.PersistenceTests testMissingAssetFailsListAndDetailWithoutSilentlySkipping]' passed (0.005 seconds).
+Test Case '-[RcpLensTests.PersistenceTests testMissingWrongAndMalformedKeyNeverReplaceExistingStore]' started.
+Test Case '-[RcpLensTests.PersistenceTests testMissingWrongAndMalformedKeyNeverReplaceExistingStore]' passed (0.005 seconds).
+Test Case '-[RcpLensTests.PersistenceTests testRealKeychainPersistenceAttributesAndDeletionFailure]' started.
+Test Case '-[RcpLensTests.PersistenceTests testRealKeychainPersistenceAttributesAndDeletionFailure]' passed (0.009 seconds).
+Test Case '-[RcpLensTests.PersistenceTests testRevisionFailurePreservesPreviouslyCommittedSnapshot]' started.
+Test Case '-[RcpLensTests.PersistenceTests testRevisionFailurePreservesPreviouslyCommittedSnapshot]' passed (0.006 seconds).
+Test Case '-[RcpLensTests.PersistenceTests testSQLiteContainsOnlyCiphertextForReceiptContentAndImage]' started.
+Test Case '-[RcpLensTests.PersistenceTests testSQLiteContainsOnlyCiphertextForReceiptContentAndImage]' passed (0.005 seconds).
+Test Case '-[RcpLensTests.PersistenceTests testStaleEditorCannotOverwriteAnotherRevision]' started.
+Test Case '-[RcpLensTests.PersistenceTests testStaleEditorCannotOverwriteAnotherRevision]' passed (0.007 seconds).
+Test Case '-[RcpLensTests.PersistenceTests testSwappedDatabasePayloadsAreRejected]' started.
+Test Case '-[RcpLensTests.PersistenceTests testSwappedDatabasePayloadsAreRejected]' passed (0.006 seconds).
+Test Case '-[RcpLensTests.PersistenceTests testUnavailableKeychainErrorDoesNotBecomeMissingKeyOrReset]' started.
+Test Case '-[RcpLensTests.PersistenceTests testUnavailableKeychainErrorDoesNotBecomeMissingKeyOrReset]' passed (0.001 seconds).
+Test Case '-[RcpLensTests.PersistenceTests testUnknownFutureVersionFailsWithoutModifyingBytes]' started.
+Test Case '-[RcpLensTests.PersistenceTests testUnknownFutureVersionFailsWithoutModifyingBytes]' passed (0.005 seconds).
+Test Case '-[RcpLensTests.PersistenceTests testUnversionedNonemptyDatabaseIsNeverReset]' started.
+Test Case '-[RcpLensTests.PersistenceTests testUnversionedNonemptyDatabaseIsNeverReset]' passed (0.001 seconds).
+Test Case '-[RcpLensTests.PersistenceTests testValidationRejectsBadAssetsCurrencyAndClockRollback]' started.
+Test Case '-[RcpLensTests.PersistenceTests testValidationRejectsBadAssetsCurrencyAndClockRollback]' passed (0.005 seconds).
+Test Case '-[RcpLensTests.PersistenceTests testVersionOneMigrationPreservesOriginalRevisionsAndImage]' started.
+Test Case '-[RcpLensTests.PersistenceTests testVersionOneMigrationPreservesOriginalRevisionsAndImage]' passed (0.010 seconds).
+Test Suite 'PersistenceTests' passed at 2026-10-07 18:06:01.321.
+	 Executed 23 tests, with 1 test skipped and 0 failures (0 unexpected) in 0.143 (0.147) seconds
+Test Suite 'ReceiptDomainTests' started at 2026-10-07 18:06:01.321.
+Test Case '-[RcpLensTests.ReceiptDomainTests testExactDecimalsAndDecodedBounds]' started.
+Test Case '-[RcpLensTests.ReceiptDomainTests testExactDecimalsAndDecodedBounds]' passed (0.000 seconds).
+Test Case '-[RcpLensTests.ReceiptDomainTests testMoneyBoundaryArithmeticAndCurrencyMismatch]' started.
+Test Case '-[RcpLensTests.ReceiptDomainTests testMoneyBoundaryArithmeticAndCurrencyMismatch]' passed (0.000 seconds).
+Test Suite 'ReceiptDomainTests' passed at 2026-10-07 18:06:01.322.
+	 Executed 2 tests, with 0 failures (0 unexpected) in 0.001 (0.001) seconds
+Test Suite 'RcpLensTests.xctest' passed at 2026-10-07 18:06:01.322.
+	 Executed 28 tests, with 1 test skipped and 0 failures (0 unexpected) in 2.017 (2.023) seconds
+Test Suite 'All tests' passed at 2026-10-07 18:06:01.322.
+	 Executed 28 tests, with 1 test skipped and 0 failures (0 unexpected) in 2.017 (2.024) seconds
+** TEST SUCCEEDED **

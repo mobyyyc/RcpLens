@@ -1,0 +1,14 @@
+{
+  "assetCount": 1,
+  "correctedAmountMatched": true,
+  "imageMatched": true,
+  "journalRemoved": true,
+  "originalEvidenceMatched": true,
+  "passed": true,
+  "phase": "reopened",
+  "receiptCount": 1,
+  "remainsDraft": true,
+  "revisionCount": 2,
+  "sqliteIntegrityOK": true,
+  "unknownOriginalAmountPreserved": true
+}

@@ -43,27 +43,28 @@ The main chat coordinates these task chats. The user approves one task at a time
 
 ## T04 — 04 · Receipt schema and local storage
 
-- Status: next task; awaiting user approval
+- Status: complete and accepted after main-chat review (2026-10-07)
 - Goal: Persist receipt records and original evidence safely across app restarts.
 - Why: The demo must retain purchases, preserve evidence and avoid data loss during edits/deletion.
 - Dependencies: T01
 - Implementation scope: Implement Swift domain models and a single local persistence approach with explicit schema migrations. Evaluate encrypted SQLite or a mature alternative; document actual protections, key storage and image storage rather than claiming encryption without verification. Store money as Int64 minor units; represent quantities/rates without binary floating-point money arithmetic. Preserve raw OCR/parser evidence and user edits without overwriting originals. Use UUIDs and timestamps suitable for future sync without building sync. Implement transactional receipt CRUD, asset ownership and cleanup, restart recovery and versioned migrations. Distinguish sync tombstones from user deletion; document local purge and backup behaviour. No receipt content in logs or source-controlled private fixtures.
 - Acceptance criteria: A synthetic receipt and original asset survive restart; edits preserve extraction provenance; deletions leave no orphaned image or searchable record; selected database protection and missing-key behaviour are verified; migration preserves existing receipts.
 - Tests: CRUD/restart, atomic write failure or recovery, migration preserving data, missing-key handling if encryption selected, deletion/asset cleanup and protection verification.
-- Risk/notes: Keep code in persistence/domain modules. No cloud/accounts/E2EE. Coordinate after T01 completion; do not edit the evaluation harness or design artifacts.
-- Chat: 01a117d0-b64b-7c00-baeb-66673db8436a (local; awaiting approval)
+- Acceptance evidence: Exact Swift money/quantity/date/evidence models; append-only corrections; system SQLite with CryptoKit AES-256-GCM receipt and image payloads; real non-sync Keychain key; transactional CRUD and v1→v2 migration. Main-chat review checked source hashes, actual xcresult (27 passed, 0 failed, 1 hardware-protection skip), signed simulator entitlements and Release signature. Separate-process synthetic evidence verified original/image/revision survival, hot-journal rollback and zero receipts/assets after deletion. [Storage verification and T05 handoff](docs/STORAGE.md), [ADR 003](docs/adr/003-local-receipt-storage.md).
+- Risk/notes: Payloads are encrypted, but SQLite structure, UUIDs and update metadata remain visible. Simulator cannot demonstrate physical lock/file-protection enforcement; verify on the later phone phase. Receipt store is excluded from ordinary backup; no export/restore yet. T05 must open only when protected data is available, close/release the actor and drop decrypted buffers on background/protected-data loss, expose missing/wrong-key failures without reset and explain local data-loss behavior. No cloud/accounts/E2EE; extraction/design artifacts unchanged.
+- Chat: 01a117d0-b64b-7c00-baeb-66673db8436a (local; implementation complete)
 
 ## T05 — 05 · Import, review and save receipts
 
-- Status: queued
+- Status: next task; awaiting user approval
 - Goal: Deliver the first usable receipt workflow in the iPhone simulator.
 - Why: Importing, correcting and saving real receipts is the core product loop before adding camera capture.
 - Dependencies: T01, T02, T03, T04
 - Implementation scope: Integrate photo import, the selected local recognition/parser pipeline, truthful processing states, fast merchant/date/item/amount edits, add/remove lines, reconciliation feedback and saved receipt detail. Preserve the original image and offer side-by-side or quick source access. Display uncertainty without treating LLM-generated confidence as calibrated confidence. Handle cancellation, permission denial, failed OCR, unavailable AI and interrupted work. Import real receipt images from a private Mac folder via simulator Photos/photo picker. Build the chosen wallet design after user selection. Do not add physical camera capture yet. Keep capture as an input boundary for the later phone phase.
 - Acceptance criteria: A real supported-store image can be imported, reviewed/corrected, saved, reopened after restart and deleted; mismatches and missing fields remain explicit; manual correction is available if AI/OCR fails; interaction remains usable with many receipts.
 - Tests: Simulator end-to-end import/edit/save/restart/delete; cancellation and failure cases; correction usability with private No Frills/Costco/T&T images; accessibility and reduced-motion checks.
-- Risk/notes: Paper lift selected: retain layer shadows and use native Liquid Glass navigation/buttons with accessible alternatives; browser previews approximate the design only. T03 selected Vision plus deterministic parsing with mandatory correction and reconciliation; model paths remain evaluation-only. T04 storage must be accepted before starting this task. Do not claim a finalized test version from synthetic examples alone.
-- Chat: 01a117d0-be03-7d12-8ea8-55d5349c89b7 (local; queued)
+- Risk/notes: T01–T04 dependencies accepted. Paper lift selected: retain layer shadows and use native Liquid Glass navigation/buttons with accessible alternatives; browser previews approximate the design only. T03 selected Vision plus deterministic parsing with mandatory correction and reconciliation; model paths remain evaluation-only. Follow T04's storage lifecycle, provenance, key-failure and backup handoff in docs/STORAGE.md. Do not claim a finalized test version from synthetic examples alone.
+- Chat: 01a117d0-be03-7d12-8ea8-55d5349c89b7 (local; awaiting approval)
 
 ## T06 — 06 · Exact item-level bill splitting
 

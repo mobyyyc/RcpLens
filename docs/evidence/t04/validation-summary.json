@@ -1,0 +1,54 @@
+{
+  "baseHead": "4ef2f25532c4e4ee65d48b4ca0ffb45db03ad1e4",
+  "debugBuild": "succeeded",
+  "protection": {
+    "backupExclusionResourceFlagsVerified": true,
+    "cryptoAuthenticationAndSyntheticConfidentialityVerified": true,
+    "directoryAndDBPermissionsVerified": true,
+    "physicalDeviceLockEnforcementVerified": false,
+    "realSimulatorKeychainVerified": true,
+    "simulatorFileProtectionAttribute": "nil"
+  },
+  "releaseBuild": "succeeded",
+  "releaseStorageDiagnosticsAbsent": true,
+  "schemaVersion": 2,
+  "scope": "fictional fixtures only; no private corpus read",
+  "separateProcesses": {
+    "abruptExitPID": 34200,
+    "createPID": 33890,
+    "deletePID": 34314,
+    "hotJournalBytes": 30216,
+    "postDeleteAssetCount": 0,
+    "postDeleteReceiptCount": 0,
+    "recoveryPID": 34237,
+    "reopenPID": 33930,
+    "uncommittedCreateRolledBack": true,
+    "verifyDeletionPID": 34434
+  },
+  "simulatorEntitlementsEmbeddedInExecutableVerified": true,
+  "sourceSHA256": {
+    "Configuration/Simulator.entitlements": "f1feaf06c3a82d1acd0adb626c6524ca90c1adddf709c36926807e33af00b2c9",
+    "RcpLens.xcodeproj/project.pbxproj": "1b71f298e746ffa90c27b17b85863c74f5effad9ccb7e2e089a4c59bb7b4ada9",
+    "RcpLens/App/RcpLensApp.swift": "1fd77b454249d366a36545b8bec7b322db5b6ed550289ef899ce25a423cacb2c",
+    "RcpLens/Diagnostics/SyntheticStorageDiagnostics.swift": "3aba7612a2fac62ed92bf88ff81ccc05e8272a5ce531a4c4afffd63a483a84c2",
+    "RcpLens/Domain/Receipt.swift": "1c275b1924f84e3c592dc6c03f96cc71197a9670c5d62bbb333d965d2f939811",
+    "RcpLens/Persistence/ReceiptStore.swift": "4c5eacaa843b98683cc5d3ca734a702432de7287411f04880836cb9674628cdf",
+    "RcpLens/Persistence/SQLiteDatabase.swift": "e35d27cecc867258fa767325cb5864415ffdddc57f2628a45e35ed852adc8241",
+    "RcpLens/Persistence/StoreCipher.swift": "59261a591ec5c488aaa89d32333927f2f3e683d69d8f40b8073a4feb384d1c9a",
+    "RcpLens/Persistence/StoreKey.swift": "5fd815e7bb0d48470fd08ebfd7c8fbec4b502e27e52329541eda43f485b476fc",
+    "RcpLensTests/PersistenceTests.swift": "ec47a1395eed3b6760ab42539821d3cd9df8f0a3bc6845434bf30e42e984e89e",
+    "docs/STORAGE.md": "c27ddf6dcad0f9d42d342ab5710bac76bf99073430ef8c9ca68dc0fc1971e252",
+    "docs/adr/003-local-receipt-storage.md": "42ec127df555e779279bb8787abb1dc73d23f9cfa5fba0d79519dc1288f82862"
+  },
+  "storage": "system SQLite; AES-256-GCM receipt/image BLOBs; Keychain WhenUnlockedThisDeviceOnly",
+  "task": "T04",
+  "tests": {
+    "failed": 0,
+    "hardwareFileProtectionSkip": true,
+    "passed": 27,
+    "skipped": 1,
+    "total": 28
+  },
+  "verifiedDate": "2026-10-07",
+  "wholeDatabaseEncrypted": false
+}
