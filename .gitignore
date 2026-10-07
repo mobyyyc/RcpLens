@@ -1,0 +1,34 @@
+# macOS
+.DS_Store
+
+# Xcode user settings and generated build output
+xcuserdata/
+*.xcuserstate
+DerivedData/
+build/
+.build/
+
+# Credentials and signing material
+.env
+.env.*
+!.env.example
+*.pem
+*.p12
+*.mobileprovision
+
+# Local databases and their journals
+*.sqlite
+*.sqlite3
+*.db
+*.sqlite-wal
+*.sqlite-shm
+*.sqlite3-wal
+*.sqlite3-shm
+*.db-wal
+*.db-shm
+
+# Private real receipt inputs. Commit only synthetic or reviewed redacted fixtures.
+private-receipts/
+/receipts/
+/test-data/private/
+/fixtures/private/
