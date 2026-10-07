@@ -30,6 +30,7 @@ build/
 *.db-shm
 
 # Private real receipt inputs. Commit only synthetic or reviewed redacted fixtures.
+/ground-truth*.json
 private-receipts/
 /receipts/
 /test-data/private/

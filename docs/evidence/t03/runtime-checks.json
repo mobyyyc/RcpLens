@@ -1,0 +1,73 @@
+{
+  "environment": {
+    "availability": "available",
+    "context_size": 8192,
+    "guided_capability": true,
+    "languages": [
+      {
+        "locale": "en-CA",
+        "supported": true
+      },
+      {
+        "locale": "fr-CA",
+        "supported": true
+      },
+      {
+        "locale": "zh-Hans",
+        "supported": true
+      },
+      {
+        "locale": "zh-Hant",
+        "supported": true
+      }
+    ],
+    "latency_ms": 26,
+    "ocr_languages": [
+      "en-US",
+      "fr-FR",
+      "it-IT",
+      "de-DE",
+      "es-ES",
+      "pt-BR",
+      "zh-Hans",
+      "zh-Hant",
+      "yue-Hans",
+      "yue-Hant",
+      "ko-KR",
+      "ja-JP",
+      "ru-RU",
+      "uk-UA",
+      "th-TH",
+      "vi-VT",
+      "ar-SA",
+      "ars-SA",
+      "tr-TR",
+      "id-ID",
+      "cs-CZ",
+      "da-DK",
+      "nl-NL",
+      "no-NO",
+      "nn-NO",
+      "nb-NO",
+      "ms-MY",
+      "pl-PL",
+      "ro-RO",
+      "sv-SE",
+      "fi-FI",
+      "hi-IN",
+      "mr-IN"
+    ],
+    "os": "Version 27.0.1 (Build 26A434)",
+    "status": "ok",
+    "tool_capability": true,
+    "vision_capability": true,
+    "wall_latency_ms": 33
+  },
+  "checks": {
+    "forced_unavailable": true,
+    "malformed_image": true,
+    "context_limit_rejected": true
+  },
+  "context_status": "context_preflight_rejected",
+  "all_passed": true
+}

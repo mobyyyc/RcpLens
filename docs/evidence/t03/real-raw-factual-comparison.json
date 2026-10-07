@@ -1,0 +1,79 @@
+{
+  "basis": "raw proposals compared with checked references; not source-accepted output",
+  "corpus_kind": "private_real",
+  "references_scored": 5,
+  "approaches": {
+    "B": {
+      "statuses": {
+        "ok": 5
+      },
+      "metrics": {
+        "merchant_expected": 5,
+        "merchant_correct": 1,
+        "field_corrections": 7,
+        "date_expected": 5,
+        "date_correct": 3,
+        "subtotal_expected": 4,
+        "subtotal_correct": 4,
+        "total_expected": 5,
+        "total_correct": 4,
+        "lines_expected": 73,
+        "items_expected": 66,
+        "detected_lines": 43,
+        "line_amounts_correct": 42,
+        "item_amounts_correct": 41,
+        "amount_corrections": 1,
+        "omitted_lines": 30,
+        "invented_lines": 35,
+        "correction_operations": 73,
+        "receipts_scored": 5,
+        "merchant_accuracy": 0.2,
+        "date_accuracy": 0.6,
+        "subtotal_accuracy": 1.0,
+        "total_accuracy": 0.8,
+        "item_amount_accuracy": 0.6212121212121212,
+        "line_amount_accuracy": 0.5753424657534246
+      },
+      "source_field_rejections": {
+        "merchant_source_rejected": 3,
+        "total_source_rejected": 1
+      }
+    },
+    "C": {
+      "statuses": {
+        "ok": 3,
+        "worker_timeout": 2
+      },
+      "metrics": {
+        "merchant_expected": 5,
+        "merchant_correct": 2,
+        "field_corrections": 12,
+        "date_expected": 5,
+        "date_correct": 3,
+        "subtotal_expected": 4,
+        "subtotal_correct": 1,
+        "total_expected": 5,
+        "total_correct": 1,
+        "lines_expected": 73,
+        "items_expected": 66,
+        "omitted_lines": 42,
+        "detected_lines": 31,
+        "line_amounts_correct": 27,
+        "amount_corrections": 4,
+        "item_amounts_correct": 26,
+        "invented_lines": 14,
+        "correction_operations": 72,
+        "receipts_scored": 5,
+        "merchant_accuracy": 0.4,
+        "date_accuracy": 0.6,
+        "subtotal_accuracy": 0.25,
+        "total_accuracy": 0.2,
+        "item_amount_accuracy": 0.3939393939393939,
+        "line_amount_accuracy": 0.3698630136986301
+      },
+      "source_field_rejections": {
+        "merchant_source_rejected": 1
+      }
+    }
+  }
+}

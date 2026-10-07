@@ -1,0 +1,998 @@
+[
+  {
+    "text": "NO FRILLS (SYNTHETIC)\n2026-10-07\nMILK 4.99\nBREAD 3.00\nSUBTOTAL 7.99\nHST 0.39\nTOTAL 8.38\nDEBIT 8.38",
+    "expected": {
+      "merchant": "NO FRILLS (SYNTHETIC)",
+      "date": "2026-10-07",
+      "subtotal": 799,
+      "total": 838,
+      "lines": [
+        {
+          "kind": "purchase",
+          "description": "MILK",
+          "amount": 499,
+          "quantity": null
+        },
+        {
+          "kind": "purchase",
+          "description": "BREAD",
+          "amount": 300,
+          "quantity": null
+        },
+        {
+          "kind": "tax",
+          "description": "HST",
+          "amount": 39,
+          "quantity": null
+        }
+      ]
+    }
+  },
+  {
+    "text": "COSTCO (SYNTHETIC)\n2026/10/07\n1001 APPLES 12.00\nCOUPON -2.00\nSUBTOTAL 10.00\nGST 0.50\nTOTAL 10.50",
+    "expected": {
+      "merchant": "COSTCO (SYNTHETIC)",
+      "date": "2026/10/07",
+      "subtotal": 1000,
+      "total": 1050,
+      "lines": [
+        {
+          "kind": "purchase",
+          "description": "1001 APPLES",
+          "amount": 1200,
+          "quantity": null
+        },
+        {
+          "kind": "discount",
+          "description": "COUPON",
+          "amount": -200,
+          "quantity": null
+        },
+        {
+          "kind": "tax",
+          "description": "GST",
+          "amount": 50,
+          "quantity": null
+        }
+      ]
+    }
+  },
+  {
+    "text": "T&T (SYNTHETIC)\n2026-10-07\nRICE 5.00\nTEA 2.00\nSUBTOTAL 7.00\nHST 0.26\nTOTAL 7.26",
+    "expected": {
+      "merchant": "T&T (SYNTHETIC)",
+      "date": "2026-10-07",
+      "subtotal": 700,
+      "total": 726,
+      "lines": [
+        {
+          "kind": "purchase",
+          "description": "RICE",
+          "amount": 500,
+          "quantity": null
+        },
+        {
+          "kind": "purchase",
+          "description": "TEA",
+          "amount": 200,
+          "quantity": null
+        },
+        {
+          "kind": "tax",
+          "description": "HST",
+          "amount": 26,
+          "quantity": null
+        }
+      ]
+    }
+  },
+  {
+    "text": "NO FRILLS (SYNTHETIC)\n2026-10-07\nBAG 0.25\n0.750 KG @ 4.00\nBANANAS 3.00\nSOAP 2 X 2.00 4.00\nSUBTOTAL 7.25\nHST 0.52\nTOTAL 7.77",
+    "expected": {
+      "merchant": "NO FRILLS (SYNTHETIC)",
+      "date": "2026-10-07",
+      "subtotal": 725,
+      "total": 777,
+      "lines": [
+        {
+          "kind": "purchase",
+          "description": "BAG",
+          "amount": 25,
+          "quantity": null
+        },
+        {
+          "kind": "purchase",
+          "description": "BANANAS",
+          "amount": 300,
+          "quantity": "0.750 KG @ 4.00"
+        },
+        {
+          "kind": "purchase",
+          "description": "SOAP 2 X 2.00",
+          "amount": 400,
+          "quantity": "2 X 2.00"
+        },
+        {
+          "kind": "tax",
+          "description": "HST",
+          "amount": 52,
+          "quantity": null
+        }
+      ]
+    }
+  },
+  {
+    "text": "T&T (SYNTHETIC)\n2026-10-07\n蘋果 APPLES 3.00\n豆腐 TOFU 2.50\nSUBTOTAL 5.50\nTOTAL 5.50",
+    "expected": {
+      "merchant": "T&T (SYNTHETIC)",
+      "date": "2026-10-07",
+      "subtotal": 550,
+      "total": 550,
+      "lines": [
+        {
+          "kind": "purchase",
+          "description": "蘋果 APPLES",
+          "amount": 300,
+          "quantity": null
+        },
+        {
+          "kind": "purchase",
+          "description": "豆腐 TOFU",
+          "amount": 250,
+          "quantity": null
+        }
+      ]
+    }
+  },
+  {
+    "text": "COSTCO (SYNTHETIC)\n2026-10-07\nITEM 001 1.00\nITEM 002 1.00\nITEM 003 1.00\nITEM 004 1.00\nITEM 005 1.00\nITEM 006 1.00\nITEM 007 1.00\nITEM 008 1.00\nITEM 009 1.00\nITEM 010 1.00\nITEM 011 1.00\nITEM 012 1.00\nITEM 013 1.00\nITEM 014 1.00\nITEM 015 1.00\nITEM 016 1.00\nITEM 017 1.00\nITEM 018 1.00\nITEM 019 1.00\nITEM 020 1.00\nITEM 021 1.00\nITEM 022 1.00\nITEM 023 1.00\nITEM 024 1.00\nITEM 025 1.00\nITEM 026 1.00\nITEM 027 1.00\nITEM 028 1.00\nITEM 029 1.00\nITEM 030 1.00\nITEM 031 1.00\nITEM 032 1.00\nITEM 033 1.00\nITEM 034 1.00\nITEM 035 1.00\nITEM 036 1.00\nITEM 037 1.00\nITEM 038 1.00\nITEM 039 1.00\nITEM 040 1.00\nITEM 041 1.00\nITEM 042 1.00\nITEM 043 1.00\nITEM 044 1.00\nITEM 045 1.00\nITEM 046 1.00\nITEM 047 1.00\nITEM 048 1.00\nITEM 049 1.00\nITEM 050 1.00\nITEM 051 1.00\nITEM 052 1.00\nITEM 053 1.00\nITEM 054 1.00\nITEM 055 1.00\nITEM 056 1.00\nITEM 057 1.00\nITEM 058 1.00\nITEM 059 1.00\nITEM 060 1.00\nITEM 061 1.00\nITEM 062 1.00\nITEM 063 1.00\nITEM 064 1.00\nITEM 065 1.00\nITEM 066 1.00\nITEM 067 1.00\nITEM 068 1.00\nITEM 069 1.00\nITEM 070 1.00\nITEM 071 1.00\nITEM 072 1.00\nITEM 073 1.00\nITEM 074 1.00\nITEM 075 1.00\nITEM 076 1.00\nITEM 077 1.00\nITEM 078 1.00\nITEM 079 1.00\nITEM 080 1.00\nITEM 081 1.00\nITEM 082 1.00\nITEM 083 1.00\nITEM 084 1.00\nITEM 085 1.00\nITEM 086 1.00\nITEM 087 1.00\nITEM 088 1.00\nITEM 089 1.00\nITEM 090 1.00\nITEM 091 1.00\nITEM 092 1.00\nITEM 093 1.00\nITEM 094 1.00\nITEM 095 1.00\nITEM 096 1.00\nITEM 097 1.00\nITEM 098 1.00\nITEM 099 1.00\nITEM 100 1.00\nITEM 101 1.00\nITEM 102 1.00\nITEM 103 1.00\nITEM 104 1.00\nITEM 105 1.00\nITEM 106 1.00\nITEM 107 1.00\nITEM 108 1.00\nITEM 109 1.00\nITEM 110 1.00\nITEM 111 1.00\nITEM 112 1.00\nITEM 113 1.00\nITEM 114 1.00\nITEM 115 1.00\nITEM 116 1.00\nITEM 117 1.00\nITEM 118 1.00\nITEM 119 1.00\nITEM 120 1.00\nITEM 121 1.00\nITEM 122 1.00\nITEM 123 1.00\nITEM 124 1.00\nITEM 125 1.00\nITEM 126 1.00\nITEM 127 1.00\nITEM 128 1.00\nITEM 129 1.00\nITEM 130 1.00\nITEM 131 1.00\nITEM 132 1.00\nITEM 133 1.00\nITEM 134 1.00\nITEM 135 1.00\nITEM 136 1.00\nITEM 137 1.00\nITEM 138 1.00\nITEM 139 1.00\nITEM 140 1.00\nSUBTOTAL 140.00\nTOTAL 140.00",
+    "expected": {
+      "merchant": "COSTCO (SYNTHETIC)",
+      "date": "2026-10-07",
+      "subtotal": 14000,
+      "total": 14000,
+      "lines": [
+        {
+          "kind": "purchase",
+          "description": "ITEM 001",
+          "amount": 100,
+          "quantity": null
+        },
+        {
+          "kind": "purchase",
+          "description": "ITEM 002",
+          "amount": 100,
+          "quantity": null
+        },
+        {
+          "kind": "purchase",
+          "description": "ITEM 003",
+          "amount": 100,
+          "quantity": null
+        },
+        {
+          "kind": "purchase",
+          "description": "ITEM 004",
+          "amount": 100,
+          "quantity": null
+        },
+        {
+          "kind": "purchase",
+          "description": "ITEM 005",
+          "amount": 100,
+          "quantity": null
+        },
+        {
+          "kind": "purchase",
+          "description": "ITEM 006",
+          "amount": 100,
+          "quantity": null
+        },
+        {
+          "kind": "purchase",
+          "description": "ITEM 007",
+          "amount": 100,
+          "quantity": null
+        },
+        {
+          "kind": "purchase",
+          "description": "ITEM 008",
+          "amount": 100,
+          "quantity": null
+        },
+        {
+          "kind": "purchase",
+          "description": "ITEM 009",
+          "amount": 100,
+          "quantity": null
+        },
+        {
+          "kind": "purchase",
+          "description": "ITEM 010",
+          "amount": 100,
+          "quantity": null
+        },
+        {
+          "kind": "purchase",
+          "description": "ITEM 011",
+          "amount": 100,
+          "quantity": null
+        },
+        {
+          "kind": "purchase",
+          "description": "ITEM 012",
+          "amount": 100,
+          "quantity": null
+        },
+        {
+          "kind": "purchase",
+          "description": "ITEM 013",
+          "amount": 100,
+          "quantity": null
+        },
+        {
+          "kind": "purchase",
+          "description": "ITEM 014",
+          "amount": 100,
+          "quantity": null
+        },
+        {
+          "kind": "purchase",
+          "description": "ITEM 015",
+          "amount": 100,
+          "quantity": null
+        },
+        {
+          "kind": "purchase",
+          "description": "ITEM 016",
+          "amount": 100,
+          "quantity": null
+        },
+        {
+          "kind": "purchase",
+          "description": "ITEM 017",
+          "amount": 100,
+          "quantity": null
+        },
+        {
+          "kind": "purchase",
+          "description": "ITEM 018",
+          "amount": 100,
+          "quantity": null
+        },
+        {
+          "kind": "purchase",
+          "description": "ITEM 019",
+          "amount": 100,
+          "quantity": null
+        },
+        {
+          "kind": "purchase",
+          "description": "ITEM 020",
+          "amount": 100,
+          "quantity": null
+        },
+        {
+          "kind": "purchase",
+          "description": "ITEM 021",
+          "amount": 100,
+          "quantity": null
+        },
+        {
+          "kind": "purchase",
+          "description": "ITEM 022",
+          "amount": 100,
+          "quantity": null
+        },
+        {
+          "kind": "purchase",
+          "description": "ITEM 023",
+          "amount": 100,
+          "quantity": null
+        },
+        {
+          "kind": "purchase",
+          "description": "ITEM 024",
+          "amount": 100,
+          "quantity": null
+        },
+        {
+          "kind": "purchase",
+          "description": "ITEM 025",
+          "amount": 100,
+          "quantity": null
+        },
+        {
+          "kind": "purchase",
+          "description": "ITEM 026",
+          "amount": 100,
+          "quantity": null
+        },
+        {
+          "kind": "purchase",
+          "description": "ITEM 027",
+          "amount": 100,
+          "quantity": null
+        },
+        {
+          "kind": "purchase",
+          "description": "ITEM 028",
+          "amount": 100,
+          "quantity": null
+        },
+        {
+          "kind": "purchase",
+          "description": "ITEM 029",
+          "amount": 100,
+          "quantity": null
+        },
+        {
+          "kind": "purchase",
+          "description": "ITEM 030",
+          "amount": 100,
+          "quantity": null
+        },
+        {
+          "kind": "purchase",
+          "description": "ITEM 031",
+          "amount": 100,
+          "quantity": null
+        },
+        {
+          "kind": "purchase",
+          "description": "ITEM 032",
+          "amount": 100,
+          "quantity": null
+        },
+        {
+          "kind": "purchase",
+          "description": "ITEM 033",
+          "amount": 100,
+          "quantity": null
+        },
+        {
+          "kind": "purchase",
+          "description": "ITEM 034",
+          "amount": 100,
+          "quantity": null
+        },
+        {
+          "kind": "purchase",
+          "description": "ITEM 035",
+          "amount": 100,
+          "quantity": null
+        },
+        {
+          "kind": "purchase",
+          "description": "ITEM 036",
+          "amount": 100,
+          "quantity": null
+        },
+        {
+          "kind": "purchase",
+          "description": "ITEM 037",
+          "amount": 100,
+          "quantity": null
+        },
+        {
+          "kind": "purchase",
+          "description": "ITEM 038",
+          "amount": 100,
+          "quantity": null
+        },
+        {
+          "kind": "purchase",
+          "description": "ITEM 039",
+          "amount": 100,
+          "quantity": null
+        },
+        {
+          "kind": "purchase",
+          "description": "ITEM 040",
+          "amount": 100,
+          "quantity": null
+        },
+        {
+          "kind": "purchase",
+          "description": "ITEM 041",
+          "amount": 100,
+          "quantity": null
+        },
+        {
+          "kind": "purchase",
+          "description": "ITEM 042",
+          "amount": 100,
+          "quantity": null
+        },
+        {
+          "kind": "purchase",
+          "description": "ITEM 043",
+          "amount": 100,
+          "quantity": null
+        },
+        {
+          "kind": "purchase",
+          "description": "ITEM 044",
+          "amount": 100,
+          "quantity": null
+        },
+        {
+          "kind": "purchase",
+          "description": "ITEM 045",
+          "amount": 100,
+          "quantity": null
+        },
+        {
+          "kind": "purchase",
+          "description": "ITEM 046",
+          "amount": 100,
+          "quantity": null
+        },
+        {
+          "kind": "purchase",
+          "description": "ITEM 047",
+          "amount": 100,
+          "quantity": null
+        },
+        {
+          "kind": "purchase",
+          "description": "ITEM 048",
+          "amount": 100,
+          "quantity": null
+        },
+        {
+          "kind": "purchase",
+          "description": "ITEM 049",
+          "amount": 100,
+          "quantity": null
+        },
+        {
+          "kind": "purchase",
+          "description": "ITEM 050",
+          "amount": 100,
+          "quantity": null
+        },
+        {
+          "kind": "purchase",
+          "description": "ITEM 051",
+          "amount": 100,
+          "quantity": null
+        },
+        {
+          "kind": "purchase",
+          "description": "ITEM 052",
+          "amount": 100,
+          "quantity": null
+        },
+        {
+          "kind": "purchase",
+          "description": "ITEM 053",
+          "amount": 100,
+          "quantity": null
+        },
+        {
+          "kind": "purchase",
+          "description": "ITEM 054",
+          "amount": 100,
+          "quantity": null
+        },
+        {
+          "kind": "purchase",
+          "description": "ITEM 055",
+          "amount": 100,
+          "quantity": null
+        },
+        {
+          "kind": "purchase",
+          "description": "ITEM 056",
+          "amount": 100,
+          "quantity": null
+        },
+        {
+          "kind": "purchase",
+          "description": "ITEM 057",
+          "amount": 100,
+          "quantity": null
+        },
+        {
+          "kind": "purchase",
+          "description": "ITEM 058",
+          "amount": 100,
+          "quantity": null
+        },
+        {
+          "kind": "purchase",
+          "description": "ITEM 059",
+          "amount": 100,
+          "quantity": null
+        },
+        {
+          "kind": "purchase",
+          "description": "ITEM 060",
+          "amount": 100,
+          "quantity": null
+        },
+        {
+          "kind": "purchase",
+          "description": "ITEM 061",
+          "amount": 100,
+          "quantity": null
+        },
+        {
+          "kind": "purchase",
+          "description": "ITEM 062",
+          "amount": 100,
+          "quantity": null
+        },
+        {
+          "kind": "purchase",
+          "description": "ITEM 063",
+          "amount": 100,
+          "quantity": null
+        },
+        {
+          "kind": "purchase",
+          "description": "ITEM 064",
+          "amount": 100,
+          "quantity": null
+        },
+        {
+          "kind": "purchase",
+          "description": "ITEM 065",
+          "amount": 100,
+          "quantity": null
+        },
+        {
+          "kind": "purchase",
+          "description": "ITEM 066",
+          "amount": 100,
+          "quantity": null
+        },
+        {
+          "kind": "purchase",
+          "description": "ITEM 067",
+          "amount": 100,
+          "quantity": null
+        },
+        {
+          "kind": "purchase",
+          "description": "ITEM 068",
+          "amount": 100,
+          "quantity": null
+        },
+        {
+          "kind": "purchase",
+          "description": "ITEM 069",
+          "amount": 100,
+          "quantity": null
+        },
+        {
+          "kind": "purchase",
+          "description": "ITEM 070",
+          "amount": 100,
+          "quantity": null
+        },
+        {
+          "kind": "purchase",
+          "description": "ITEM 071",
+          "amount": 100,
+          "quantity": null
+        },
+        {
+          "kind": "purchase",
+          "description": "ITEM 072",
+          "amount": 100,
+          "quantity": null
+        },
+        {
+          "kind": "purchase",
+          "description": "ITEM 073",
+          "amount": 100,
+          "quantity": null
+        },
+        {
+          "kind": "purchase",
+          "description": "ITEM 074",
+          "amount": 100,
+          "quantity": null
+        },
+        {
+          "kind": "purchase",
+          "description": "ITEM 075",
+          "amount": 100,
+          "quantity": null
+        },
+        {
+          "kind": "purchase",
+          "description": "ITEM 076",
+          "amount": 100,
+          "quantity": null
+        },
+        {
+          "kind": "purchase",
+          "description": "ITEM 077",
+          "amount": 100,
+          "quantity": null
+        },
+        {
+          "kind": "purchase",
+          "description": "ITEM 078",
+          "amount": 100,
+          "quantity": null
+        },
+        {
+          "kind": "purchase",
+          "description": "ITEM 079",
+          "amount": 100,
+          "quantity": null
+        },
+        {
+          "kind": "purchase",
+          "description": "ITEM 080",
+          "amount": 100,
+          "quantity": null
+        },
+        {
+          "kind": "purchase",
+          "description": "ITEM 081",
+          "amount": 100,
+          "quantity": null
+        },
+        {
+          "kind": "purchase",
+          "description": "ITEM 082",
+          "amount": 100,
+          "quantity": null
+        },
+        {
+          "kind": "purchase",
+          "description": "ITEM 083",
+          "amount": 100,
+          "quantity": null
+        },
+        {
+          "kind": "purchase",
+          "description": "ITEM 084",
+          "amount": 100,
+          "quantity": null
+        },
+        {
+          "kind": "purchase",
+          "description": "ITEM 085",
+          "amount": 100,
+          "quantity": null
+        },
+        {
+          "kind": "purchase",
+          "description": "ITEM 086",
+          "amount": 100,
+          "quantity": null
+        },
+        {
+          "kind": "purchase",
+          "description": "ITEM 087",
+          "amount": 100,
+          "quantity": null
+        },
+        {
+          "kind": "purchase",
+          "description": "ITEM 088",
+          "amount": 100,
+          "quantity": null
+        },
+        {
+          "kind": "purchase",
+          "description": "ITEM 089",
+          "amount": 100,
+          "quantity": null
+        },
+        {
+          "kind": "purchase",
+          "description": "ITEM 090",
+          "amount": 100,
+          "quantity": null
+        },
+        {
+          "kind": "purchase",
+          "description": "ITEM 091",
+          "amount": 100,
+          "quantity": null
+        },
+        {
+          "kind": "purchase",
+          "description": "ITEM 092",
+          "amount": 100,
+          "quantity": null
+        },
+        {
+          "kind": "purchase",
+          "description": "ITEM 093",
+          "amount": 100,
+          "quantity": null
+        },
+        {
+          "kind": "purchase",
+          "description": "ITEM 094",
+          "amount": 100,
+          "quantity": null
+        },
+        {
+          "kind": "purchase",
+          "description": "ITEM 095",
+          "amount": 100,
+          "quantity": null
+        },
+        {
+          "kind": "purchase",
+          "description": "ITEM 096",
+          "amount": 100,
+          "quantity": null
+        },
+        {
+          "kind": "purchase",
+          "description": "ITEM 097",
+          "amount": 100,
+          "quantity": null
+        },
+        {
+          "kind": "purchase",
+          "description": "ITEM 098",
+          "amount": 100,
+          "quantity": null
+        },
+        {
+          "kind": "purchase",
+          "description": "ITEM 099",
+          "amount": 100,
+          "quantity": null
+        },
+        {
+          "kind": "purchase",
+          "description": "ITEM 100",
+          "amount": 100,
+          "quantity": null
+        },
+        {
+          "kind": "purchase",
+          "description": "ITEM 101",
+          "amount": 100,
+          "quantity": null
+        },
+        {
+          "kind": "purchase",
+          "description": "ITEM 102",
+          "amount": 100,
+          "quantity": null
+        },
+        {
+          "kind": "purchase",
+          "description": "ITEM 103",
+          "amount": 100,
+          "quantity": null
+        },
+        {
+          "kind": "purchase",
+          "description": "ITEM 104",
+          "amount": 100,
+          "quantity": null
+        },
+        {
+          "kind": "purchase",
+          "description": "ITEM 105",
+          "amount": 100,
+          "quantity": null
+        },
+        {
+          "kind": "purchase",
+          "description": "ITEM 106",
+          "amount": 100,
+          "quantity": null
+        },
+        {
+          "kind": "purchase",
+          "description": "ITEM 107",
+          "amount": 100,
+          "quantity": null
+        },
+        {
+          "kind": "purchase",
+          "description": "ITEM 108",
+          "amount": 100,
+          "quantity": null
+        },
+        {
+          "kind": "purchase",
+          "description": "ITEM 109",
+          "amount": 100,
+          "quantity": null
+        },
+        {
+          "kind": "purchase",
+          "description": "ITEM 110",
+          "amount": 100,
+          "quantity": null
+        },
+        {
+          "kind": "purchase",
+          "description": "ITEM 111",
+          "amount": 100,
+          "quantity": null
+        },
+        {
+          "kind": "purchase",
+          "description": "ITEM 112",
+          "amount": 100,
+          "quantity": null
+        },
+        {
+          "kind": "purchase",
+          "description": "ITEM 113",
+          "amount": 100,
+          "quantity": null
+        },
+        {
+          "kind": "purchase",
+          "description": "ITEM 114",
+          "amount": 100,
+          "quantity": null
+        },
+        {
+          "kind": "purchase",
+          "description": "ITEM 115",
+          "amount": 100,
+          "quantity": null
+        },
+        {
+          "kind": "purchase",
+          "description": "ITEM 116",
+          "amount": 100,
+          "quantity": null
+        },
+        {
+          "kind": "purchase",
+          "description": "ITEM 117",
+          "amount": 100,
+          "quantity": null
+        },
+        {
+          "kind": "purchase",
+          "description": "ITEM 118",
+          "amount": 100,
+          "quantity": null
+        },
+        {
+          "kind": "purchase",
+          "description": "ITEM 119",
+          "amount": 100,
+          "quantity": null
+        },
+        {
+          "kind": "purchase",
+          "description": "ITEM 120",
+          "amount": 100,
+          "quantity": null
+        },
+        {
+          "kind": "purchase",
+          "description": "ITEM 121",
+          "amount": 100,
+          "quantity": null
+        },
+        {
+          "kind": "purchase",
+          "description": "ITEM 122",
+          "amount": 100,
+          "quantity": null
+        },
+        {
+          "kind": "purchase",
+          "description": "ITEM 123",
+          "amount": 100,
+          "quantity": null
+        },
+        {
+          "kind": "purchase",
+          "description": "ITEM 124",
+          "amount": 100,
+          "quantity": null
+        },
+        {
+          "kind": "purchase",
+          "description": "ITEM 125",
+          "amount": 100,
+          "quantity": null
+        },
+        {
+          "kind": "purchase",
+          "description": "ITEM 126",
+          "amount": 100,
+          "quantity": null
+        },
+        {
+          "kind": "purchase",
+          "description": "ITEM 127",
+          "amount": 100,
+          "quantity": null
+        },
+        {
+          "kind": "purchase",
+          "description": "ITEM 128",
+          "amount": 100,
+          "quantity": null
+        },
+        {
+          "kind": "purchase",
+          "description": "ITEM 129",
+          "amount": 100,
+          "quantity": null
+        },
+        {
+          "kind": "purchase",
+          "description": "ITEM 130",
+          "amount": 100,
+          "quantity": null
+        },
+        {
+          "kind": "purchase",
+          "description": "ITEM 131",
+          "amount": 100,
+          "quantity": null
+        },
+        {
+          "kind": "purchase",
+          "description": "ITEM 132",
+          "amount": 100,
+          "quantity": null
+        },
+        {
+          "kind": "purchase",
+          "description": "ITEM 133",
+          "amount": 100,
+          "quantity": null
+        },
+        {
+          "kind": "purchase",
+          "description": "ITEM 134",
+          "amount": 100,
+          "quantity": null
+        },
+        {
+          "kind": "purchase",
+          "description": "ITEM 135",
+          "amount": 100,
+          "quantity": null
+        },
+        {
+          "kind": "purchase",
+          "description": "ITEM 136",
+          "amount": 100,
+          "quantity": null
+        },
+        {
+          "kind": "purchase",
+          "description": "ITEM 137",
+          "amount": 100,
+          "quantity": null
+        },
+        {
+          "kind": "purchase",
+          "description": "ITEM 138",
+          "amount": 100,
+          "quantity": null
+        },
+        {
+          "kind": "purchase",
+          "description": "ITEM 139",
+          "amount": 100,
+          "quantity": null
+        },
+        {
+          "kind": "purchase",
+          "description": "ITEM 140",
+          "amount": 100,
+          "quantity": null
+        }
+      ]
+    }
+  }
+]

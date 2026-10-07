@@ -1,0 +1,41 @@
+{
+  "worker_build": "passed (Xcode 27 Mac SDK, arm64 macOS 27 target)",
+  "regression_tests": {
+    "passed": 14,
+    "failed": 0
+  },
+  "review_browser_checks": {
+    "status": "passed",
+    "inputs": "fictional fixtures only",
+    "browser": "existing system Google Chrome via local Playwright",
+    "checks": [
+      "blank and unverified draft",
+      "edits clear verification",
+      "unverified export blocked",
+      "malformed decimal rejected",
+      "export uses integer cents",
+      "zero page HTTP requests"
+    ],
+    "screenshots": "none"
+  },
+  "runtime_checks": {
+    "forced_unavailable": "passed",
+    "malformed_image": "passed",
+    "oversized_context": "passed"
+  },
+  "app_source_changes": "none",
+  "human_verified_real_labels": 5,
+  "real_accuracy_status": "pilot_measured_against_independent_human_references",
+  "fresh_original_hash_match": true,
+  "reference_schema": "schema_version 1, distinct IDs, matching SHA256, explicit human method and all four checks",
+  "final_source_hashes": {
+    "Worker.swift": "1ebcf3f7824442f4e972e89f793a09dbcc9f5fe6f3f836d99f763972c2442bf2",
+    "evaluate.py": "923dac8042fb21a515bce72c74c8e0b5d20d680f1596728d7fbdb5d267d3c7da",
+    "score_raw.py": "f1d8a70e250cbee9b9040a3d91cf6bdf9e795e6d844543a527baa8802ea38f01"
+  },
+  "human_reference_retailer_counts": {
+    "Costco": 2,
+    "No Frills": 2,
+    "T&T": 1
+  }
+}

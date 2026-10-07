@@ -1,0 +1,164 @@
+[
+  {
+    "scenario": "basic",
+    "expected_items": 2,
+    "approaches": {
+      "A": {
+        "status": "ok",
+        "items_with_exact_amount": 2,
+        "omitted_lines": 0,
+        "extra_line_proxy": 0,
+        "correction_proxy": 0
+      },
+      "B": {
+        "status": "operation_failed",
+        "items_with_exact_amount": 0,
+        "omitted_lines": 3,
+        "extra_line_proxy": 0,
+        "correction_proxy": 7
+      },
+      "C": {
+        "status": "ok",
+        "items_with_exact_amount": 2,
+        "omitted_lines": 0,
+        "extra_line_proxy": 0,
+        "correction_proxy": 0
+      }
+    }
+  },
+  {
+    "scenario": "discount",
+    "expected_items": 1,
+    "approaches": {
+      "A": {
+        "status": "ok",
+        "items_with_exact_amount": 1,
+        "omitted_lines": 0,
+        "extra_line_proxy": 0,
+        "correction_proxy": 0
+      },
+      "B": {
+        "status": "ok",
+        "items_with_exact_amount": 1,
+        "omitted_lines": 0,
+        "extra_line_proxy": 0,
+        "correction_proxy": 1
+      },
+      "C": {
+        "status": "ok",
+        "items_with_exact_amount": 1,
+        "omitted_lines": 0,
+        "extra_line_proxy": 0,
+        "correction_proxy": 0
+      }
+    }
+  },
+  {
+    "scenario": "retailer-layout",
+    "expected_items": 2,
+    "approaches": {
+      "A": {
+        "status": "ok",
+        "items_with_exact_amount": 2,
+        "omitted_lines": 0,
+        "extra_line_proxy": 0,
+        "correction_proxy": 0
+      },
+      "B": {
+        "status": "ok",
+        "items_with_exact_amount": 2,
+        "omitted_lines": 0,
+        "extra_line_proxy": 0,
+        "correction_proxy": 1
+      },
+      "C": {
+        "status": "ok",
+        "items_with_exact_amount": 0,
+        "omitted_lines": 3,
+        "extra_line_proxy": 3,
+        "correction_proxy": 6
+      }
+    }
+  },
+  {
+    "scenario": "weighted-quantity",
+    "expected_items": 3,
+    "approaches": {
+      "A": {
+        "status": "ok",
+        "items_with_exact_amount": 3,
+        "omitted_lines": 0,
+        "extra_line_proxy": 0,
+        "correction_proxy": 0
+      },
+      "B": {
+        "status": "ok",
+        "items_with_exact_amount": 2,
+        "omitted_lines": 2,
+        "extra_line_proxy": 1,
+        "correction_proxy": 4
+      },
+      "C": {
+        "status": "ok",
+        "items_with_exact_amount": 0,
+        "omitted_lines": 3,
+        "extra_line_proxy": 1,
+        "correction_proxy": 4
+      }
+    }
+  },
+  {
+    "scenario": "mixed-Chinese-English",
+    "expected_items": 2,
+    "approaches": {
+      "A": {
+        "status": "ok",
+        "items_with_exact_amount": 0,
+        "omitted_lines": 2,
+        "extra_line_proxy": 2,
+        "correction_proxy": 4
+      },
+      "B": {
+        "status": "operation_failed",
+        "items_with_exact_amount": 0,
+        "omitted_lines": 2,
+        "extra_line_proxy": 0,
+        "correction_proxy": 6
+      },
+      "C": {
+        "status": "ok",
+        "items_with_exact_amount": 0,
+        "omitted_lines": 2,
+        "extra_line_proxy": 0,
+        "correction_proxy": 2
+      }
+    }
+  },
+  {
+    "scenario": "140-item-long",
+    "expected_items": 140,
+    "approaches": {
+      "A": {
+        "status": "ok",
+        "items_with_exact_amount": 139,
+        "omitted_lines": 1,
+        "extra_line_proxy": 0,
+        "correction_proxy": 1
+      },
+      "B": {
+        "status": "worker_timeout",
+        "items_with_exact_amount": 0,
+        "omitted_lines": 140,
+        "extra_line_proxy": 0,
+        "correction_proxy": 144
+      },
+      "C": {
+        "status": "ok",
+        "items_with_exact_amount": 0,
+        "omitted_lines": 140,
+        "extra_line_proxy": 2,
+        "correction_proxy": 144
+      }
+    }
+  }
+]

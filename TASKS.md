@@ -30,19 +30,20 @@ The main chat coordinates these task chats. The user approves one task at a time
 
 ## T03 — 03 · Apple receipt extraction evaluation
 
-- Status: approved and in progress (2026-10-07)
+- Status: complete and accepted after main-chat review (2026-10-07)
 - Goal: Choose a receipt recognition approach using measured evidence.
 - Why: API availability does not demonstrate receipt accuracy; the cost of corrections determines usability.
 - Dependencies: T01
 - Implementation scope: Build an isolated evaluation harness, not production app screens. Compare Vision plus deterministic parsing, the same OCR enriched by Foundation Models, and supported iOS 27 image-assisted Foundation Models extraction. Keep all benchmark execution on device/Mac; explicitly select a local model and avoid automatic cloud routing. Use the same consented private receipt corpus with expected merchant/date/items/amounts/taxes/total; start with 3–5 per retailer if available and expand toward about 30. Use synthetic fixtures while waiting for real images and label them clearly. Exercise long receipts, discounts, quantities, weighted items and mixed-language text where present. Save aggregate results, parser versions, device/OS and reproducible commands. Keep inputs, OCR, generated receipt content and participant identities out of logs. Verify output against source and never let a model compute money allocations.
 - Acceptance criteria: Reproducible comparison reports field and item amount accuracy, omissions/invented lines, reconciliation rate, latency and correction burden; recommended approach and fallbacks are documented in an OCR ADR. Synthetic-only evaluation is explicitly provisional, not a claim of real-receipt support.
 - Tests: Golden-corpus regression, malformed/model-unavailable output, repeatability and supported-language checks, context limits on long receipts.
-- Risk/notes: Five private HEIC receipt images supplied and Git exclusion verified. Store coverage and independently human-verified ground truth must be checked; pipeline-derived labels are provisional and cannot establish accuracy. Preserve raw evidence and normalized labels separately. Apple SDK APIs and supported capabilities must be verified locally. Own docs/OCR_EVALUATION.md, docs/adr/002-receipt-recognition.md and a dedicated evaluation harness; do not restructure the app scaffold.
-- Chat: 01a117d0-ae9f-7dc3-bcd2-bd84dda035b2 (local; in progress)
+- Acceptance evidence: Five independently human-verified receipts (2 Costco, 2 No Frills, 1 T&T), matched to original-image hashes, plus six fictional image fixtures. Main chat independently passed all 14 regression tests, verified final source hashes and reproduced the published human-scored aggregate. Mac local-model runtime and synthetic browser checks passed. Vision plus deterministic parsing recovered 57/66 exact purchase amounts; model paths recovered 33/66 and 26/66 after source validation. Report and decision: [docs/OCR_EVALUATION.md](docs/OCR_EVALUATION.md), [ADR 002](docs/adr/002-receipt-recognition.md).
+- Risk/notes: Select Vision plus deterministic parsing for the manual-review demo. No approach fully reconciled any of the five real receipts without correction; the selected route matched only 2/5 totals. Mandatory correction, visible missing fields and deterministic reconciliation remain T05 requirements. Five receipts do not establish broad retailer accuracy. Correction counts are proxies; actual human correction time and adjudicated invented-content counts remain unmeasured. Image/OCRTool model evaluation ran on the Mac; Apple documents OCRTool as unavailable in Simulator. Raw receipts, OCR, proposals and checked references stay private and ignored. No production app changes in this task.
+- Chat: 01a117d0-ae9f-7dc3-bcd2-bd84dda035b2 (local; evaluation complete)
 
 ## T04 — 04 · Receipt schema and local storage
 
-- Status: queued
+- Status: next task; awaiting user approval
 - Goal: Persist receipt records and original evidence safely across app restarts.
 - Why: The demo must retain purchases, preserve evidence and avoid data loss during edits/deletion.
 - Dependencies: T01
@@ -50,7 +51,7 @@ The main chat coordinates these task chats. The user approves one task at a time
 - Acceptance criteria: A synthetic receipt and original asset survive restart; edits preserve extraction provenance; deletions leave no orphaned image or searchable record; selected database protection and missing-key behaviour are verified; migration preserves existing receipts.
 - Tests: CRUD/restart, atomic write failure or recovery, migration preserving data, missing-key handling if encryption selected, deletion/asset cleanup and protection verification.
 - Risk/notes: Keep code in persistence/domain modules. No cloud/accounts/E2EE. Coordinate after T01 completion; do not edit the evaluation harness or design artifacts.
-- Chat: 01a117d0-b64b-7c00-baeb-66673db8436a (local; queued)
+- Chat: 01a117d0-b64b-7c00-baeb-66673db8436a (local; awaiting approval)
 
 ## T05 — 05 · Import, review and save receipts
 
@@ -61,7 +62,7 @@ The main chat coordinates these task chats. The user approves one task at a time
 - Implementation scope: Integrate photo import, the selected local recognition/parser pipeline, truthful processing states, fast merchant/date/item/amount edits, add/remove lines, reconciliation feedback and saved receipt detail. Preserve the original image and offer side-by-side or quick source access. Display uncertainty without treating LLM-generated confidence as calibrated confidence. Handle cancellation, permission denial, failed OCR, unavailable AI and interrupted work. Import real receipt images from a private Mac folder via simulator Photos/photo picker. Build the chosen wallet design after user selection. Do not add physical camera capture yet. Keep capture as an input boundary for the later phone phase.
 - Acceptance criteria: A real supported-store image can be imported, reviewed/corrected, saved, reopened after restart and deleted; mismatches and missing fields remain explicit; manual correction is available if AI/OCR fails; interaction remains usable with many receipts.
 - Tests: Simulator end-to-end import/edit/save/restart/delete; cancellation and failure cases; correction usability with private No Frills/Costco/T&T images; accessibility and reduced-motion checks.
-- Risk/notes: Paper lift selected: retain layer shadows and use native Liquid Glass navigation/buttons with accessible alternatives; browser previews approximate the design only. Blocked until storage and recognition decision exist. Do not claim a finalized test version from synthetic examples alone.
+- Risk/notes: Paper lift selected: retain layer shadows and use native Liquid Glass navigation/buttons with accessible alternatives; browser previews approximate the design only. T03 selected Vision plus deterministic parsing with mandatory correction and reconciliation; model paths remain evaluation-only. T04 storage must be accepted before starting this task. Do not claim a finalized test version from synthetic examples alone.
 - Chat: 01a117d0-be03-7d12-8ea8-55d5349c89b7 (local; queued)
 
 ## T06 — 06 · Exact item-level bill splitting
