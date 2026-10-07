@@ -17,28 +17,28 @@ The main chat coordinates these task chats. The user approves one task at a time
 
 ## T02 — 02 · Wallet interface concepts
 
-- Status: design artifacts complete and accepted after main-chat review; user concept choice pending (2026-10-07)
+- Status: complete and accepted; user selected Paper lift (2026-10-07)
 - Goal: Resolve the wallet interaction and receipt organization before implementing the main screens.
 - Why: The user wants receipts to pull out of a wallet, with usable navigation when there are many receipts.
 - Dependencies: none
 - Implementation scope: Develop two reviewable concepts: a restrained wallet pocket and a more tactile paper/wallet version. Show recent receipts, opening a receipt, editing, processing/error states, all-receipts browsing, empty states and search. Check collections containing 5, 50 and 500 synthetic receipts. Use month grouping and merchant filters as the starting organization; multiple named wallets remain exploratory. Provide accessible tap alternatives to dragging, Dynamic Type, VoiceOver labels and Reduce Motion behaviour. Save standalone design artifacts and recommendations under docs/design; do not modify production app source. Ask the user to choose the direction before production UI implementation.
 - Acceptance criteria: Both concepts are reviewable, large-collection browsing is clear, primary actions remain accessible, and a design choice or pending preference is recorded.
 - Tests: Visual review at small/large screen and text sizes, reduced-motion interaction review, 5/50/500-receipt navigation walkthrough.
-- Acceptance evidence: Two interactive browser concepts, Pocket and Paper lift, share a consistent simplified receipt layout. 124 focused browser checks passed across collection sizes, search/filter/source access, edit/reconciliation, recovery, keyboard/tap/pull and reduced motion; final screenshots visually reviewed. Native Dynamic Type/VoiceOver and device performance remain T05/T07 checks. [Design preview and handoff](docs/design/README.md). Recommendation: Pocket; user choice is pending and required before T05.
+- Acceptance evidence: Two interactive browser concepts, Pocket and Paper lift, share a consistent simplified receipt layout. 124 focused browser checks passed across collection sizes, search/filter/source access, edit/reconciliation, recovery, keyboard/tap/pull and reduced motion; final screenshots visually reviewed. Native Dynamic Type/VoiceOver and device performance remain T05/T07 checks. [Design preview and handoff](docs/design/README.md). User selected Paper lift, with restrained layer shadows and native Liquid Glass navigation/buttons required for T05.
 - Risk/notes: Use synthetic receipt content. User approved a minimalist native iOS 27 direction with subtle depth and one simplified, consistent digital receipt format across stores. The two concepts explore interaction within that direction. Original evidence remains separately accessible. No logo or multiple-wallet decision is approved yet. Initial retailer scope is No Frills, Costco and T&T.
 - Chat: 01a117d0-a6c8-7d91-bc1c-86b6ad3e6a14 (local; design artifacts complete)
 
 ## T03 — 03 · Apple receipt extraction evaluation
 
-- Status: queued
+- Status: approved and in progress (2026-10-07)
 - Goal: Choose a receipt recognition approach using measured evidence.
 - Why: API availability does not demonstrate receipt accuracy; the cost of corrections determines usability.
 - Dependencies: T01
 - Implementation scope: Build an isolated evaluation harness, not production app screens. Compare Vision plus deterministic parsing, the same OCR enriched by Foundation Models, and supported iOS 27 image-assisted Foundation Models extraction. Keep all benchmark execution on device/Mac; explicitly select a local model and avoid automatic cloud routing. Use the same consented private receipt corpus with expected merchant/date/items/amounts/taxes/total; start with 3–5 per retailer if available and expand toward about 30. Use synthetic fixtures while waiting for real images and label them clearly. Exercise long receipts, discounts, quantities, weighted items and mixed-language text where present. Save aggregate results, parser versions, device/OS and reproducible commands. Keep inputs, OCR, generated receipt content and participant identities out of logs. Verify output against source and never let a model compute money allocations.
 - Acceptance criteria: Reproducible comparison reports field and item amount accuracy, omissions/invented lines, reconciliation rate, latency and correction burden; recommended approach and fallbacks are documented in an OCR ADR. Synthetic-only evaluation is explicitly provisional, not a claim of real-receipt support.
 - Tests: Golden-corpus regression, malformed/model-unavailable output, repeatability and supported-language checks, context limits on long receipts.
-- Risk/notes: Requires private real receipt images for final accuracy conclusions. Preserve raw evidence and normalized labels separately. Apple SDK APIs and supported capabilities must be verified locally. Own docs/OCR_EVALUATION.md, docs/adr/002-receipt-recognition.md and a dedicated evaluation harness; do not restructure the app scaffold.
-- Chat: 01a117d0-ae9f-7dc3-bcd2-bd84dda035b2 (local; queued)
+- Risk/notes: Five private HEIC receipt images supplied and Git exclusion verified. Store coverage and independently human-verified ground truth must be checked; pipeline-derived labels are provisional and cannot establish accuracy. Preserve raw evidence and normalized labels separately. Apple SDK APIs and supported capabilities must be verified locally. Own docs/OCR_EVALUATION.md, docs/adr/002-receipt-recognition.md and a dedicated evaluation harness; do not restructure the app scaffold.
+- Chat: 01a117d0-ae9f-7dc3-bcd2-bd84dda035b2 (local; in progress)
 
 ## T04 — 04 · Receipt schema and local storage
 
@@ -61,7 +61,7 @@ The main chat coordinates these task chats. The user approves one task at a time
 - Implementation scope: Integrate photo import, the selected local recognition/parser pipeline, truthful processing states, fast merchant/date/item/amount edits, add/remove lines, reconciliation feedback and saved receipt detail. Preserve the original image and offer side-by-side or quick source access. Display uncertainty without treating LLM-generated confidence as calibrated confidence. Handle cancellation, permission denial, failed OCR, unavailable AI and interrupted work. Import real receipt images from a private Mac folder via simulator Photos/photo picker. Build the chosen wallet design after user selection. Do not add physical camera capture yet. Keep capture as an input boundary for the later phone phase.
 - Acceptance criteria: A real supported-store image can be imported, reviewed/corrected, saved, reopened after restart and deleted; mismatches and missing fields remain explicit; manual correction is available if AI/OCR fails; interaction remains usable with many receipts.
 - Tests: Simulator end-to-end import/edit/save/restart/delete; cancellation and failure cases; correction usability with private No Frills/Costco/T&T images; accessibility and reduced-motion checks.
-- Risk/notes: Blocked until storage, recognition decision and user-selected wallet design exist. Do not claim a finalized test version from synthetic examples alone.
+- Risk/notes: Paper lift selected: retain layer shadows and use native Liquid Glass navigation/buttons with accessible alternatives; browser previews approximate the design only. Blocked until storage and recognition decision exist. Do not claim a finalized test version from synthetic examples alone.
 - Chat: 01a117d0-be03-7d12-8ea8-55d5349c89b7 (local; queued)
 
 ## T06 — 06 · Exact item-level bill splitting

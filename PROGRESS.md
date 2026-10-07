@@ -18,25 +18,25 @@ M0 — environment, design and extraction validation.
 - T02: two interactive wallet concepts with a shared digital receipt layout; 124 focused browser checks passed. Main-chat review verified final wallet/detail/large-text/dark screenshots and source scope. [Design preview and handoff](docs/design/README.md).
 
 ## Current task
-T02 design artifacts complete and accepted on 2026-10-07; user choice between Pocket and Paper lift remains pending. M0 still requires design selection and T03 extraction evaluation.
+T03 approved and started on 2026-10-07 using the supplied private receipts. T02 complete: user selected Paper lift with restrained layer shadows and native Liquid Glass controls/navigation. M0 still requires extraction evaluation.
 
 ## Task status
-T01: complete and accepted. T02: design artifacts complete and accepted; user concept choice pending. T03–T07: queued, each awaiting its own approval. The main chat handles all task dispatch and handoffs; IDs are recorded in TASKS.md.
+T01/T02: complete and accepted. T03: approved and in progress. T04–T07: queued, each awaiting its own approval. The main chat handles all task dispatch and handoffs; IDs are recorded in TASKS.md.
 
 ## Blockers and pending inputs
 - xcode-select points to standalone Command Line Tools; verified build commands use DEVELOPER_DIR to select full Xcode per shell/command.
 - Simulator local Foundation Models availability and generation verified; physical-phone availability remains unverified until its later phase.
 - Five private HEIC receipt images supplied in `private-receipts/`; Git exclusion verified. Store coverage and ground truth await T03.
-- Wallet design choice pending user review of the completed T02 preview. Recommendation: Pocket; no choice assumed.
+- Receipt reference labels must be independently verified before publishing accuracy metrics; pipeline-derived labels alone are provisional.
 
 ## Decisions
-Native Swift/SwiftUI; Mac/simulator first; minimalist native iOS 27 appearance with depth; one simplified digital receipt layout across stores; original evidence preserved; local processing/storage; deterministic money; cloud and physical camera deferred.
+Native Swift/SwiftUI; Mac/simulator first; Paper lift with layer shadows and native Liquid Glass navigation/controls; one simplified digital receipt layout across stores; original evidence preserved; local processing/storage; deterministic money; cloud and physical camera deferred.
 
 ## Known issues
 Only a foundation scaffold and synthetic diagnostics exist. No production receipt workflow, measured real-receipt accuracy or verified storage-security claims. Current deployment target is iOS 27.0; device OS/signing must be checked later.
 
 ## Next recommended action
-Present Pocket/Paper lift for selection and request approval for T03 — Apple receipt extraction evaluation using the supplied private images. Do not start T03 automatically. A pending concept choice does not prevent extraction evaluation, but must be resolved before T05.
+Finish and review T03 — Apple receipt extraction evaluation. Bring any required private label verification to the user here. Commit/push accepted results and request approval for T04; do not start it automatically.
 
 ## Latest task commit
-T02 commit message: `design: add minimalist wallet concepts and consistent receipt layout`. Use `git log -1` and the GitHub branch to inspect its hash and synchronization status.
+T02 artifacts: `abccf2e` — `design: add minimalist wallet concepts and consistent receipt layout`. Design-selection follow-up message: `docs: select Paper lift and native Liquid Glass controls`. Use Git history and the GitHub branch to inspect hashes and synchronization status.

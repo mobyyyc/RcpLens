@@ -1,6 +1,6 @@
 # T02 · Wallet interface concepts
 
-Artifact work complete, 2026-10-07. **User direction pending.** No production app source changed. The main chat owns product/task/progress updates and commit/push.
+Artifact work complete, 2026-10-07. **User selected Paper lift** after main-chat review. No production app source changed. The main chat owns product/task/progress updates and commit/push.
 
 Open [index.html](index.html) directly in a browser. No server, account, network requests or build are required. Both concepts are interactive and share the same digital receipt layout. Review controls change collection, screen, text scale, appearance, motion and scenario together; each phone's normal navigation works independently.
 
@@ -14,9 +14,9 @@ Open [index.html](index.html) directly in a browser. No server, account, network
 | Tradeoff | More compact; All receipts sits higher | More physical character; takes about 52 px more space |
 | Large text / Reduce Motion | Full-size recent list / direct tap | Same accessible alternatives |
 
-**Recommendation: Pocket.** It keeps the wallet interaction while giving browsing more room on a small phone. Paper lift is a viable choice if a little more physical character matters. This recommendation is an inference from the design review, not a user choice or usability-study result.
+**Accepted direction: Paper lift.** The user prefers its physical character. The earlier Pocket recommendation was superseded by this choice.
 
-**Pending decision:** the user should choose Pocket or Paper lift in the main chat before T05 builds production UI. No logo, brand colour, real texture or named-wallet model is approved. The neutral colours and standard blue actions are concept values, not final tokens. Both concepts use one collection.
+**Native implementation requirements for T05:** use restrained shadows to indicate wallet/slip/receipt layers, and native Liquid Glass interactions for appropriate bottom navigation and buttons. Prefer standard SwiftUI controls and supported glass APIs; the browser prototype does not demonstrate Apple's live refraction/material behaviour. Keep receipt contents readable and solid. Respect Reduce Motion, reduced transparency and increased contrast. No logo, brand colour, real texture or named-wallet model is approved. The neutral colours and standard blue actions are concept values, not final tokens. Both concepts use one collection.
 
 ![Wallet concepts](evidence/concepts-wallet.png)
 

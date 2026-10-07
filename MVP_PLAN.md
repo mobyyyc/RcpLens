@@ -2,7 +2,7 @@
 
 ## M0: Validate environment, design and extraction
 T01: Xcode/SwiftUI foundation and synthetic local AI/OCR smoke test.
-T02: Two wallet concepts and user design selection. Design artifacts complete; choice pending.
+T02: Two wallet concepts and user design selection. Complete; Paper lift selected with layer shadows and native Liquid Glass controls/navigation.
 T03: Reproducible extraction comparison against real receipt ground truth.
 
 Exit: simulator build works; local AI availability is known; recognition decision has evidence or a clearly documented provisional fallback; wallet design chosen.
@@ -27,7 +27,7 @@ Exit: a saved real receipt produces an exact split and is findable by purchased 
 Physical iPhone 15 Pro camera capture, phone-specific performance/privacy validation, repeated personal dogfood, reliability hardening and eventual trusted testers.
 
 ## Execution
-Tasks are separate user-owned chats in the RcpLens project, coordinated from the original planning chat. The user approves one next task at a time here; the main chat starts and follows its execution chat, verifies acceptance, commits/pushes verified changes, then reports completion, current milestone, commit message/hash and next task and asks for approval. Stop before starting another task. T01 is complete and accepted; T02 is approved. Default order is T01, T02, T03, T04, T05, T06, T07. T05 requires T02 design approval plus T03/T04. T06/T07 follow T05. The main chat updates task status and evidence in TASKS.md and PROGRESS.md while preserving other entries.
+Tasks are separate user-owned chats in the RcpLens project, coordinated from the original planning chat. The user approves one next task at a time here; the main chat starts and follows its execution chat, verifies acceptance, commits/pushes verified changes, then reports completion, current milestone, commit message/hash and next task and asks for approval. Stop before starting another task. T01/T02 are complete and accepted; T03 is approved. Default order is T01, T02, T03, T04, T05, T06, T07. T05 requires T02 design approval plus T03/T04. T06/T07 follow T05. The main chat updates task status and evidence in TASKS.md and PROGRESS.md while preserving other entries.
 
 Detailed acceptance criteria and test requirements are in TASKS.md. Keep the registry concise; do not create distant-roadmap tasks.
 
