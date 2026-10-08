@@ -1,0 +1,53 @@
+{
+  "devices" : [
+    {
+      "architecture" : "arm64",
+      "deviceId" : "50661E83-1F58-466B-99F0-9DC517D8EC82",
+      "deviceName" : "iPhone 18 Pro",
+      "modelName" : "iPhone 18 Pro",
+      "osBuildNumber" : "24A434",
+      "osVersion" : "27.0",
+      "platform" : "iOS Simulator"
+    }
+  ],
+  "testNodes" : [
+    {
+      "children" : [
+        {
+          "children" : [
+            {
+              "children" : [
+                {
+                  "duration" : "36s",
+                  "durationInSeconds" : 36.37759804725647,
+                  "name" : "testLargeTextReducedMotionDarkSearchAndStructuralAccessibility()",
+                  "nodeIdentifier" : "ReceiptSearchUITests/testLargeTextReducedMotionDarkSearchAndStructuralAccessibility()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/RcpLens/RcpLensUITests/ReceiptSearchUITests/testLargeTextReducedMotionDarkSearchAndStructuralAccessibility",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                }
+              ],
+              "name" : "ReceiptSearchUITests",
+              "nodeIdentifierURL" : "test://com.apple.xcode/RcpLens/RcpLensUITests/ReceiptSearchUITests",
+              "nodeType" : "Test Suite",
+              "result" : "Passed"
+            }
+          ],
+          "name" : "RcpLensUITests",
+          "nodeIdentifierURL" : "test://com.apple.xcode/RcpLens/RcpLensUITests",
+          "nodeType" : "UI test bundle",
+          "result" : "Passed"
+        }
+      ],
+      "name" : "T05Workflow",
+      "nodeType" : "Test Plan",
+      "result" : "Passed"
+    }
+  ],
+  "testPlanConfigurations" : [
+    {
+      "configurationId" : "1",
+      "configurationName" : "Test Scheme Action"
+    }
+  ]
+}

@@ -1,0 +1,129 @@
+{
+  "actualSwiftMatcher": true,
+  "cases": [
+    {
+      "case": "literal/current/source/Unicode coverage: nofrills",
+      "passed": true
+    },
+    {
+      "case": "literal/current/source/Unicode coverage: no-frills",
+      "passed": true
+    },
+    {
+      "case": "literal/current/source/Unicode coverage: nO fRiLlS",
+      "passed": true
+    },
+    {
+      "case": "literal/current/source/Unicode coverage: nofrills milk",
+      "passed": true
+    },
+    {
+      "case": "literal/current/source/Unicode coverage: nofrills 777",
+      "passed": true
+    },
+    {
+      "case": "literal/current/source/Unicode coverage: no-frills mlk",
+      "passed": true
+    },
+    {
+      "case": "literal/current/source/Unicode coverage: milk",
+      "passed": true
+    },
+    {
+      "case": "literal/current/source/Unicode coverage: mlk",
+      "passed": true
+    },
+    {
+      "case": "literal/current/source/Unicode coverage: org milk",
+      "passed": true
+    },
+    {
+      "case": "literal/current/source/Unicode coverage: creme",
+      "passed": true
+    },
+    {
+      "case": "literal/current/source/Unicode coverage: \u82f9\u679c",
+      "passed": true
+    },
+    {
+      "case": "literal/current/source/Unicode coverage: \uff26\uff32\uff21\u00ce\uff23\uff28\uff25",
+      "passed": true
+    },
+    {
+      "case": "literal/current/source/Unicode coverage: 777",
+      "passed": true
+    },
+    {
+      "case": "literal/current/source/Unicode coverage: 999",
+      "passed": true
+    },
+    {
+      "case": "literal/current/source/Unicode coverage: aubergine",
+      "passed": true
+    },
+    {
+      "case": "literal/current/source/Unicode coverage: fennel",
+      "passed": true
+    },
+    {
+      "case": "original SKU provenance",
+      "passed": true
+    },
+    {
+      "case": "current SKU provenance",
+      "passed": true
+    },
+    {
+      "case": "removed evidence has no current purchase",
+      "passed": true
+    },
+    {
+      "case": "unparsed evidence has no current purchase",
+      "passed": true
+    },
+    {
+      "case": "default excludes archive",
+      "passed": true
+    },
+    {
+      "case": "include archived finds archive",
+      "passed": true
+    },
+    {
+      "case": "Archive collection finds archive",
+      "passed": true
+    },
+    {
+      "case": "query punctuation produces no wildcard",
+      "passed": true
+    },
+    {
+      "case": "unknown query produces no fabricated match",
+      "passed": true
+    },
+    {
+      "case": "ordering invariant under record permutation",
+      "passed": true
+    },
+    {
+      "case": "no cross-item composite purchase",
+      "passed": true
+    },
+    {
+      "case": "delete removes searchable current and source data",
+      "passed": true
+    },
+    {
+      "case": "long query never silently truncates terms",
+      "passed": true
+    },
+    {
+      "case": "combined merchant query preserves original SKU provenance",
+      "passed": true
+    }
+  ],
+  "failed": 0,
+  "fictionalOnly": true,
+  "fixtureSHA256": "590d47a34d6982311519217af823702ca94e5cc7c2fb750c2cf138b853a74291",
+  "verifiedMatcherSHA256": "a4196c4bf038207dbdab7ac1b5982b4a5305f0341ee6488f76cbc353ecacc3f3"
+}

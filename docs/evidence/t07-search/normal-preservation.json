@@ -1,0 +1,10 @@
+{
+  "unchanged": true,
+  "before": {
+    "receipts.sqlite": "e5d7299cfb49569b6b78d3f12e369cdb3df990b35abd0fcb080e56c03a803a95"
+  },
+  "after": {
+    "receipts.sqlite": "e5d7299cfb49569b6b78d3f12e369cdb3df990b35abd0fcb080e56c03a803a95"
+  },
+  "method": "Opaque file SHA256 only; no record/asset export or decryption; no Photos access"
+}

@@ -1,0 +1,16 @@
+{
+  "app": "/tmp/RcpLens-T07-Release/Build/Products/Release-iphonesimulator/RcpLens.app",
+  "binarySHA256": "3d45f3ed36fbd5306cede686bc92cfdfde7b656d8b326b0cef07d31fb524127d",
+  "debugMarkersAbsent": {
+    "--t05-synthetic-preview": true,
+    "searchDemoImport": true,
+    "FICTIONAL CORNER MART": true,
+    "Fictional search fixture": true,
+    "T05SyntheticPreviewStore": true,
+    "--t05-local-test": true,
+    "--add-demo-receipts": true
+  },
+  "buildLog": "/tmp/RcpLens-T07-release-final2.log",
+  "signatureVerified": true,
+  "installedByTask": false
+}

@@ -1,0 +1,95 @@
+[
+  {
+    "case": "current merchant and punctuation",
+    "fields": {
+      "merchant": "No Frills"
+    },
+    "queries": [
+      "no frills",
+      "NO FRILLS",
+      "nofrills"
+    ],
+    "expected": "Same receipt; no invented merchant or amount"
+  },
+  {
+    "case": "preserve printed abbreviation after correction",
+    "sourceItem": "MLK 2%",
+    "currentItem": "2% Milk",
+    "queries": [
+      "mlk",
+      "milk"
+    ],
+    "expected": "Receipt found for both; distinguish original and current matches"
+  },
+  {
+    "case": "removed original purchase",
+    "sourceItem": "WRONG APPLES",
+    "currentItems": [
+      "Milk"
+    ],
+    "queries": [
+      "wrong apples"
+    ],
+    "expected": "Original-text match only; no current purchase amount or ownership inferred"
+  },
+  {
+    "case": "Chinese substring",
+    "currentItem": "有机苹果",
+    "queries": [
+      "苹果",
+      "有机"
+    ],
+    "expected": "Current item found; Unicode intact"
+  },
+  {
+    "case": "accent and case",
+    "currentItem": "Crème fraîche",
+    "queries": [
+      "creme",
+      "CRÈME"
+    ],
+    "expected": "Current item found"
+  },
+  {
+    "case": "SKU provenance",
+    "sourceSKU": "123456",
+    "currentSKU": null,
+    "queries": [
+      "123456"
+    ],
+    "expected": "Original field match clearly labelled; original image remains reachable"
+  },
+  {
+    "case": "archive filter",
+    "archived": true,
+    "query": "milk",
+    "expected": "Excluded by default; included with Include archived and in Archive"
+  },
+  {
+    "case": "delete and restart",
+    "sequence": [
+      "save",
+      "search",
+      "edit",
+      "search",
+      "delete",
+      "search",
+      "restart",
+      "search"
+    ],
+    "expected": "Committed corrections reflected; deleted records never returned"
+  },
+  {
+    "case": "lifecycle privacy",
+    "sequence": [
+      "search",
+      "background"
+    ],
+    "expected": "Query, matches, index and retained result selection cleared synchronously"
+  },
+  {
+    "case": "large local history",
+    "count": 500,
+    "expected": "Record IDs unique, bounded search/browsing; report measured Simulator environment/time"
+  }
+]

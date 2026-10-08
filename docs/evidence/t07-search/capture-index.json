@@ -1,0 +1,131 @@
+{
+  "fictionalOnly": true,
+  "images": [
+    {
+      "path": "T07-fictional-import-restarted-split.png",
+      "test": "ReceiptSearchUITests/testFictionalImageImportReviewSplitShareSearchAndEvidence()",
+      "sha256": "3a797e0ecca20e061fb2a8c356ba525219c272c790a9ce760b449c3dc2ff34b2",
+      "xcresult": "/tmp/RcpLens-T07-ui-final1.xcresult",
+      "sourceSnapshot": "source-hashes-before-spacing.json"
+    },
+    {
+      "path": "T07-fictional-import-search-original.png",
+      "test": "ReceiptSearchUITests/testFictionalImageImportReviewSplitShareSearchAndEvidence()",
+      "sha256": "8056a0535185e8336f3f279f88b28fd5b3714fcdae4e99f7eddb3a7001325289",
+      "xcresult": "/tmp/RcpLens-T07-ui-final1.xcresult",
+      "sourceSnapshot": "source-hashes-before-spacing.json"
+    },
+    {
+      "path": "T07-fictional-import-native-share.png",
+      "test": "ReceiptSearchUITests/testFictionalImageImportReviewSplitShareSearchAndEvidence()",
+      "sha256": "99d599dd9de33d3f924baad996b1d3d1b4bad48b1ba66eace4e4be3810fd301f",
+      "xcresult": "/tmp/RcpLens-T07-ui-final1.xcresult",
+      "sourceSnapshot": "source-hashes-before-spacing.json"
+    },
+    {
+      "path": "T07-search-structure-audit.png",
+      "test": "ReceiptSearchUITests/testLargeTextReducedMotionDarkSearchAndStructuralAccessibility()",
+      "sha256": "6f237d9c9d1a1c181df7bc3a9bc5b2c89258102618f54bbf43705264ec71cba7",
+      "xcresult": "/tmp/RcpLens-T07-ui-final3.xcresult",
+      "sourceSnapshot": "source-hashes.json"
+    },
+    {
+      "path": "T07-large-dark-full-match-details.png",
+      "test": "ReceiptSearchUITests/testLargeTextReducedMotionDarkSearchAndStructuralAccessibility()",
+      "sha256": "adb69563f89a5f6dd79dd28832b7f8ddbc48fa8539cc612bcd5c8206ab0102df",
+      "xcresult": "/tmp/RcpLens-T07-ui-final3.xcresult",
+      "sourceSnapshot": "source-hashes.json"
+    },
+    {
+      "path": "T07-large-dark-match-context.png",
+      "test": "ReceiptSearchUITests/testLargeTextReducedMotionDarkSearchAndStructuralAccessibility()",
+      "sha256": "0b16412aaf721b3430dc285722a241f5e70e9118b9b0587e2371f031869bcf23",
+      "xcresult": "/tmp/RcpLens-T07-ui-final3.xcresult",
+      "sourceSnapshot": "source-hashes.json"
+    },
+    {
+      "path": "T07-large-dark-search.png",
+      "test": "ReceiptSearchUITests/testLargeTextReducedMotionDarkSearchAndStructuralAccessibility()",
+      "sha256": "340b34088a10c52148a214d1af602779a96ad703d0e598ff013eb4acacc6dfeb",
+      "xcresult": "/tmp/RcpLens-T07-ui-final3.xcresult",
+      "sourceSnapshot": "source-hashes.json"
+    },
+    {
+      "path": "T07-removed-original-result.png",
+      "test": "ReceiptSearchUITests/testNativeCurrentRawSKUUnparsedAndRemovedEvidenceNavigation()",
+      "sha256": "1b6914ed641d0ae020d4cc93034acdb6b2e69f0291cfa1099b14049f8836594c",
+      "xcresult": "/tmp/RcpLens-T07-ui-final1.xcresult",
+      "sourceSnapshot": "source-hashes-before-spacing.json"
+    },
+    {
+      "path": "T07-unparsed-source-result.png",
+      "test": "ReceiptSearchUITests/testNativeCurrentRawSKUUnparsedAndRemovedEvidenceNavigation()",
+      "sha256": "d45d2657f6e068f4ec585e23cde7b20737718faec33247f4e52201767d1007e2",
+      "xcresult": "/tmp/RcpLens-T07-ui-final1.xcresult",
+      "sourceSnapshot": "source-hashes-before-spacing.json"
+    },
+    {
+      "path": "T07-linked-original-evidence.png",
+      "test": "ReceiptSearchUITests/testNativeCurrentRawSKUUnparsedAndRemovedEvidenceNavigation()",
+      "sha256": "e6cbdf047f2ca2467c8685976be76e10b8583134c76a608380e2405aef689f6e",
+      "xcresult": "/tmp/RcpLens-T07-ui-final1.xcresult",
+      "sourceSnapshot": "source-hashes-before-spacing.json"
+    },
+    {
+      "path": "T07-original-description-results.png",
+      "test": "ReceiptSearchUITests/testNativeCurrentRawSKUUnparsedAndRemovedEvidenceNavigation()",
+      "sha256": "729ed30e531ecd02edb68bd44ccd3a9932bc1dd055ec23a556f0cf9660ca4e34",
+      "xcresult": "/tmp/RcpLens-T07-ui-final1.xcresult",
+      "sourceSnapshot": "source-hashes-before-spacing.json"
+    },
+    {
+      "path": "T07-included-archive.png",
+      "test": "ReceiptSearchUITests/testNativeEditArchiveIncludeRestoreDeleteAndRelaunch()",
+      "sha256": "15815878af338270e36c900f94d49cac562c4c684bb11fc925ce8ca1b06c443c",
+      "xcresult": "/tmp/RcpLens-T07-ui-final1.xcresult",
+      "sourceSnapshot": "source-hashes-before-spacing.json"
+    },
+    {
+      "path": "T07-500-filtered-results.png",
+      "test": "ReceiptSearchUITests/testNativeFiveHundredBrowseFiltersUnicodeAndSource()",
+      "sha256": "1a10800ae05112f5d55318736233e57686eb05ef0a2097cd59e24645fdc86711",
+      "xcresult": "/tmp/RcpLens-T07-ui-final1.xcresult",
+      "sourceSnapshot": "source-hashes-before-spacing.json"
+    },
+    {
+      "path": "T07-500-unicode-results.png",
+      "test": "ReceiptSearchUITests/testNativeFiveHundredBrowseFiltersUnicodeAndSource()",
+      "sha256": "1e8b23dffbe2d47c3721de7a7260f1416459c23c9cb66ef47c39389fb687073b",
+      "xcresult": "/tmp/RcpLens-T07-ui-final1.xcresult",
+      "sourceSnapshot": "source-hashes-before-spacing.json"
+    },
+    {
+      "path": "T07-500-scrolled-history.png",
+      "test": "ReceiptSearchUITests/testNativeFiveHundredBrowseFiltersUnicodeAndSource()",
+      "sha256": "359c1f91dde1d17c2f4bd0ac5a1672c0bdec6ccb086a1e825b8757aafcad90b2",
+      "xcresult": "/tmp/RcpLens-T07-ui-final1.xcresult",
+      "sourceSnapshot": "source-hashes-before-spacing.json"
+    },
+    {
+      "path": "T07-500-history.png",
+      "test": "ReceiptSearchUITests/testNativeFiveHundredBrowseFiltersUnicodeAndSource()",
+      "sha256": "919ece8f9a92ef5485abe7c2e4b463412e7b01c50e59b663ecd19a016dc12229",
+      "xcresult": "/tmp/RcpLens-T07-ui-final1.xcresult",
+      "sourceSnapshot": "source-hashes-before-spacing.json"
+    },
+    {
+      "path": "T07-Transition-many-newest-detail.png",
+      "test": "WalletInteractionTests/testDetailContainsOnlySelectedPaperAcrossRepeatedReturns()",
+      "sha256": "272f40f51b1744cd68ced741a0577f96bd555074d6b92afa3de2e7416fd52c51",
+      "xcresult": "/tmp/RcpLens-T07-ui-final2.xcresult",
+      "sourceSnapshot": "source-hashes-spacing-return.json"
+    },
+    {
+      "path": "T07-Transition-elastic-returned.png",
+      "test": "WalletInteractionTests/testDetailContainsOnlySelectedPaperAcrossRepeatedReturns()",
+      "sha256": "e40a6f130f8cddb1acefdce9ac8c01e98f928622aaf5ffeb5eb811344b4eecf4",
+      "xcresult": "/tmp/RcpLens-T07-ui-final2.xcresult",
+      "sourceSnapshot": "source-hashes-spacing-return.json"
+    }
+  ]
+}

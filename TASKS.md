@@ -80,7 +80,7 @@ The main chat coordinates these task chats. The user approves one task at a time
 
 ## T06 — 06 · Exact item-level bill splitting
 
-- Status: implemented, verified, signed and pushed; user acceptance pending (2026-10-08)
+- Status: complete and accepted, including the wallet-transition refinement through T07 approval (2026-10-08)
 - Goal: Assign purchases to local people and share cent-exact results.
 - Why: Splitting provides immediate value for scanning a receipt.
 - Dependencies: T05
@@ -95,7 +95,7 @@ The main chat coordinates these task chats. The user approves one task at a time
 
 ## T07 — 07 · Purchase history and local search
 
-- Status: queued
+- Status: implemented and independently verified; user review pending (2026-10-08)
 - Goal: Find an old item or merchant and reopen its original receipt.
 - Why: Search supplies the long-term purchase-memory value and completes the first imported-image demo.
 - Dependencies: T04, T05
@@ -103,4 +103,6 @@ The main chat coordinates these task chats. The user approves one task at a time
 - Acceptance criteria: Saved purchases are findable by merchant/item; corrections are reflected; deleted records disappear; 500 synthetic receipts remain practical to browse/search; original evidence is reachable from results.
 - Tests: Search create/edit/delete consistency, merchant/raw/normalized/SKU coverage, supported multilingual examples, restart and a 500-receipt performance/usability sample.
 - Risk/notes: No semantic search, AI chat, cloud backend or mandatory multiple wallets. Camera testing is the next phase after the simulator demo, not part of this task.
-- Chat: 01a117d0-ee31-7363-9ee0-f0b9986d83f2 (local; queued)
+- Chat: 01a117d0-ee31-7363-9ee0-f0b9986d83f2 (local; implementation verified, handoff ready)
+
+- Verification evidence: 83 hosted unit passes, one hardware-only skip and seven native cases passed; final large-text spacing and retained-return follow-up are scoped in the manifest. The 500-fictional-receipt sample covers browsing, Unicode, filters and source access. Release signature/Debug-control exclusion verified; normal encrypted wallet unchanged. [Contract and complete demo review](docs/SEARCH.md), [exact results and source scope](docs/evidence/t07-search/validation-summary.json). Main-chat independent review and normal Release restoration passed; all twelve encrypted receipts/originals/preferences are unchanged. Planned milestone commit: `feat: add local purchase history and receipt search`.

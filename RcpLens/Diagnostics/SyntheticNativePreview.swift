@@ -97,7 +97,7 @@ import CryptoKit
             try? await Task.sleep(for: .milliseconds(25))
         }
         guard !Task.isCancelled else { return }
-        if mode != "resume" { await workspace.seedSyntheticPreview(count: mode == "library" ? 500 : mode == "many" ? 30 : (mode == "one" || mode == "split") ? 1 : mode == "two" ? 2 : (mode == "empty" ? 0 : 3)) }
+        if mode != "resume" { await workspace.seedSyntheticPreview(count: (mode == "library" || mode == "search-large") ? 500 : mode == "many" ? 30 : (mode == "one" || mode == "split") ? 1 : mode == "two" ? 2 : (["empty", "search-import"].contains(mode) ? 0 : 3)) }
         if mode == "elastic" { _ = await workspace.addFictionalDemoReceipts() }
         guard !Task.isCancelled else { return }
         if let receipt = mode == "long" ? workspace.orderedReceipts.dropFirst().first : workspace.orderedReceipts.first, ["detail", "review", "source", "long", "split"].contains(mode) {
@@ -109,7 +109,7 @@ import CryptoKit
             if mode == "review" { workspace.edit() }
             if mode == "source" { workspace.showSource(ids: receipt.original.fields.items.first?.sourceLineIDs ?? []) }
         }
-        if mode == "library" { workspace.library = true }
+        if ["library", "search", "search-large"].contains(mode) { workspace.library = true }
         try? JSONSerialization.data(withJSONObject: ["mode":mode,"count":workspace.receipts.count,"ready":true], options: [.sortedKeys]).write(to: readyURL, options: .atomic)
         if mode == "motion", workspace.orderedReceipts.count == 3 {
             let records = workspace.orderedReceipts

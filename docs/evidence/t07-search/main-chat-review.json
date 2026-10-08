@@ -1,0 +1,74 @@
+{
+  "date": "2026-10-08",
+  "baseline": "4516a44d549d9b5c8588d10229a6a63b4c2a3b62",
+  "actualXcresultsReadIndependently": {
+    "unit-final1": {
+      "result": "Passed",
+      "passedTests": 83,
+      "failedTests": 0,
+      "skippedTests": 1
+    },
+    "ui-final1": {
+      "result": "Passed",
+      "passedTests": 7,
+      "failedTests": 0,
+      "skippedTests": 0
+    },
+    "ui-final2": {
+      "result": "Failed",
+      "passedTests": 1,
+      "failedTests": 1,
+      "skippedTests": 0
+    },
+    "ui-final3": {
+      "result": "Passed",
+      "passedTests": 1,
+      "failedTests": 0,
+      "skippedTests": 0
+    }
+  },
+  "finalSourceFingerprintsMatched": 43,
+  "afterFullRunOnlyChanged": [
+    "RcpLens/UI/ReceiptWalletScene.swift",
+    "RcpLensUITests/ReceiptSearchUITests.swift"
+  ],
+  "verificationScope": "83 unit passes/one hardware skip and five unaffected native cases precede UI-only spacing fix. Final retained-return case passed in ui-final2; final large-text/source/strict structural audit passed in ui-final3. The failed geometry-selector attempt is superseded, not counted as passing.",
+  "independentMatcher": {
+    "passed": 30,
+    "failed": 0,
+    "actualSwiftMatcher": true,
+    "fictionalOnly": true,
+    "report": "independent/results.json",
+    "sha256": "a4196c4bf038207dbdab7ac1b5982b4a5305f0341ee6488f76cbc353ecacc3f3"
+  },
+  "fictionalScreensVisuallyReviewed": [
+    "T07-original-description-results.png",
+    "T07-large-dark-match-context.png",
+    "T07-500-history.png",
+    "T07-fictional-import-restarted-split.png"
+  ],
+  "reviewFindingsResolved": [
+    "Combined compact merchant plus item/SKU searches retain correct provenance.",
+    "Large-text match details use scrollable sheet and visible compact source controls.",
+    "Paper clears full measured Reviewed status; rendered status OCR and return assertions pass."
+  ],
+  "release": {
+    "app": "/tmp/RcpLens-T07-Release/Build/Products/Release-iphonesimulator/RcpLens.app",
+    "binarySHA256": "3d45f3ed36fbd5306cede686bc92cfdfde7b656d8b326b0cef07d31fb524127d",
+    "signatureVerifiedIndependently": true,
+    "debugMarkersAbsentIndependently": true,
+    "normalInstallAndLaunch": true
+  },
+  "normalStore": {
+    "encryptedPayloadFingerprintBeforeAfterEqual": true,
+    "receipts": 12,
+    "originalAssets": 12,
+    "encryptedPreferencesUnchanged": true,
+    "noPlaintextExportOrNormalScreenshots": true
+  },
+  "limits": [
+    "500 short fictional receipts measured in Simulator; physical-phone performance remains unverified.",
+    "One hardware file-protection skip; device VoiceOver/contrast/camera need the next approved phase.",
+    "No new real-receipt extraction accuracy score; manual source review remains required."
+  ]
+}

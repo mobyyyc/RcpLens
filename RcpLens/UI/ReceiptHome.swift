@@ -33,7 +33,7 @@ struct ReceiptHome: View {
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .background(Color(uiColor: .systemGroupedBackground))
             .navigationTitle(title)
-            .navigationBarTitleDisplayMode(.inline)
+            .navigationBarTitleDisplayMode(workspace.flow == .wallet && workspace.library ? .large : .inline)
             .toolbar {
                 if workspace.availability == .ready && !workspace.privacyCovered {
                     if workspace.flow != .wallet {
@@ -58,7 +58,7 @@ struct ReceiptHome: View {
                             }
                         } else if !workspace.receipts.isEmpty {
                             ToolbarItem(placement: .topBarTrailing) {
-                                Button("All receipts") { workspace.collection = "All receipts"; workspace.library = true }.accessibilityIdentifier("allReceipts")
+                                Button("All receipts", systemImage: "magnifyingglass") { workspace.collection = "All receipts"; workspace.library = true }.accessibilityIdentifier("allReceipts")
                             }
                         }
                         ToolbarItem(placement: .topBarTrailing) {
@@ -118,6 +118,14 @@ struct ReceiptHome: View {
                         }
                     }
                     #if DEBUG
+                    if SyntheticNativePreview.enabled && SyntheticNativePreview.mode == "search-import" && workspace.flow == .wallet {
+                        ToolbarItem(placement: .topBarLeading) {
+                            Button("Import fictional image") {
+                                let bytes = SyntheticNativePreview.fixture(index: 0).0
+                                workspace.startImport { bytes }
+                            }.accessibilityIdentifier("searchDemoImport")
+                        }
+                    }
                     if WorkflowTestInput.enabled {
                         if workspace.flow == .wallet {
                             ToolbarItem(placement: .topBarTrailing) {
@@ -177,7 +185,7 @@ struct ReceiptHome: View {
     }
     private var title: String {
         switch workspace.flow {
-        case .wallet: ""
+        case .wallet: workspace.library ? (workspace.searchQuery.isEmpty ? workspace.collection : "Search") : ""
         case .review: "Review receipt"
         case .detail: "Receipt"
         case .failed: "Import needs attention"
@@ -219,10 +227,6 @@ struct ReceiptHome: View {
         Group {
             if workspace.library && workspace.flow == .wallet {
                 ReceiptLibraryView(workspace: workspace)
-                    .safeAreaInset(edge: .top, spacing: 0) {
-                        Text(workspace.collection).font(.largeTitle.weight(.bold))
-                            .frame(maxWidth: .infinity, alignment: .leading).padding(.horizontal, 20).padding(.bottom, 12)
-                    }
             } else {
                 ReceiptWalletScene(workspace: workspace) { record in
                     deleteTarget = record; delete = true
@@ -234,7 +238,10 @@ struct ReceiptHome: View {
                     }
                 }
             }
-        }.accessibilityIdentifier(workspace.flow == .detail ? "detailScreen" : "walletScreen")
+        }
+        .safeAreaInset(edge: .top, spacing: 0) {
+            if workspace.flow == .detail, let match = workspace.searchMatch { ReceiptSearchContext(workspace: workspace, match: match) }
+        }
     }
     @ViewBuilder private var debugControls: some View {
         #if DEBUG
@@ -304,44 +311,5 @@ struct ReceiptSummary: View {
 
 struct ReceiptLibraryView: View {
     @Bindable var workspace: ReceiptWorkspace
-    var filtered: [ReceiptRecord] {
-        workspace.orderedReceipts.filter {
-            (workspace.collection == "Archive" ? $0.isArchived : workspace.collection == "Starred" ? $0.isStarred && !$0.isArchived : !$0.isArchived) &&
-            (workspace.merchantFilter == "All stores" || ($0.current.fields.merchant ?? "Merchant missing") == workspace.merchantFilter)
-            && (workspace.monthFilter == "All months" || month($0) == workspace.monthFilter)
-        }
-    }
-    private func month(_ record: ReceiptRecord) -> String {
-        guard let date = record.current.fields.purchaseDate else { return "Date missing" }
-        return String(format: "%04d-%02d", date.year, date.month)
-    }
-    var body: some View {
-        List {
-            Section {
-                Picker("Collection", selection: $workspace.collection) {
-                    Text("All receipts").tag("All receipts"); Text("Starred").tag("Starred"); Text("Archive").tag("Archive")
-                }.accessibilityIdentifier("collectionPicker")
-                Picker("Store", selection: $workspace.merchantFilter) {
-                    Text("All stores").tag("All stores")
-                    ForEach(Array(Set(workspace.receipts.map { $0.current.fields.merchant ?? "Merchant missing" })).sorted(), id: \.self) { Text($0).tag($0) }
-                }
-                Picker("Month", selection: $workspace.monthFilter) {
-                    Text("All months").tag("All months")
-                    ForEach(Array(Set(workspace.receipts.map(month))).sorted(by: >), id: \.self) { Text($0).tag($0) }
-                }
-            }
-            if filtered.isEmpty { ContentUnavailableView("No receipts here", systemImage: "doc.text", description: Text("Import a receipt or choose different filters.")) }
-            ForEach(Array(Set(filtered.map(month))).sorted(by: >), id: \.self) { group in
-                Section {
-                    ForEach(filtered.filter { month($0) == group }) { record in
-                        Button { workspace.open(record) } label: { ReceiptSummary(record: record).padding(.vertical, 8).frame(maxWidth: .infinity, alignment: .leading).contentShape(Rectangle()) }
-                            .buttonStyle(.plain).frame(minHeight: 44)
-                    }
-                } header: { Text(group).foregroundStyle(Color(uiColor: .label)) }
-            }
-        }
-        .scrollClipDisabled()
-        .scrollEdgeEffectStyle(.soft, for: .vertical)
-        .accessibilityIdentifier("receiptLibrary")
-    }
+    var body: some View { ReceiptPurchaseHistoryView(workspace: workspace) }
 }

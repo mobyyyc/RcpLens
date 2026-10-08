@@ -12,7 +12,11 @@ final class ReceiptWorkspace {
     enum Flow: Equatable { case wallet, loading, reading, review, detail, failed }
     var availability: Availability = .closed
     var flow: Flow = .wallet
-    var receipts: [ReceiptRecord] = []
+    var receipts: [ReceiptRecord] = [] { didSet { searchIndex = ReceiptSearchIndex(receipts) } }
+    private(set) var searchIndex = ReceiptSearchIndex()
+    var searchQuery = ""
+    var includeArchived = false
+    var searchMatch: ReceiptSearchIndex.Match?
     var selected: ReceiptRecord?
     var draft = ReceiptReviewDraft()
     var image: ReceiptImage?
@@ -28,8 +32,8 @@ final class ReceiptWorkspace {
     var library = false
     var collection = "All receipts"
     var walletSettings = ReceiptWalletSettings()
-    var merchantFilter = "All stores"
-    var monthFilter = "All months"
+    var merchantFilter: ReceiptHistoryChoice = .all
+    var monthFilter: ReceiptHistoryChoice = .all
     var active = false
     @ObservationIgnored private var store: ReceiptStore?
     @ObservationIgnored private var task: Task<Void, Never>?
@@ -83,7 +87,8 @@ final class ReceiptWorkspace {
         receipts = []; selected = nil; image = nil; extraction = nil
         draft = ReceiptReviewDraft(); sourceVisible = false; splitVisible = false; sourceLineIDs = []
         errorMessage = nil; notice = nil; saving = false; flow = .wallet; availability = .closed
-        merchantFilter = "All stores"; monthFilter = "All months"; library = false
+        merchantFilter = .all; monthFilter = .all; library = false
+        searchQuery = ""; searchMatch = nil; includeArchived = false
         collection = "All receipts"; walletSettings = ReceiptWalletSettings()
     }
     func retryOpen() { suspend(); activate(protectedDataAvailable: UIApplication.shared.isProtectedDataAvailable) }
@@ -171,7 +176,7 @@ final class ReceiptWorkspace {
         guard !saving else { return }
         task?.cancel(); worker?.cancel(); recognition?.cancel(); worker = nil; recognition = nil
         image = nil; extraction = nil; selected = nil; draft = ReceiptReviewDraft()
-        sourceVisible = false; sourceLineIDs = []; errorMessage = nil; flow = .wallet
+        sourceVisible = false; sourceLineIDs = []; searchMatch = nil; errorMessage = nil; flow = .wallet
         if showNotice { notice = "Unsaved receipt discarded." }
     }
     func showSource(ids: [UUID] = []) {
@@ -179,10 +184,10 @@ final class ReceiptWorkspace {
         sourceLineIDs = ids; sourceVisible = true
         if flow == .review { draft.sourceOpened = true }
     }
-    func open(_ record: ReceiptRecord) {
+    func open(_ record: ReceiptRecord, match: ReceiptSearchIndex.Match? = nil) {
         guard let store, active, !saving else { return }
         task?.cancel(); let session = sessionID
-        selected = record; image = nil; extraction = record.original
+        selected = record; image = nil; extraction = record.original; searchMatch = match
         flow = .detail; errorMessage = nil
         task = Task { [weak self] in
             do {
@@ -201,6 +206,7 @@ final class ReceiptWorkspace {
     }
     func edit() {
         guard let selected, image != nil, !saving else { return }
+        searchMatch = nil
         if let bytes = selected.current.reviewInput, let input = try? JSONDecoder().decode(ReceiptReviewDraft.self, from: bytes) { draft = input }
         else { draft = ReceiptReviewDraft(fields: selected.current.fields) }
         draft.sourceChecked = false; draft.sourceOpened = false
@@ -271,7 +277,7 @@ final class ReceiptWorkspace {
                 guard let self, self.isCurrent(session) else { return }
                 // Forget deleted evidence as soon as DELETE commits, independently of list refresh.
                 self.selected = nil; self.image = nil; self.extraction = nil; self.draft = ReceiptReviewDraft()
-                self.sourceVisible = false; self.sourceLineIDs = []; self.flow = .wallet
+                self.sourceVisible = false; self.sourceLineIDs = []; self.searchMatch = nil; self.flow = .wallet
                 self.receipts.removeAll { $0.id == selected.id }
                 self.notice = "Receipt and original deleted from this app."
                 let records = try await self.refreshedList(store)
@@ -409,6 +415,16 @@ final class ReceiptWorkspace {
             let settings = ReceiptWalletSettings(paperAppearance: ProcessInfo.processInfo.arguments.contains("--t05-white-paper") ? .alwaysWhite : .matchAppearance)
             try await store.saveWalletSettings(settings)
             walletSettings = settings
+            if ["search", "search-large"].contains(SyntheticNativePreview.mode) {
+                for index in 0..<count {
+                    try Task.checkCancellation()
+                    let (bytes, extraction, draft) = SyntheticSearchPreview.fixture(index)
+                    _ = try await store.create(extraction: extraction, originalImage: bytes, mediaType: "image/png", correction: draft.fields,
+                        review: draft.date.isEmpty ? .draft : .sourceReviewed, reviewInput: JSONEncoder().encode(draft), permit: permit)
+                }
+                receipts = try await store.receipts()
+                return
+            }
             var fixtures: [(Data, ReceiptReviewDraft, ReceiptExtraction)] = []
             for index in 0..<3 {
                 try Task.checkCancellation()

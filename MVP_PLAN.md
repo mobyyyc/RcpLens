@@ -27,7 +27,7 @@ Exit: usable with real receipts from the supported initial retailer set; failure
 T06: Exact item splits and share summary.
 T07: Chronological history and local full-text search.
 
-Status: next milestone; T06 and T07 remain queued, each awaiting approval. T05 provides basic month/store browsing; exact splitting and item search are not implemented yet.
+Status: demo implementation complete in Simulator; user review pending. T06 exact splitting and the wallet-transition refinement are accepted through T07 approval. T07 chronological history and local merchant/item/SKU search are implemented and verified; independent main-chat review and normal Release restoration are complete; user review remains. See [search contract and evidence](docs/SEARCH.md).
 
 Exit: a saved real receipt produces an exact split and is findable by purchased item later.
 
@@ -35,7 +35,7 @@ Exit: a saved real receipt produces an exact split and is findable by purchased 
 Physical iPhone 15 Pro camera capture, phone-specific performance/privacy validation, repeated personal dogfood, reliability hardening and eventual trusted testers.
 
 ## Execution
-Tasks are separate user-owned chats in the RcpLens project, coordinated from the original planning chat. The user approves one next task at a time here; the main chat starts and follows its execution chat, verifies acceptance, commits/pushes verified changes, then reports completion, current milestone, commit message/hash and next task and asks for approval. Stop before starting another task. T01–T05 are complete and accepted; T06 is next and requires approval. Default order is T01, T02, T03, T04, T05, T06, T07. T05 requires T02 design approval plus T03/T04. T06/T07 follow T05. The main chat updates task status and evidence in TASKS.md and PROGRESS.md while preserving other entries.
+Tasks are separate user-owned chats in the RcpLens project, coordinated from the original planning chat. The user approves one next task at a time here; the main chat starts and follows its execution chat, verifies acceptance, commits/pushes verified changes, then reports completion, current milestone, commit message/hash and next task and asks for approval. Stop before starting another task. T01–T06 are complete and accepted; approved T07 is implemented and verified, independently reviewed and ready for user review. Default order is T01, T02, T03, T04, T05, T06, T07. T05 requires T02 design approval plus T03/T04. T06/T07 follow T05. The main chat updates task status and evidence in TASKS.md and PROGRESS.md while preserving other entries.
 
 Detailed acceptance criteria and test requirements are in TASKS.md. Keep the registry concise; do not create distant-roadmap tasks.
 

@@ -1,0 +1,80 @@
+{
+  "devices" : [
+    {
+      "architecture" : "arm64",
+      "deviceId" : "50661E83-1F58-466B-99F0-9DC517D8EC82",
+      "deviceName" : "iPhone 18 Pro",
+      "modelName" : "iPhone 18 Pro",
+      "osBuildNumber" : "24A434",
+      "osVersion" : "27.0",
+      "platform" : "iOS Simulator"
+    }
+  ],
+  "testNodes" : [
+    {
+      "children" : [
+        {
+          "children" : [
+            {
+              "children" : [
+                {
+                  "children" : [
+                    {
+                      "name" : "XCTAssertGreaterThanOrEqual failed: (\"-18.667643229166657\") is less than (\"38.0\") - The expanded paper must leave space below the full large-text status",
+                      "nodeType" : "Failure Message",
+                      "sourceLocation" : {
+                        "filePath" : "/Users/moby/Desktop/cs/RcpLens/RcpLensUITests/ReceiptSearchUITests.swift",
+                        "lineNumber" : 149
+                      }
+                    }
+                  ],
+                  "duration" : "15s",
+                  "durationInSeconds" : 15.327935099601746,
+                  "name" : "testLargeTextReducedMotionDarkSearchAndStructuralAccessibility()",
+                  "nodeIdentifier" : "ReceiptSearchUITests/testLargeTextReducedMotionDarkSearchAndStructuralAccessibility()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/RcpLens/RcpLensUITests/ReceiptSearchUITests/testLargeTextReducedMotionDarkSearchAndStructuralAccessibility",
+                  "nodeType" : "Test Case",
+                  "result" : "Failed"
+                }
+              ],
+              "name" : "ReceiptSearchUITests",
+              "nodeIdentifierURL" : "test://com.apple.xcode/RcpLens/RcpLensUITests/ReceiptSearchUITests",
+              "nodeType" : "Test Suite",
+              "result" : "Failed"
+            },
+            {
+              "children" : [
+                {
+                  "duration" : "57s",
+                  "durationInSeconds" : 57.54546105861664,
+                  "name" : "testDetailContainsOnlySelectedPaperAcrossRepeatedReturns()",
+                  "nodeIdentifier" : "WalletInteractionTests/testDetailContainsOnlySelectedPaperAcrossRepeatedReturns()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/RcpLens/RcpLensUITests/WalletInteractionTests/testDetailContainsOnlySelectedPaperAcrossRepeatedReturns",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                }
+              ],
+              "name" : "WalletInteractionTests",
+              "nodeIdentifierURL" : "test://com.apple.xcode/RcpLens/RcpLensUITests/WalletInteractionTests",
+              "nodeType" : "Test Suite",
+              "result" : "Passed"
+            }
+          ],
+          "name" : "RcpLensUITests",
+          "nodeIdentifierURL" : "test://com.apple.xcode/RcpLens/RcpLensUITests",
+          "nodeType" : "UI test bundle",
+          "result" : "Failed"
+        }
+      ],
+      "name" : "T05Workflow",
+      "nodeType" : "Test Plan",
+      "result" : "Failed"
+    }
+  ],
+  "testPlanConfigurations" : [
+    {
+      "configurationId" : "1",
+      "configurationName" : "Test Scheme Action"
+    }
+  ]
+}

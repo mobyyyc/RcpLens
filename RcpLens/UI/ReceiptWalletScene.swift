@@ -432,17 +432,22 @@ private struct WalletLiftedPaper: View {
     let error: String?
     let loading: Bool
     @State private var fullHeight: CGFloat = 244
+    @State private var statusHeight: CGFloat = 0
     @Environment(\.dynamicTypeSize) private var typeSize
     private var reading: Bool { expanded || reduceMotion }
     private var paperWidth: CGFloat { reading ? width : origin.width }
     private var paperHeight: CGFloat { reading ? fullHeight : origin.height }
+    // Preserve the regular 52-point transition destination, but clear the actual status row at larger sizes.
+    private var readingPaperTop: CGFloat { max(52, statusHeight + 12) }
     var body: some View {
         ZStack(alignment: .topLeading) {
             HStack {
                 Label(ReceiptCompletion.isComplete(record) ? "Reviewed" : "Needs review", systemImage: ReceiptCompletion.isComplete(record) ? "checkmark.circle" : "exclamationmark.circle")
                 Spacer()
                 if record.isStarred { Image(systemName: "star.fill").accessibilityLabel("Starred") }
-            }.font(.footnote.weight(.medium)).padding(.horizontal, 34).padding(.top, 10)
+            }.font(.footnote.weight(.medium)).fixedSize(horizontal: false, vertical: true)
+                .padding(.horizontal, 34).padding(.top, 10)
+                .onGeometryChange(for: CGFloat.self) { $0.size.height } action: { statusHeight = $0 }
                 .opacity(expanded ? 1 : 0)
             ZStack(alignment: .topLeading) {
                 ReceiptPaper(fields: record.current.fields, input: record.current.reviewInput.flatMap { try? JSONDecoder().decode(ReceiptReviewDraft.self, from: $0) }, showsSurface: false)
@@ -457,16 +462,16 @@ private struct WalletLiftedPaper: View {
             .background { ReceiptPaperBackground(fade: !expanded && record.current.fields.items.count > 3 && !typeSize.isAccessibilitySize ? 1 : 0) }
             .receiptPaperStyle()
             .rotationEffect(.degrees(reading ? 0 : tilt))
-            .offset(x: reading ? 30 : origin.minX, y: reading ? 52 : origin.minY + returnOffset)
+            .offset(x: reading ? 30 : origin.minX, y: reading ? readingPaperTop : origin.minY + returnOffset)
             VStack(alignment: .leading, spacing: 18) {
                 if loading { ProgressView("Loading original").font(.footnote) }
                 if let error { Text(error).font(.subheadline) }
                 if record.current.fields.currency == nil { Text("Currency needs confirmation. Edit to check the saved amounts.").font(.footnote) }
                 Label("Saved on this device", systemImage: "lock").font(.footnote)
-            }.padding(.horizontal, 30).offset(y: fullHeight + 74).opacity(expanded ? 1 : 0)
+            }.padding(.horizontal, 30).offset(y: fullHeight + readingPaperTop + 22).opacity(expanded ? 1 : 0)
         }
         .frame(maxWidth: .infinity, alignment: .topLeading)
-        .frame(height: max(viewportHeight, fullHeight + 180), alignment: .topLeading)
+        .frame(height: max(viewportHeight, fullHeight + readingPaperTop + 128), alignment: .topLeading)
     }
 }
 
