@@ -1,0 +1,123 @@
+{
+  "date": "2026-10-08",
+  "milestone": "M3 - wallet transition refinement; T07 awaits approval",
+  "parentCommit": "64f3987ef2c32fccf24ccaf8339d364a8ae28f28",
+  "device": "iPhone 18 Pro Simulator, iOS 27.0 (24A434), Xcode 27.0",
+  "finalSourcesMatch": true,
+  "sourceFingerprintCount": 35,
+  "unitTests": {
+    "passed": 2,
+    "failed": 0,
+    "skipped": 0,
+    "actualResult": "/tmp/rcplens-transition/units-final.xcresult",
+    "summary": "unit-results.json"
+  },
+  "nativeTests": {
+    "passed": 7,
+    "failed": 0,
+    "skipped": 0,
+    "actualResult": "/tmp/rcplens-transition/ui-verified.xcresult",
+    "summary": "native-results.json",
+    "cases": [
+      "-[RcpLensUITests.NativeAccessibilityTests testNativeWalletDetailReviewSourceAndLibraryStructureAudit]",
+      "-[RcpLensUITests.ReceiptSplitUITests testNativeAssignFinalizeCopyShareRestartEditAndWalletReturn]",
+      "-[RcpLensUITests.WalletInteractionTests testChronologicalStackExpandsAndRestoresEachPaper]",
+      "-[RcpLensUITests.WalletInteractionTests testDetailContainsOnlySelectedPaperAcrossRepeatedReturns]",
+      "-[RcpLensUITests.WalletInteractionTests testElasticStackHasVariableGapsSpeedsAndReversibleScroll]",
+      "-[RcpLensUITests.WalletInteractionTests testManyReceiptsAndAccessibleMotionFallback]",
+      "-[RcpLensUITests.WalletInteractionTests testShortStacksRemainTuckedIntoPocket]"
+    ]
+  },
+  "recordedRepeat": {
+    "passed": 1,
+    "failed": 0,
+    "actualResult": "/tmp/rcplens-transition/ui-recorded.xcresult",
+    "summary": "recorded-run-results.json",
+    "sameFinalAppAndTestSources": true
+  },
+  "renderedRegression": "Vision OCR of actual fictional Simulator screenshots finds exactly one selected merchant and no wallet saved-count label. Scrolling long details does not reveal neighbours; nine open/return cycles span 13/30-record stores, plus newest after scrolling to the end. Restored X/Y are within two points.",
+  "motion": {
+    "normalDurationSeconds": 0.38,
+    "reduceMotionDurationSeconds": 0.12,
+    "movie": "receipt-transitions.mp4",
+    "fictionalOnly": true,
+    "captureSource": "final recorded repeat",
+    "trimStartSeconds": 15.8,
+    "trimDurationSeconds": 20.2,
+    "entryFrameReview": "entry-frame-review.png",
+    "returnFrameReview": "return-frame-review.png",
+    "rootVisualReview": "No start-position jump; screen-order exit/fade and simultaneous reverse; original depth retained. Selected torn-bottom surface grows/shrinks in place."
+  },
+  "automationTiming": {
+    "samples": [
+      {
+        "mode": "elastic",
+        "cycle": 0,
+        "returnAutomationSeconds": 1.5050400495529175
+      },
+      {
+        "mode": "elastic",
+        "cycle": 1,
+        "returnAutomationSeconds": 1.467628002166748
+      },
+      {
+        "mode": "elastic",
+        "cycle": 2,
+        "returnAutomationSeconds": 1.4764559268951416
+      },
+      {
+        "mode": "elastic",
+        "cycle": 3,
+        "returnAutomationSeconds": 1.4773310422897339
+      },
+      {
+        "mode": "elastic",
+        "cycle": 4,
+        "returnAutomationSeconds": 1.4840630292892456
+      },
+      {
+        "mode": "many",
+        "cycle": 0,
+        "returnAutomationSeconds": 1.5244669914245605
+      },
+      {
+        "mode": "many",
+        "cycle": 1,
+        "returnAutomationSeconds": 1.4727009534835815
+      },
+      {
+        "mode": "many",
+        "cycle": 2,
+        "returnAutomationSeconds": 1.4943870306015015
+      }
+    ],
+    "meaning": "Includes XCTest tap synthesis, idle wait, existence polling and hittability; not app animation duration or FPS. No device performance claim."
+  },
+  "accessibility": {
+    "strictStructureFindings": 0,
+    "contrastDiagnostics": 12,
+    "exceptionsUnchanged": true,
+    "diagnostics": "accessibility-diagnostics.json",
+    "scope": "Eight measured black reading/native Glass labels, one exact disabled Finish, three occluded List fragments. Existing rules unchanged; no device certification."
+  },
+  "runtimeWarnings": {
+    "native": 2,
+    "unit": 0,
+    "scope": "Existing invalid-frame warning in review/detail startup, one in native structure audit and one in split workflow. No warning in repeated transition regression. No assertion failures."
+  },
+  "nonfatalDiagnostics": [
+    "Xcode debugger metadata lookup unavailable",
+    "Post-test diagnostic collection uses unconfigured simctl lookup; assertions and result bundle passed"
+  ],
+  "earlierIterations": "ui-1 had one overly broad screenshot OCR assertion (item names and bullet punctuation); corrected without weakening neighbour detection. Frame-by-frame review of pre-frame-fix recording then found a start-position jump; tap-time projected frame capture added and all seven affected cases rerun with final sources. Earlier runs are not counted as final verification.",
+  "release": "release-verification.json",
+  "normalStore": "normal-store-preservation.json",
+  "captures": "capture-index.json",
+  "fictionalPNGCount": 21,
+  "limits": [
+    "Simulator verification; physical iPhone frame pacing not yet measured",
+    "No extraction accuracy re-evaluation or camera work in this change",
+    "Existing T06 domain/storage verification remains historical; only affected geometry and native integration rerun"
+  ],
+  "T07Started": false
+}

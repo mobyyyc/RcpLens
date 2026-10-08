@@ -1,0 +1,12 @@
+{
+  "normalReceiptsBefore": 12,
+  "normalReceiptsAfter": 12,
+  "normalAssetsBefore": 12,
+  "normalAssetsAfter": 12,
+  "encryptedReceiptPayloadsUnchanged": true,
+  "encryptedOriginalPayloadsUnchanged": true,
+  "encryptedPreferencesUnchanged": true,
+  "comparison": "SHA256 of encrypted payloads, ordered by UUID; no content decoded or screenshots captured",
+  "releaseInstalled": true,
+  "normalReleaseLaunch": true
+}

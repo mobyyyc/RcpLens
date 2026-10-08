@@ -24,6 +24,24 @@ final class ReceiptWorkflowTests: XCTestCase, @unchecked Sendable {
             }
         }
     }
+    func testDeparturesClearTheScreenAndShadowsInScreenOrder() {
+        let selected = CGRect(x: 30, y: 260, width: 340, height: 244)
+        for height: CGFloat in [480, 656, 820] {
+            for y: CGFloat in [-220, 20, 220, 300, 620, 900] {
+                let frame = CGRect(x: 30, y: y, width: 340, height: 244)
+                let distance = ReceiptDepartureGeometry.travel(frame: frame, selected: selected,
+                    viewportHeight: height, topInset: 62, bottomInset: 34)
+                if y < selected.minY {
+                    XCTAssertLessThan(distance, 0)
+                    XCTAssertLessThanOrEqual(frame.maxY + distance + 48, -62)
+                } else {
+                    XCTAssertGreaterThan(distance, 0)
+                    XCTAssertGreaterThanOrEqual(frame.minY + distance - 48, height + 34)
+                }
+                XCTAssertEqual(frame.offsetBy(dx: 0, dy: distance).offsetBy(dx: 0, dy: -distance), frame)
+            }
+        }
+    }
     struct Key: ReceiptStoreKeyProvider {
         func loadKey() -> Data? { Data(repeating: 0x5a, count: 32) }
         func createKey() -> Data { Data(repeating: 0x5a, count: 32) }

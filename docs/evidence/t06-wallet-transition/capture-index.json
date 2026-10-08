@@ -1,0 +1,111 @@
+{
+  "fictionalOnly": true,
+  "sourceHashes": "source-hashes.json",
+  "images": [
+    {
+      "file": "T06-retained-wallet.png",
+      "test": "ReceiptSplitUITests/testNativeAssignFinalizeCopyShareRestartEditAndWalletReturn()",
+      "sha256": "a7429b86c4156e35a51e541b6634b0b2a6d5ebd942ad5db8004d37a8736b1578"
+    },
+    {
+      "file": "Expanded-scrolled-screen-edges.png",
+      "test": "WalletInteractionTests/testChronologicalStackExpandsAndRestoresEachPaper()",
+      "sha256": "4580a00a7054e73f7d5658c82d4b586c096d29755dde67b61fe69f6d4b46fc47"
+    },
+    {
+      "file": "Expanded-long-paper.png",
+      "test": "WalletInteractionTests/testChronologicalStackExpandsAndRestoresEachPaper()",
+      "sha256": "b70dd55a9fdb20d76c364fb0a085b94f3ba623c2f7f3ff4a13213bed1f73f959"
+    },
+    {
+      "file": "Wallet-stack-light.png",
+      "test": "WalletInteractionTests/testChronologicalStackExpandsAndRestoresEachPaper()",
+      "sha256": "842c04462926e3be33e29035830b8a277de0a172b14dedd8608fbe52376314ee"
+    },
+    {
+      "file": "Transition-many-newest-detail.png",
+      "test": "WalletInteractionTests/testDetailContainsOnlySelectedPaperAcrossRepeatedReturns()",
+      "sha256": "a1278c2ddef995e9586727a58ba19443aaba54fe87c7c5f24484f3e486922147"
+    },
+    {
+      "file": "Transition-many-detail-6.png",
+      "test": "WalletInteractionTests/testDetailContainsOnlySelectedPaperAcrossRepeatedReturns()",
+      "sha256": "220fba7b9a81ba5079b651f9d07379f0e57f6338df51a883ad1ca91dd0faf470"
+    },
+    {
+      "file": "Transition-many-returned.png",
+      "test": "WalletInteractionTests/testDetailContainsOnlySelectedPaperAcrossRepeatedReturns()",
+      "sha256": "448548828f93a8cc69bd6dced1bada639842a0dfa8aa7c581cf8480afea1932f"
+    },
+    {
+      "file": "Transition-many-scrolled.png",
+      "test": "WalletInteractionTests/testDetailContainsOnlySelectedPaperAcrossRepeatedReturns()",
+      "sha256": "220fba7b9a81ba5079b651f9d07379f0e57f6338df51a883ad1ca91dd0faf470"
+    },
+    {
+      "file": "Transition-many-detail-4.png",
+      "test": "WalletInteractionTests/testDetailContainsOnlySelectedPaperAcrossRepeatedReturns()",
+      "sha256": "220fba7b9a81ba5079b651f9d07379f0e57f6338df51a883ad1ca91dd0faf470"
+    },
+    {
+      "file": "Transition-many-detail-1.png",
+      "test": "WalletInteractionTests/testDetailContainsOnlySelectedPaperAcrossRepeatedReturns()",
+      "sha256": "220fba7b9a81ba5079b651f9d07379f0e57f6338df51a883ad1ca91dd0faf470"
+    },
+    {
+      "file": "Transition-elastic-detail-6.png",
+      "test": "WalletInteractionTests/testDetailContainsOnlySelectedPaperAcrossRepeatedReturns()",
+      "sha256": "220fba7b9a81ba5079b651f9d07379f0e57f6338df51a883ad1ca91dd0faf470"
+    },
+    {
+      "file": "Transition-elastic-returned.png",
+      "test": "WalletInteractionTests/testDetailContainsOnlySelectedPaperAcrossRepeatedReturns()",
+      "sha256": "255408d92ff4fbeca07bf9acac99b343cab155a99c8885dc9f81a1f7cabe0819"
+    },
+    {
+      "file": "Transition-elastic-scrolled.png",
+      "test": "WalletInteractionTests/testDetailContainsOnlySelectedPaperAcrossRepeatedReturns()",
+      "sha256": "c6cb6d473f476c9f2b19d7f77e2ef3a80149e1fac5c090fbfd1db444ffad4653"
+    },
+    {
+      "file": "Transition-elastic-detail-4.png",
+      "test": "WalletInteractionTests/testDetailContainsOnlySelectedPaperAcrossRepeatedReturns()",
+      "sha256": "c6cb6d473f476c9f2b19d7f77e2ef3a80149e1fac5c090fbfd1db444ffad4653"
+    },
+    {
+      "file": "Transition-elastic-detail-1.png",
+      "test": "WalletInteractionTests/testDetailContainsOnlySelectedPaperAcrossRepeatedReturns()",
+      "sha256": "ff7bfeeee7450046a926fb891d32f935f1fd97220e555a69988aaf175e47e65c"
+    },
+    {
+      "file": "Elastic-stack-pulled.png",
+      "test": "WalletInteractionTests/testElasticStackHasVariableGapsSpeedsAndReversibleScroll()",
+      "sha256": "aaabb9f1a42314b5fccd6f8f76e4f906bed3bc944e28b55794432e05df45047c"
+    },
+    {
+      "file": "Elastic-stack-rest.png",
+      "test": "WalletInteractionTests/testElasticStackHasVariableGapsSpeedsAndReversibleScroll()",
+      "sha256": "d0542478b6f683fe1b5dfaa4371d5734ff51934a9b69a93583ba9759e8f24f1d"
+    },
+    {
+      "file": "Many-receipts-newest.png",
+      "test": "WalletInteractionTests/testManyReceiptsAndAccessibleMotionFallback()",
+      "sha256": "a46a029c9f70c68e7c600c0e48683016bca5220cb0959c5ba2cf34f751da1620"
+    },
+    {
+      "file": "Tucked-wallet-3.png",
+      "test": "WalletInteractionTests/testShortStacksRemainTuckedIntoPocket()",
+      "sha256": "b16df31450be375a28a63be40e0643c4de9ee8c85c48fef630648e7e4e54687a"
+    },
+    {
+      "file": "Tucked-wallet-2.png",
+      "test": "WalletInteractionTests/testShortStacksRemainTuckedIntoPocket()",
+      "sha256": "078d27384dc985c32f6eb5c1df3c6b66153db86a3afe0535873b1f57a4ef50fa"
+    },
+    {
+      "file": "Tucked-wallet-1.png",
+      "test": "WalletInteractionTests/testShortStacksRemainTuckedIntoPocket()",
+      "sha256": "cc4bfae93f4e1328b454960a12daa74581ea71365087a242035bcf12163109a6"
+    }
+  ]
+}

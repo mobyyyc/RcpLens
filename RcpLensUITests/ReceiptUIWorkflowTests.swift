@@ -1,5 +1,6 @@
 import XCTest
 import UIKit
+import Vision
 
 /// Real inputs/references are supplied locally, never compiled or logged by this suite.
 /// Test logs and attachments for private runs must stay under ignored private-receipts/.
@@ -345,6 +346,65 @@ import UIKit
         XCTAssertTrue(app.buttons["original"].waitForExistence(timeout: 15)); app.buttons["back"].tap()
         XCTAssertTrue(upper.waitForExistence(timeout: 15)); XCTAssertEqual(upper.frame.minY, topY, accuracy: 4)
         app.terminate()
+    }
+    private func visibleReceiptHeadings(_ app: XCUIApplication) throws -> [String] {
+        let image = try XCTUnwrap(app.screenshot().image.cgImage)
+        let request = VNRecognizeTextRequest()
+        request.recognitionLevel = .accurate
+        request.usesLanguageCorrection = false
+        try VNImageRequestHandler(cgImage: image).perform([request])
+        return (request.results ?? []).compactMap { $0.topCandidates(1).first?.string }
+            .filter { $0.range(of: "^DEMO [0-9]{2}", options: .regularExpression) != nil || $0.contains("SYNTHETIC ") || $0.contains("saved") }
+            .map { $0.replacingOccurrences(of: "•", with: "·") }
+    }
+    func testDetailContainsOnlySelectedPaperAcrossRepeatedReturns() throws {
+        for mode in ["elastic", "many"] {
+            let app = launch(mode)
+            XCTAssertTrue(app.staticTexts[mode == "elastic" ? "13 saved" : "30 saved"].waitForExistence(timeout: 40))
+            let indices = mode == "elastic" ? [1, 4, 6, 4, 1] : [1, 4, 6]
+            for (cycle, index) in indices.enumerated() {
+                let paper = app.buttons["receipt-\(index)"]
+                XCTAssertTrue(paper.exists)
+                let origin = paper.frame
+                let merchant = String(paper.label.split(separator: ",")[0])
+                paper.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.07)).tap()
+                XCTAssertTrue(app.buttons["edit"].waitForExistence(timeout: 15))
+                XCTAssertTrue(app.staticTexts[merchant].exists, "The tapped paper must be selected")
+                XCTAssertEqual(try visibleReceiptHeadings(app), [merchant],
+                               "Rendered pixels must contain only the selected merchant; hidden AX alone is insufficient")
+                if cycle < 3 { capture(app, "Transition-\(mode)-detail-\(index)") }
+                if cycle == 1 {
+                    app.swipeUp()
+                    XCTAssertTrue(try visibleReceiptHeadings(app).allSatisfy { $0 == merchant },
+                                  "Detail scrolling must not reveal any wallet previews")
+                    capture(app, "Transition-\(mode)-scrolled")
+                }
+                let start = Date()
+                app.buttons["back"].tap()
+                XCTAssertTrue(paper.waitForExistence(timeout: 5))
+                XCTAssertTrue(paper.isHittable)
+                let elapsed = Date().timeIntervalSince(start)
+                print("WALLET_TRANSITION_TIMING \(mode) cycle=\(cycle) returnAutomationSeconds=\(elapsed)")
+                XCTAssertEqual(paper.frame.minY, origin.minY, accuracy: 2)
+                XCTAssertEqual(paper.frame.minX, origin.minX, accuracy: 2)
+                if cycle == 1 { capture(app, "Transition-\(mode)-returned") }
+            }
+            if mode == "many" {
+                app.buttons["latestReceipt"].tap()
+                let newest = app.buttons["receipt-29"]
+                XCTAssertTrue(newest.waitForExistence(timeout: 10))
+                let originY = newest.frame.minY
+                let merchant = String(newest.label.split(separator: ",")[0])
+                newest.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.07)).tap()
+                XCTAssertTrue(app.buttons["edit"].waitForExistence(timeout: 15))
+                XCTAssertEqual(try visibleReceiptHeadings(app), [merchant])
+                capture(app, "Transition-many-newest-detail")
+                app.buttons["back"].tap()
+                XCTAssertTrue(newest.waitForExistence(timeout: 5))
+                XCTAssertEqual(newest.frame.minY, originY, accuracy: 2)
+            }
+            app.terminate()
+        }
     }
     private func paperBrightness(_ app: XCUIApplication, at point: CGPoint) throws -> Double {
         let image = try XCTUnwrap(app.screenshot().image.cgImage)

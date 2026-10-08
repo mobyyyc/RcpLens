@@ -1,6 +1,6 @@
 # T05 follow-up: receipt wallet
 
-The user's 2026-10-08 direction supersedes the earlier compact recent-three-card layout. This remains T05 work; T06/T07 are awaiting approval.
+The user's 2026-10-08 direction supersedes the earlier compact recent-three-card layout. The sections below preserve the T05 design history. T06 is implemented and pushed; T07 awaits separate approval.
 
 ## Interaction and appearance
 
@@ -49,3 +49,11 @@ Review the [final stretch/reverse/detail-return animation](evidence/t05-elastic-
 The opaque backing beneath the pocket previously cut receipt shadows at a horizontal plane, visible beside the leather front. Its upper edge now fades from transparent to opaque across 32 points behind the front panel. This lets the paper and its shadows disappear into the pocket together; the lower backing remains solid. The rear panel, receipt and leather front retain their depth order, and the same feathered backing moves with the wallet during expansion, return and the joint end spring. The backing remains non-interactive.
 
 The earlier elastic-stack verification above is historical. The combined T06 update records the affected short-stack layering, open/return and elastic-scroll reruns and final source fingerprints in [current verification](evidence/t06-splitting/validation-summary.json).
+
+## Receipt transition simplification · 2026-10-08
+
+The detail transition now uses a single frozen set of visible papers. The live scroll stack stays mounted to retain its position, but is hidden while its transition siblings render. The tap action captures the current projected rectangles before navigation can change layout; Reduced Motion and accessibility text use their measured regular-layout rectangles. Papers whose screen positions are above the selection leave upward; papers below it and both wallet panels leave downward. Every surrounding surface fades to zero. The selected paper keeps its original depth, straightens and expands its torn-bottom silhouette in place. Return reverses all offsets and opacities in one animation transaction, then restores the live stack without an extra animation.
+
+The motion has a bounded 0.38-second ease in/out; Reduced Motion uses a 0.12-second fade. Offscreen destinations include the system insets and a shadow margin. Only visible neighbours are cloned, the receipt ordering is frozen during detail, and reading-scroll updates stay inside the selected-paper subtree. Wallet height/scroll/frame observations remain frozen until return completes. A canceled original-image load does not display a loading indicator during return. Native rubber-banding and the elastic scrolling curve are unchanged.
+
+Current verification and fictional motion captures are recorded in [the transition evidence](evidence/t06-wallet-transition/README.md). Earlier captures remain historical. Simulator automation timings include event synthesis and quiescence and are not application frame times; physical iPhone profiling remains a later check.

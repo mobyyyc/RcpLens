@@ -80,7 +80,7 @@ The main chat coordinates these task chats. The user approves one task at a time
 
 ## T06 — 06 · Exact item-level bill splitting
 
-- Status: implemented and verified; main-chat signed commit/push and user acceptance pending (2026-10-08)
+- Status: implemented, verified, signed and pushed; user acceptance pending (2026-10-08)
 - Goal: Assign purchases to local people and share cent-exact results.
 - Why: Splitting provides immediate value for scanning a receipt.
 - Dependencies: T05
@@ -90,6 +90,8 @@ The main chat coordinates these task chats. The user approves one task at a time
 - Risk/notes: No model-generated arithmetic, settlement/payment integration or collaborative accounts. Clipboard/share is explicit user action; no participant data in telemetry.
 - Verification evidence: 73 unit passes and one hardware-only skip; 40/40 independent allocator oracle; 19 unique native cases across explicitly scoped runs, including all six split cases and three final wallet-shadow cases. Final strict structural checks pass with zero waivers; six precise contrast findings are individually classified. Release signature/Debug exclusion and unchanged twelve normal encrypted receipts verified. [Split contract](docs/SPLITTING.md), [actual evidence](docs/evidence/t06-splitting/validation-summary.json). Planned commit: `feat: add exact receipt splits and soften wallet shadows`.
 - Chat: 01a117d0-d507-7bf0-a9cc-c6f6724d16a0 (local; implementation and verification complete, handoff ready)
+
+- Wallet-transition follow-up (2026-10-08): tap-time projected positions and one visible sibling set replace mixed live/overlay departures. Papers above exit upward; lower papers and wallet exit downward; all fade and reverse together. Bounded completion and isolated detail scrolling reduce return work. Seven affected native cases, two geometry unit cases and a recorded repeat passed with final sources; 13/30-paper OCR/return checks and 50-millisecond motion review verify the result. Signed Release installed; all twelve encrypted normal receipts/originals/preferences unchanged. [Evidence](docs/evidence/t06-wallet-transition/README.md). T07 remains unapproved.
 
 ## T07 — 07 · Purchase history and local search
 

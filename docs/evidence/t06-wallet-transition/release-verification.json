@@ -1,0 +1,19 @@
+{
+  "build": "Succeeded",
+  "adHocSignatureVerified": true,
+  "debugMarkersChecked": [
+    "--add-demo-receipts",
+    "--t05-synthetic-preview",
+    "--t05-white-paper",
+    "--t05-local-test",
+    "--t05-slot",
+    "--synthetic-diagnostics",
+    "Synthetic diagnostics",
+    "Test reference",
+    "Test verify",
+    "Local test image"
+  ],
+  "debugMarkersPresent": [],
+  "installedExecutableMatchesBuild": true,
+  "executableSHA256": "a44e1282995168a761362602162be27f2907254c4a88d7f890816bf473c3f8ad"
+}
