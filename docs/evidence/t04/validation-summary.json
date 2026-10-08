@@ -37,7 +37,7 @@
     "RcpLens/Persistence/StoreCipher.swift": "59261a591ec5c488aaa89d32333927f2f3e683d69d8f40b8073a4feb384d1c9a",
     "RcpLens/Persistence/StoreKey.swift": "5fd815e7bb0d48470fd08ebfd7c8fbec4b502e27e52329541eda43f485b476fc",
     "RcpLensTests/PersistenceTests.swift": "ec47a1395eed3b6760ab42539821d3cd9df8f0a3bc6845434bf30e42e984e89e",
-    "docs/STORAGE.md": "c27ddf6dcad0f9d42d342ab5710bac76bf99073430ef8c9ca68dc0fc1971e252",
+    "docs/STORAGE.md": "ac4e3bcff862a10573b1be677328f7455bf331c6547f668b7a822f740ee5a1b6",
     "docs/adr/003-local-receipt-storage.md": "42ec127df555e779279bb8787abb1dc73d23f9cfa5fba0d79519dc1288f82862"
   },
   "storage": "system SQLite; AES-256-GCM receipt/image BLOBs; Keychain WhenUnlockedThisDeviceOnly",

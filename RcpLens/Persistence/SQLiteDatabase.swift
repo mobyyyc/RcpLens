@@ -81,11 +81,12 @@ final class ReceiptSQLiteDatabase: @unchecked Sendable {
         return result
     }
 
-    func transaction<T>(_ body: () throws -> T) throws -> T {
+    func transaction<T>(permit: ReceiptOperationPermit? = nil, _ body: () throws -> T) throws -> T {
         try run("BEGIN IMMEDIATE")
         do {
             let result = try body()
-            try run("COMMIT")
+            if let permit { _ = try permit.committing { try run("COMMIT") } }
+            else { try run("COMMIT") }
             return result
         } catch {
             // If rollback itself fails, the connection must not be reused.

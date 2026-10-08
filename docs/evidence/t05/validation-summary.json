@@ -1,0 +1,123 @@
+{
+  "task": "T05",
+  "status": "Accepted by coordinator",
+  "unit": {
+    "result": "Passed",
+    "totalTestCount": 44,
+    "passedTests": 43,
+    "failedTests": 0,
+    "skippedTests": 1,
+    "xcresult": "/tmp/RcpLens-T05-unit-reviewed.xcresult",
+    "scope": "Final functional unit suite including committed-save cache regression, before final cosmetic heading/button foreground changes. Physical-device protection intentionally skipped."
+  },
+  "nativeSyntheticUI": {
+    "aggregate": {
+      "result": "Passed",
+      "totalTestCount": 2,
+      "passedTests": 2,
+      "failedTests": 0,
+      "skippedTests": 0,
+      "kind": "synthetic"
+    },
+    "run": "private-receipts/evaluation/t05/20261007-201826",
+    "xcresult": "private-receipts/evaluation/t05/20261007-201826/tests.xcresult",
+    "sourceHashManifest": "private-receipts/evaluation/t05/20261007-201826/source-hashes.json",
+    "applicationSourceMatchesCurrent": false,
+    "uiTestSourceMatchesCurrent": false,
+    "changesAfterRun": [
+      "RcpLens/Diagnostics/SyntheticNativePreview.swift",
+      "RcpLens/UI/ReceiptAccessibility.swift",
+      "RcpLensUITests/ReceiptUIWorkflowTests.swift"
+    ],
+    "versionScope": "This passing run precedes the prominent-button foreground fix, empty preview, and focused regression fixture. Functional receipt flow is unchanged; final focused contrast verification and Release build are recorded separately."
+  },
+  "nativeAccessibility": {
+    "aggregate": {
+      "result": "Passed",
+      "totalTestCount": 3,
+      "passedTests": 3,
+      "failedTests": 0,
+      "skippedTests": 0,
+      "kind": "accessibility",
+      "structureAuditTypes": [
+        "elementDetection",
+        "hitRegion",
+        "sufficientElementDescription"
+      ],
+      "contrastFindingsBySyntheticScenario": {
+        "wallet": 7,
+        "detail": 3,
+        "review": 2,
+        "source": 1,
+        "library": 1
+      },
+      "contrastAuditStatus": "FindingsWithNarrowDocumentedExceptions",
+      "contrastScope": "Diagnostics only, never certified by the green structural/interaction test result.",
+      "acceptedContrastExceptions": 14,
+      "unresolvedContrastFindings": 0
+    },
+    "run": "private-receipts/evaluation/t05/20261007-235940",
+    "xcresult": "private-receipts/evaluation/t05/20261007-235940/tests.xcresult",
+    "sourceHashManifest": "private-receipts/evaluation/t05/20261007-235940/source-hashes.json",
+    "applicationSourceMatchesCurrent": true,
+    "uiTestSourceMatchesCurrent": true
+  },
+  "privateReferenceAssistedRoundTrip": {
+    "aggregate": {
+      "result": "Passed",
+      "totalTestCount": 1,
+      "passedTests": 1,
+      "failedTests": 0,
+      "skippedTests": 0,
+      "kind": "private",
+      "reports": 5,
+      "originalBytesEqual": 5,
+      "originalParserUnchanged": 5,
+      "correctionMatchesReference": 5,
+      "complete": 2,
+      "hasGeometry": 5
+    },
+    "run": "private-receipts/evaluation/t05/20261007-193228",
+    "xcresult": "private-receipts/evaluation/t05/20261007-193228/tests.xcresult",
+    "sourceHashManifestCaptured": false
+  },
+  "privateVersionScope": "Passing private run predates final focus/picker/presentation/cache refinements; no source-hash manifest was captured. Final cache upsert has a unit regression. No new raw extraction accuracy or timed human-correction claim.",
+  "release": {
+    "evidence": "root-release.json",
+    "build": "Passed",
+    "signatureVerified": true,
+    "currentSourceMatches": true,
+    "debugMarkerCount": 0,
+    "coordinatorVerified": true
+  },
+  "currentCodeHashManifest": "source-hashes.json",
+  "contrast": "14 individually documented exceptions; 0 unclassified; reading/action screenshot samples >=20.47:1. Not complete device/material accessibility certification.",
+  "remainingLimits": [
+    "Physical-device file/Keychain lock enforcement",
+    "Device VoiceOver",
+    "Direct UIKit app-switcher snapshot-pixel inspection",
+    "All native material/accessibility states",
+    "Fresh iOS raw extraction benchmark",
+    "Timed human correction burden"
+  ],
+  "ordinaryLaunchSeededReceipts": false,
+  "temporarySimulatorCleanup": "Removed only owned RcpLens-T05-Synthetic simulator",
+  "ordinaryReleaseLaunchRestored": true,
+  "privateCorrectionVerificationScope": [
+    "merchant",
+    "civil date",
+    "line kind/description/amount multiset",
+    "subtotal",
+    "total"
+  ],
+  "privateCorrectionNotSeparatelyScored": [
+    "quantity",
+    "currency"
+  ],
+  "acceptedDate": "2026-10-08",
+  "prominentButtonContrast": {
+    "evidence": "prominent-button.json",
+    "darkAndLightPassed": true,
+    "currentSourceMatches": true
+  }
+}

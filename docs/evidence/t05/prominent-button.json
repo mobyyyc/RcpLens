@@ -1,0 +1,22 @@
+{
+  "syntheticOnly": true,
+  "result": "Passed",
+  "measurements": [
+    {
+      "background": "#F9F9F9",
+      "foreground": "#000000",
+      "mode": "dark",
+      "ratio": 19.946130734663996
+    },
+    {
+      "background": "#0D0D0F",
+      "foreground": "#FFFFFF",
+      "mode": "light",
+      "ratio": 19.416029268599825
+    }
+  ],
+  "run": "private-receipts/evaluation/t05/20261007-235940",
+  "xcresult": "private-receipts/evaluation/t05/20261007-235940/tests.xcresult",
+  "currentSourceMatches": true,
+  "scope": "Dominant opaque background and glyph-interior sRGB samples; not all Glass interaction/material states."
+}

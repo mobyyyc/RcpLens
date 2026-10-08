@@ -4,7 +4,7 @@ The main chat coordinates these task chats. The user approves one task at a time
 
 ## T01 — 01 · Xcode and SwiftUI foundation
 
-- Status: complete and accepted after main-chat review (2026-10-07)
+- Status: complete and accepted after main-chat review (2026-10-08)
 - Goal: Verify the Mac development environment and build the smallest native app foundation.
 - Why: Simulator AI availability and the toolchain must be demonstrated before relying on them.
 - Dependencies: none
@@ -30,7 +30,7 @@ The main chat coordinates these task chats. The user approves one task at a time
 
 ## T03 — 03 · Apple receipt extraction evaluation
 
-- Status: complete and accepted after main-chat review (2026-10-07)
+- Status: complete and accepted after main-chat review (2026-10-08)
 - Goal: Choose a receipt recognition approach using measured evidence.
 - Why: API availability does not demonstrate receipt accuracy; the cost of corrections determines usability.
 - Dependencies: T01
@@ -43,7 +43,7 @@ The main chat coordinates these task chats. The user approves one task at a time
 
 ## T04 — 04 · Receipt schema and local storage
 
-- Status: complete and accepted after main-chat review (2026-10-07)
+- Status: complete and accepted after main-chat review (2026-10-08)
 - Goal: Persist receipt records and original evidence safely across app restarts.
 - Why: The demo must retain purchases, preserve evidence and avoid data loss during edits/deletion.
 - Dependencies: T01
@@ -56,15 +56,16 @@ The main chat coordinates these task chats. The user approves one task at a time
 
 ## T05 — 05 · Import, review and save receipts
 
-- Status: next task; awaiting user approval
+- Status: complete and accepted after main-chat review (2026-10-08)
 - Goal: Deliver the first usable receipt workflow in the iPhone simulator.
 - Why: Importing, correcting and saving real receipts is the core product loop before adding camera capture.
 - Dependencies: T01, T02, T03, T04
 - Implementation scope: Integrate photo import, the selected local recognition/parser pipeline, truthful processing states, fast merchant/date/item/amount edits, add/remove lines, reconciliation feedback and saved receipt detail. Preserve the original image and offer side-by-side or quick source access. Display uncertainty without treating LLM-generated confidence as calibrated confidence. Handle cancellation, permission denial, failed OCR, unavailable AI and interrupted work. Import real receipt images from a private Mac folder via simulator Photos/photo picker. Build the chosen wallet design after user selection. Do not add physical camera capture yet. Keep capture as an input boundary for the later phone phase.
 - Acceptance criteria: A real supported-store image can be imported, reviewed/corrected, saved, reopened after restart and deleted; mismatches and missing fields remain explicit; manual correction is available if AI/OCR fails; interaction remains usable with many receipts.
 - Tests: Simulator end-to-end import/edit/save/restart/delete; cancellation and failure cases; correction usability with private No Frills/Costco/T&T images; accessibility and reduced-motion checks.
-- Risk/notes: T01–T04 dependencies accepted. Paper lift selected: retain layer shadows and use native Liquid Glass navigation/buttons with accessible alternatives; browser previews approximate the design only. T03 selected Vision plus deterministic parsing with mandatory correction and reconciliation; model paths remain evaluation-only. Follow T04's storage lifecycle, provenance, key-failure and backup handoff in docs/STORAGE.md. Do not claim a finalized test version from synthetic examples alone.
-- Chat: 01a117d0-be03-7d12-8ea8-55d5349c89b7 (local; awaiting approval)
+- Risk/notes: T01–T04 dependencies accepted. User approved Save draft for incomplete/unreconciled receipts; drafts remain Needs review, and finishing requires explicit source review and exact reconciliation. Field edits invalidate prior confirmation. Paper lift selected: retain layer shadows and use native Liquid Glass navigation/buttons with accessible alternatives; browser previews approximate the design only. T03 selected Vision plus deterministic parsing with mandatory correction and reconciliation; model paths remain evaluation-only. Follow T04's storage lifecycle, provenance, key-failure and backup handoff in docs/STORAGE.md. Do not claim a finalized test version from synthetic examples alone.
+- Acceptance evidence: Native system photo selection and keyboard editing; Paper lift/shadows/native Glass; source zoom/linked geometry; exact reconciliation and draft/finish gates; encrypted save/restart/revision/delete and lifecycle revocation. Main chat independently checked actual xcresults (43 unit passes, 1 hardware skip; 2 synthetic workflow passes before the final cosmetic button fix; 3 final accessibility/interaction passes), matching final accessibility source hashes, Release build/signature/Debug-control exclusion, and five private reference-assisted round-trip reports (2 finished, 3 drafts; original bytes/parser preserved). Reviewed synthetic native screens and 14 individually measured/classified simulator contrast exceptions; no full-device accessibility certification. [Demo report and limits](docs/IMPORT_DEMO.md).
+- Chat: 01a117d0-be03-7d12-8ea8-55d5349c89b7 (local; implementation complete)
 
 ## T06 — 06 · Exact item-level bill splitting
 

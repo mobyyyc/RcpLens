@@ -1,0 +1,11 @@
+{
+  "backgroundPixels" : 9411,
+  "backgroundRGB" : "#FEFEFE",
+  "contrastRatio" : 20.822041942276595,
+  "fixture" : "contrast-diagnostic-example.png",
+  "foregroundPixels" : 1731,
+  "foregroundRGB" : "#000000",
+  "height" : 54,
+  "scope" : "Measured dominant dark glyph and background colors in one fictional audit crop; does not adjudicate all remaining findings or certify device accessibility.",
+  "width" : 378
+}

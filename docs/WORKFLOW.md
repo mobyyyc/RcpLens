@@ -4,7 +4,7 @@ Use the original planning chat as the main point of contact. The seven task chat
 
 ## Starting
 
-The user approves one task at a time in this main chat. Saying "approved" in response to the proposed next task authorizes the main chat to start that task in its existing task chat and send the follow-ups necessary to complete it. The user approved T01, then T02, then T03, then T04 on 2026-10-07.
+The user approves one task at a time in this main chat. Saying "approved" in response to the proposed next task authorizes the main chat to start that task in its existing task chat and send the follow-ups necessary to complete it. The user approved T01, then T02, then T03, then T04, then T05 on 2026-10-07.
 
 Approval applies to the named next task, including its implementation, verification and relevant corrections. It does not authorize starting the following task. Do not create additional chats or background schedules without a user request.
 

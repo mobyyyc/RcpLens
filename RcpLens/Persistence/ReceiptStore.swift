@@ -248,7 +248,9 @@ actor ReceiptStore {
 
     @discardableResult
     func create(extraction: ReceiptExtraction, originalImage: Data, mediaType: String,
-                now: Date = Date()) throws -> ReceiptRecord {
+                now: Date = Date(), correction: ReceiptFields? = nil,
+                review: ReceiptRevision.Review = .draft, reviewInput: Data? = nil, permit: ReceiptOperationPermit? = nil) throws -> ReceiptRecord {
+        try permit?.check()
         guard !originalImage.isEmpty, ["image/png", "image/jpeg", "image/heic", "image/heif"].contains(mediaType) else {
             throw ReceiptStoreError.invalidAsset
         }
@@ -258,10 +260,12 @@ actor ReceiptStore {
         let record = ReceiptRecord(id: id, createdAt: now, updatedAt: now, original: extraction,
             asset: ReceiptAsset(id: assetID, mediaType: mediaType, byteCount: originalImage.count,
                                 sha256: Data(SHA256.hash(data: originalImage))),
-            revisions: [ReceiptRevision(id: UUID(), createdAt: now, fields: extraction.fields, review: .draft)])
+            revisions: [ReceiptRevision(id: UUID(), createdAt: now, fields: extraction.fields, review: .draft)]
+                + (correction.map { [ReceiptRevision(id: UUID(), createdAt: now, fields: $0, review: review, reviewInput: reviewInput)] } ?? []))
         let payload = try encode(record)
         let image = try cipher.seal(originalImage, context: ReceiptStoreCipher.assetContext(assetID, owner: id))
-        try database.transaction {
+        try database.transaction(permit: permit) {
+            try permit?.check()
             try database.run("INSERT INTO receipts (id, payload, updated_at) VALUES (?, ?, ?)",
                              [.text(id.uuidString), .blob(payload), .integer(try Self.milliseconds(now))])
             #if DEBUG
@@ -272,6 +276,7 @@ actor ReceiptStore {
             #if DEBUG
             try fault?(.beforeCommit)
             #endif
+            try permit?.check()
         }
         return record
     }
@@ -279,32 +284,39 @@ actor ReceiptStore {
     /// Append-only corrections. expectedRevision rejects stale editors instead of overwriting work.
     @discardableResult
     func revise(id: UUID, expectedRevision: UUID, fields: ReceiptFields,
-                review: ReceiptRevision.Review = .draft, now: Date = Date()) throws -> ReceiptRecord {
-        try database.transaction {
+                review: ReceiptRevision.Review = .draft, now: Date = Date(), reviewInput: Data? = nil,
+                permit: ReceiptOperationPermit? = nil) throws -> ReceiptRecord {
+        try permit?.check()
+        return try database.transaction(permit: permit) {
+            try permit?.check()
             guard let old = try load(id) else { throw ReceiptStoreError.notFound }
             guard old.current.id == expectedRevision else { throw ReceiptStoreError.editConflict }
             try Self.verifyAsset(old, db: database, cipher: cipher)
             let next = ReceiptRecord(id: old.id, createdAt: old.createdAt, updatedAt: now,
                 original: old.original, asset: old.asset,
-                revisions: old.revisions + [ReceiptRevision(id: UUID(), createdAt: now, fields: fields, review: review)])
+                revisions: old.revisions + [ReceiptRevision(id: UUID(), createdAt: now, fields: fields, review: review, reviewInput: reviewInput)])
             try database.run("UPDATE receipts SET payload = ?, updated_at = ? WHERE id = ?",
                              [.blob(try encode(next)), .integer(try Self.milliseconds(now)), .text(id.uuidString)])
             #if DEBUG
             try fault?(.beforeCommit)
             #endif
+            try permit?.check()
             return next
         }
     }
 
     /// Hard local user deletion, never a sync tombstone. Cascade removes the owned original asset.
     /// Idempotent so retrying after interrupted UI feedback is safe.
-    func delete(id: UUID) throws {
-        try database.transaction {
+    func delete(id: UUID, permit: ReceiptOperationPermit? = nil) throws {
+        try permit?.check()
+        try database.transaction(permit: permit) {
+            try permit?.check()
             _ = try database.run("DELETE FROM receipts WHERE id = ?", [.text(id.uuidString)])
             #if DEBUG
             try fault?(.afterDelete)
             try fault?(.beforeCommit)
             #endif
+            try permit?.check()
         }
     }
 

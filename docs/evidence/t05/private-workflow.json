@@ -1,0 +1,14 @@
+{
+  "result": "Passed",
+  "totalTestCount": 1,
+  "passedTests": 1,
+  "failedTests": 0,
+  "skippedTests": 0,
+  "kind": "private",
+  "reports": 5,
+  "originalBytesEqual": 5,
+  "originalParserUnchanged": 5,
+  "correctionMatchesReference": 5,
+  "complete": 2,
+  "hasGeometry": 5
+}

@@ -1,0 +1,302 @@
+{
+  "syntheticOnly": true,
+  "certified": false,
+  "measurementMethod": "sRGB opaque dominant background and glyph-interior pair; antialias edges excluded. Not a complete native material-state certification.",
+  "findings": [
+    {
+      "acceptedException": true,
+      "background": "#FEFEFE",
+      "classification": "measured-black-reading-text-sdk-finding",
+      "details": "Contrast failed for SwiftUI.AccessibilityNode",
+      "enabled": true,
+      "foreground": "#000000",
+      "frame": [
+        58.41879653930664,
+        516.873779296875,
+        117.27452087402344,
+        16.78045654296875
+      ],
+      "identifier": "",
+      "index": 1,
+      "label": "1 items \u00b7 Tap to open",
+      "measuredRatio": 20.822041942276595,
+      "reason": "Contrast failed",
+      "role": "staticText",
+      "scenario": "wallet"
+    },
+    {
+      "acceptedException": true,
+      "background": "#FDFDFD",
+      "classification": "measured-black-reading-text-sdk-finding",
+      "details": "Contrast failed for SwiftUI.AccessibilityNode",
+      "enabled": true,
+      "foreground": "#000000",
+      "frame": [
+        58.108150482177734,
+        344.9154357910156,
+        83.6920166015625,
+        19.741241455078125
+      ],
+      "identifier": "",
+      "index": 2,
+      "label": "2026-10-07",
+      "measuredRatio": 20.645011006662344,
+      "reason": "Contrast failed",
+      "role": "staticText",
+      "scenario": "wallet"
+    },
+    {
+      "acceptedException": true,
+      "background": "#FDFDFD",
+      "classification": "measured-black-reading-text-sdk-finding",
+      "details": "Contrast failed for SwiftUI.AccessibilityNode",
+      "enabled": true,
+      "foreground": "#000000",
+      "frame": [
+        268.0621032714844,
+        340.67108154296875,
+        76.36029052734375,
+        19.587677001953125
+      ],
+      "identifier": "",
+      "index": 3,
+      "label": "CAD 12.34",
+      "measuredRatio": 20.645011006662344,
+      "reason": "Contrast failed",
+      "role": "staticText",
+      "scenario": "wallet"
+    },
+    {
+      "acceptedException": true,
+      "background": "#FCFCFC",
+      "classification": "measured-black-reading-text-sdk-finding",
+      "details": "Contrast failed for SwiftUI.AccessibilityNode",
+      "enabled": true,
+      "foreground": "#000000",
+      "frame": [
+        57.610408782958984,
+        414.25408935546875,
+        84.66334533691406,
+        19.61566162109375
+      ],
+      "identifier": "",
+      "index": 4,
+      "label": "2026-10-06",
+      "measuredRatio": 20.46890580796825,
+      "reason": "Contrast failed",
+      "role": "staticText",
+      "scenario": "wallet"
+    },
+    {
+      "acceptedException": true,
+      "background": "#FCFCFC",
+      "classification": "measured-black-reading-text-sdk-finding",
+      "details": "Contrast failed for SwiftUI.AccessibilityNode",
+      "enabled": true,
+      "foreground": "#000000",
+      "frame": [
+        267.57171630859375,
+        418.2855529785156,
+        76.33154296875,
+        19.4556884765625
+      ],
+      "identifier": "",
+      "index": 5,
+      "label": "CAD 12.34",
+      "measuredRatio": 20.46890580796825,
+      "reason": "Contrast failed",
+      "role": "staticText",
+      "scenario": "wallet"
+    },
+    {
+      "acceptedException": true,
+      "background": "#FDFDFD",
+      "classification": "measured-black-reading-text-sdk-finding",
+      "details": "Contrast failed for SwiftUI.AccessibilityNode",
+      "enabled": true,
+      "foreground": "#000000",
+      "frame": [
+        57.87429428100586,
+        491.5635986328125,
+        84.69180297851562,
+        19.76220703125
+      ],
+      "identifier": "",
+      "index": 6,
+      "label": "2026-10-05",
+      "measuredRatio": 20.645011006662344,
+      "reason": "Contrast failed",
+      "role": "staticText",
+      "scenario": "wallet"
+    },
+    {
+      "acceptedException": true,
+      "background": "#FDFDFD",
+      "classification": "measured-black-reading-text-sdk-finding",
+      "details": "Contrast failed for SwiftUI.AccessibilityNode",
+      "enabled": true,
+      "foreground": "#000000",
+      "frame": [
+        267.8282470703125,
+        487.3402099609375,
+        76.36029052734375,
+        19.587677001953125
+      ],
+      "identifier": "",
+      "index": 7,
+      "label": "CAD 12.34",
+      "measuredRatio": 20.645011006662344,
+      "reason": "Contrast failed",
+      "role": "staticText",
+      "scenario": "wallet"
+    },
+    {
+      "acceptedException": true,
+      "background": "#FEFEFE",
+      "classification": "measured-black-reading-text-sdk-finding",
+      "details": "Contrast failed for SwiftUI.AccessibilityNode",
+      "enabled": true,
+      "foreground": "#000000",
+      "frame": [
+        48,
+        267.71557617187494,
+        126,
+        18
+      ],
+      "identifier": "",
+      "index": 1,
+      "label": "2026-10-07 \u00b7 CAD",
+      "measuredRatio": 20.822041942276595,
+      "reason": "Contrast failed",
+      "role": "staticText",
+      "scenario": "detail"
+    },
+    {
+      "acceptedException": true,
+      "background": "#FEFEFE",
+      "classification": "measured-black-reading-text-sdk-finding",
+      "details": "Contrast failed for SwiftUI.AccessibilityNode",
+      "enabled": true,
+      "foreground": "#000000",
+      "frame": [
+        308,
+        360.3822428385417,
+        46,
+        20.333333333333314
+      ],
+      "identifier": "",
+      "index": 2,
+      "label": "12.34",
+      "measuredRatio": 20.822041942276595,
+      "reason": "Contrast failed",
+      "role": "staticText",
+      "scenario": "detail"
+    },
+    {
+      "acceptedException": true,
+      "background": "#FDFDFD",
+      "classification": "measured-black-reading-text-sdk-finding",
+      "details": "Contrast failed for SwiftUI.AccessibilityNode",
+      "enabled": true,
+      "foreground": "#000000",
+      "frame": [
+        48,
+        385.715576171875,
+        124.33333333333334,
+        14.333333333333314
+      ],
+      "identifier": "",
+      "index": 3,
+      "label": "Quantity not recorded",
+      "measuredRatio": 20.645011006662344,
+      "reason": "Contrast failed",
+      "role": "staticText",
+      "scenario": "detail"
+    },
+    {
+      "acceptedException": true,
+      "background": "#FDFDFD",
+      "classification": "measured-native-glass-label-sdk-finding",
+      "details": "Contrast failed for SwiftUI.AccessibilityNode",
+      "enabled": true,
+      "foreground": "#000000",
+      "frame": [
+        107,
+        804,
+        99.66666666666666,
+        36
+      ],
+      "identifier": "saveDraft",
+      "index": 1,
+      "label": "Save draft",
+      "measuredRatio": 20.645011006662344,
+      "reason": "Contrast failed",
+      "role": "button",
+      "scenario": "review"
+    },
+    {
+      "acceptedException": true,
+      "background": "#8F8F8F",
+      "classification": "intentionally-disabled-native-finish",
+      "details": "Contrast failed for SwiftUI.AccessibilityNode",
+      "enabled": false,
+      "foreground": "#FFFFFF",
+      "frame": [
+        228.66666666666666,
+        804,
+        66.66666666666666,
+        36
+      ],
+      "identifier": "finishSave",
+      "index": 2,
+      "label": "Finish",
+      "measuredRatio": 3.2339802043350576,
+      "reason": "Contrast failed",
+      "role": "button",
+      "scenario": "review"
+    },
+    {
+      "acceptedException": true,
+      "background": "#FDFDFD",
+      "classification": "measured-native-glass-label-sdk-finding",
+      "details": "Contrast failed for SwiftUI.AccessibilityNode",
+      "enabled": true,
+      "foreground": "#000000",
+      "frame": [
+        316.3333333333333,
+        82,
+        65.66666666666669,
+        36
+      ],
+      "identifier": "sourceDone",
+      "index": 1,
+      "label": "Done",
+      "measuredRatio": 20.645011006662344,
+      "reason": "Contrast failed",
+      "role": "button",
+      "scenario": "source"
+    },
+    {
+      "acceptedException": true,
+      "background": "#FFFFFF",
+      "classification": "native-list-row-partly-under-floating-toolbar",
+      "details": "Contrast failed for SwiftUI.AccessibilityNode",
+      "enabled": true,
+      "foreground": "#000000",
+      "frame": [
+        32,
+        821,
+        168.66666666666666,
+        20.33333333333337
+      ],
+      "identifier": "",
+      "index": 1,
+      "label": "SYNTHETIC CORNER",
+      "measuredRatio": 21,
+      "reason": "Contrast failed",
+      "role": "staticText",
+      "scenario": "library"
+    }
+  ],
+  "run": "private-receipts/evaluation/t05/20261007-235940"
+}

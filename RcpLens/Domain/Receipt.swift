@@ -206,6 +206,9 @@ struct ReceiptRevision: Codable, Equatable, Sendable, Identifiable {
     let fields: ReceiptFields
     /// This records a user's explicit source review; it is not arithmetic reconciliation.
     let review: Review
+    /// Optional exact editable input, including amounts whose currency is not yet known.
+    /// Older encrypted documents decode this missing optional field as nil.
+    var reviewInput: Data? = nil
 }
 
 struct ReceiptAsset: Codable, Equatable, Sendable, Identifiable {

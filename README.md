@@ -2,11 +2,26 @@
 
 An iOS-only personal purchase memory app. Import a receipt, correct it quickly, save it, split items with other people and find purchases later.
 
-Status: T01–T04 accepted: native foundation, Paper lift design, extraction evaluation and encrypted local storage. The visible app remains the foundation screen; T05 will integrate receipt import/review/save after user approval. See [MVP_PLAN.md](MVP_PLAN.md), [TASKS.md](TASKS.md), [PROGRESS.md](PROGRESS.md), and [docs/PRODUCT.md](docs/PRODUCT.md).
+Status: T01–T05 accepted. The native imported-image demo supports review, drafts, exact reconciliation, local saving, reopening and deletion. Item splitting and purchase search follow in T06/T07, each awaiting approval. See [demo verification](docs/IMPORT_DEMO.md), [MVP_PLAN.md](MVP_PLAN.md), [TASKS.md](TASKS.md), [PROGRESS.md](PROGRESS.md), and [docs/PRODUCT.md](docs/PRODUCT.md).
 
-## Run the foundation
+## Try the receipt demo on your Mac
 
-Open `RcpLens.xcodeproj` in Xcode 27, select the shared **RcpLens** scheme and an iPhone running iOS 27, then Run. In Debug, open **Synthetic diagnostics** and tap **Run synthetic checks**. It tests a bundled fictional PNG through Vision and asks the local Foundation Models model for a harmless greeting. Release has no diagnostics screen.
+Open `RcpLens.xcodeproj` in Xcode 27, select the shared **RcpLens** scheme and an iPhone simulator running iOS 27, then Run. Xcode 27 displays simulated devices in **Device Hub**.
+
+Choose **Import → Photo library** to select a receipt image already added to Simulator Photos. With the simulator running, add a Finder image through Terminal (replace the example path):
+
+```sh
+DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer \
+  xcrun simctl addmedia booted "/absolute/path/to/receipt.heic"
+```
+
+You can drag the image from Finder into Terminal to insert its path. **Import → Files** also accepts images available inside the simulated device's Files browser.
+
+Review merchant, date, currency, purchases, adjustments and totals. Open **Original** to compare the source; fields can be edited and lines added or removed. **Save draft** keeps incomplete work as **Needs review**. **Finish** requires complete fields, exact reconciliation and your original-source confirmation. Both actions stay in the bottom bar. Saved receipts can be reopened, edited or deleted; **All receipts** provides month and store filters.
+
+Save before leaving the app: backgrounding discards unsaved work. Saved receipts remain on this device, excluded from ordinary backup, with no export/restore yet. Uninstalling the app or losing the device can lose them. Recognition uses local Vision and deterministic parsing; manual review is required. Apple Intelligence is not required for this workflow.
+
+Debug also offers **Synthetic diagnostics**, which tests a fictional PNG and a harmless local Foundation Models greeting. Release has no diagnostics or local test controls.
 
 For command-line builds, select Xcode for this shell without changing the system default:
 
@@ -15,11 +30,11 @@ export DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer
 xcrun simctl list devices available
 xcodebuild -project RcpLens.xcodeproj -scheme RcpLens -configuration Debug \
   -destination 'platform=iOS Simulator,id=50661E83-1F58-466B-99F0-9DC517D8EC82' \
-  -derivedDataPath /tmp/RcpLens-T04-DerivedData \
+  -derivedDataPath /tmp/RcpLens-T05-DerivedData \
   CODE_SIGNING_ALLOWED=YES CODE_SIGN_IDENTITY=- build
 xcodebuild -project RcpLens.xcodeproj -scheme RcpLens -configuration Debug \
   -destination 'platform=iOS Simulator,id=50661E83-1F58-466B-99F0-9DC517D8EC82' \
-  -derivedDataPath /tmp/RcpLens-T04-DerivedData -parallel-testing-enabled NO \
+  -derivedDataPath /tmp/RcpLens-T05-DerivedData -parallel-testing-enabled NO \
   CODE_SIGNING_ALLOWED=YES CODE_SIGN_IDENTITY=- test
 ```
 
@@ -29,8 +44,8 @@ Use local ad-hoc signing for Simulator Keychain access; no Apple account is requ
 
 ## Source boundaries
 
-One app target and one hosted XCTest target. `RcpLens/App` contains the entry point; `UI` contains SwiftUI screens; `Domain` holds exact-money and receipt/evidence models; `Recognition` accepts encoded image bytes and returns Vision text. `Persistence` implements transactional SQLite with encrypted receipt/image payloads and a Keychain key. `Parsing` remains reserved for T05's production pipeline; `evaluation/receipt-eval` is a separate Mac-only benchmark. `Diagnostics` is Debug-only, and `Resources` contains the public synthetic fixture. The production store is not opened by the foundation UI.
+One app target, one hosted XCTest target and a separately selected native UI-test target. `RcpLens/App` manages scene/protected-data lifecycle; `UI` contains the wallet, review, saved receipt and original-image screens; `Domain` holds exact-money, review and receipt/evidence models. `Recognition` accepts encoded image bytes and returns positioned Vision observations; `Parsing` produces a deterministic editable draft. `Persistence` implements transactional SQLite with encrypted receipt/image payloads and a Keychain key. `evaluation/receipt-eval` remains a separate Mac-only benchmark. `Diagnostics` is Debug-only, and `Resources` contains the public synthetic fixture.
 
-Private receipt images and extracted personal data must not enter Git. Use the ignored `private-receipts/` folder for future consented inputs. Diagnostics never accept private images or write OCR/model contents to logs or reports.
+Private receipt images and extracted personal data must not enter Git. Use the ignored `private-receipts/` folder for consented inputs and private verification logs/results. Synthetic diagnostics use fictional content. Explicit local Debug test launches can read consented private inputs from a separate simulator inbox; private workflow reports expose only aggregates. Release contains no test importer or checked-reference controls.
 
 GitHub repository: [mobyyyc/RcpLens](https://github.com/mobyyyc/RcpLens). Local `main` tracks `origin/main`.

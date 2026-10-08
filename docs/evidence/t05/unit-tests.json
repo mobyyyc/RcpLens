@@ -1,0 +1,9 @@
+{
+  "result": "Passed",
+  "totalTestCount": 44,
+  "passedTests": 43,
+  "failedTests": 0,
+  "skippedTests": 1,
+  "xcresult": "/tmp/RcpLens-T05-unit-reviewed.xcresult",
+  "scope": "Final functional unit suite including committed-save cache regression, before final cosmetic header foreground change. Physical-device protection intentionally skipped."
+}
