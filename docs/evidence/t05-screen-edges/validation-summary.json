@@ -1,0 +1,91 @@
+{
+  "date": "2026-10-08",
+  "milestone": "T05 screen-edge effects and tucked short stacks; T06 awaits approval",
+  "fictionalEvidenceOnly": true,
+  "nativeFullRun": {
+    "result": "Failed",
+    "totalTestCount": 11,
+    "passedTests": 10,
+    "failedTests": 1,
+    "skippedTests": 0
+  },
+  "finalAuditRerun": {
+    "result": "Passed",
+    "totalTestCount": 1,
+    "passedTests": 1,
+    "failedTests": 0,
+    "skippedTests": 0
+  },
+  "uniqueNativeCasesVerified": 11,
+  "unitBaseline": {
+    "result": "Passed",
+    "totalTestCount": 49,
+    "passedTests": 48,
+    "failedTests": 0,
+    "skippedTests": 1
+  },
+  "unitBaselineCommit": "c1f1c6d",
+  "unitTestsRerun": false,
+  "accessibility": {
+    "passedTests": 5,
+    "failedTests": 0,
+    "structureAuditTypes": [
+      "elementDetection",
+      "hitRegion",
+      "sufficientElementDescription"
+    ],
+    "contrastFindingsBySyntheticScenario": {
+      "wallet": 3,
+      "detail": 2,
+      "review": 3,
+      "source": 1,
+      "library": 3
+    },
+    "acceptedContrastExceptions": 12,
+    "unresolvedContrastFindings": 0,
+    "contrastAuditStatus": "FindingsWithNarrowDocumentedExceptions",
+    "certified": false
+  },
+  "testScope": "All six Wallet interaction cases and four native accessibility/navigation cases passed with final app sources. The remaining audit then passed after only three exact fictional row fragments within the native bottom blur/toolbar band were documented as expected occluded content. Pixel diagnostics are preserved; the low-contrast faded date is not claimed as readable until scrolled above the band. Short-stack geometry is checked for one, two and three receipts, including expansion/return. Import is actually tapped in empty and populated wallets. Prior unit checks cover the unchanged domain/date/storage code. Early diagnostic runs identified pocket hit interception and a Debug-only badge contrast finding; the backing is now a separate non-interactive layer, and the test-only safe-area badge is removed so test geometry matches normal launch. A hard clip and blank bottom spacer in the collection List also caused cropped-row findings; both are removed in favor of the native soft edge effect. Outside that precise occluded band, structural and reading/action checks remain strict.",
+  "referenceComparison": {
+    "app": "Settings",
+    "runtime": "iOS 27.0 Simulator",
+    "readOnly": true,
+    "settingsChanged": false,
+    "observed": "Content continues beneath fixed controls with progressively blurred screen-edge transitions; no custom center-frame mask."
+  },
+  "visualReview": [
+    "native top/bottom screen effects",
+    "one/two/three papers partly inside pocket",
+    "per-paper tilt and shadows",
+    "joint end-of-stack spring",
+    "retained layers and scroll position on return",
+    "light/dark/empty/long/large text states"
+  ],
+  "sourceManifest": "source-hashes.json",
+  "releaseVerification": "release-verification.json",
+  "releaseInstalledAndNormallyLaunched": true,
+  "simulator": {
+    "model": "iPhone 18 Pro",
+    "iOS": "27.0",
+    "id": "50661E83-1F58-466B-99F0-9DC517D8EC82"
+  },
+  "limits": [
+    "Hardware camera, device protection and VoiceOver remain for the iPhone phase",
+    "Narrow contrast exceptions do not certify native material/device contrast",
+    "No new OCR accuracy score",
+    "User design review and T06 approval remain pending"
+  ],
+  "fictionalCaptureScenarios": 13,
+  "motionEvidence": {
+    "paperTransition": "paper-motion.mp4",
+    "jointEndSpring": "pocket-scroll-motion.mp4",
+    "reviewedFrames": [
+      "bounce-rest.png",
+      "bounce-pull.png",
+      "bounce-settled.png",
+      "return-layers-moving.png",
+      "return-layers-near-home.png"
+    ]
+  }
+}

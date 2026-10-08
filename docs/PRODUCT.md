@@ -43,3 +43,8 @@ The user requested the wallet at the top, oldest-to-newest vertical paper order,
 ### Wallet pocket refinement · 2026-10-08
 
 The user superseded the top wallet crown: keep the pocket at the bottom while the chronological papers slide out on an upward swipe and slide back in on a downward swipe. Fade both viewport edges, add small paper tilts and preserve per-paper shadows. End-of-stack pulling rubber-bands the pocket and papers together. Return from detail retains the selected paper's original layer throughout. Purchase date review uses the native iOS calendar selector, with explicit confirmation and support for unknown dates.
+
+
+### Screen edges and small collections · 2026-10-08
+
+The user clarified that fading belongs at the top and bottom of the screen, following Settings, rather than around a center frame. Use native progressive scroll edge effects beneath the system controls; retain the separate fade within long preview papers. Position short stacks against the bottom pocket so a small portion of the newest paper always remains inside the wallet. Pocket backing must conceal inserted paper without blocking the Import control.

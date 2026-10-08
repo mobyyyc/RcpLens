@@ -32,11 +32,6 @@ struct ReceiptHome: View {
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .background(Color(uiColor: .systemGroupedBackground))
-            #if DEBUG
-            .safeAreaInset(edge: .bottom, spacing: 0) {
-                if SyntheticNativePreview.enabled { Text("Synthetic preview").font(.system(size: 11)).foregroundStyle(.primary).padding(.horizontal, 16).padding(.vertical, 4).frame(maxWidth: .infinity, alignment: .trailing) }
-            }
-            #endif
             .navigationTitle(title)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
@@ -317,7 +312,6 @@ struct ReceiptLibraryView: View {
         return String(format: "%04d-%02d", date.year, date.month)
     }
     var body: some View {
-        VStack(spacing: 0) {
         List {
             Section {
                 Picker("Collection", selection: $workspace.collection) {
@@ -341,8 +335,9 @@ struct ReceiptLibraryView: View {
                     }
                 } header: { Text(group).foregroundStyle(Color(uiColor: .label)) }
             }
-        }.clipped()
-        Color.clear.frame(height: 72).accessibilityHidden(true)
-        }.accessibilityIdentifier("receiptLibrary")
+        }
+        .scrollClipDisabled()
+        .scrollEdgeEffectStyle(.soft, for: .vertical)
+        .accessibilityIdentifier("receiptLibrary")
     }
 }

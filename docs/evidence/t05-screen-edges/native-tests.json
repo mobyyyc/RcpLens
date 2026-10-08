@@ -1,0 +1,18 @@
+{
+  "fullRun": {
+    "result": "Failed",
+    "totalTestCount": 11,
+    "passedTests": 10,
+    "failedTests": 1,
+    "skippedTests": 0
+  },
+  "finalAuditRerun": {
+    "result": "Passed",
+    "totalTestCount": 1,
+    "passedTests": 1,
+    "failedTests": 0,
+    "skippedTests": 0
+  },
+  "uniqueCasesVerified": 11,
+  "scope": "Ten cases passed in the final full run; the remaining audit passed after only its expectation for visually confirmed native edge-obscured row fragments was updated. App sources did not change between these runs."
+}

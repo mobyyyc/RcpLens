@@ -14,6 +14,9 @@ struct ReceiptWalletScene: View {
     @State private var walletHeight: CGFloat = 110
     @State private var endBounce: CGFloat = 0
     @State private var jumpToNewest = 0
+    @State private var stackHeight: CGFloat = 0
+    @State private var measuredCount = 0
+    private let tuckedDepth: CGFloat = 32
     @Environment(\.dynamicTypeSize) private var typeSize
     @Environment(\.accessibilityReduceMotion) private var systemMotion
     @State private var revealedID: UUID?
@@ -40,29 +43,38 @@ struct ReceiptWalletScene: View {
                                 .padding(.horizontal, 8).padding(.vertical, 32)
                                 .frame(maxWidth: .infinity, minHeight: max(0, geometry.size.height - 140))
                                 .opacity(selectedID == nil ? 1 : 0)
+                                if let notice = workspace.notice {
+                                    Text(notice).font(.footnote).padding(.top, 24).opacity(selectedID == nil ? 1 : 0)
+                                }
                             } else {
-                                LazyVStack(spacing: typeSize.isAccessibilitySize ? 14 : -108) {
-                                    ForEach(Array(records.enumerated()), id: \.element.id) { index, record in
-                                        card(record, index: index, height: geometry.size.height)
-                                            .id(record.id).zIndex(revealedID == record.id ? Double(records.count + 1) : Double(index + 1))
-                                            .onGeometryChange(for: CGRect.self) { proxy in
-                                                let bounds = proxy.frame(in: .named("walletScene"))
-                                                return CGRect(x: bounds.midX - proxy.size.width / 2, y: bounds.midY - proxy.size.height / 2,
-                                                              width: proxy.size.width, height: proxy.size.height)
-                                            } action: { if presented == nil { paperFrames[record.id] = $0 } }
-                                            .rotationEffect(.degrees(tilt(index)))
+                                VStack(spacing: 0) {
+                                    if let notice = workspace.notice {
+                                        Text(notice).font(.footnote).padding(.bottom, 16).opacity(selectedID == nil ? 1 : 0)
                                     }
-                                }.padding(.horizontal, 10)
-
-                            }
-                            if let notice = workspace.notice {
-                                Text(notice).font(.footnote).padding(.top, 24).opacity(selectedID == nil ? 1 : 0)
+                                    LazyVStack(spacing: typeSize.isAccessibilitySize ? 14 : -108) {
+                                        ForEach(Array(records.enumerated()), id: \.element.id) { index, record in
+                                            card(record, index: index, height: geometry.size.height)
+                                                .id(record.id).zIndex(revealedID == record.id ? Double(records.count + 1) : Double(index + 1))
+                                                .onGeometryChange(for: CGRect.self) { proxy in
+                                                    let bounds = proxy.frame(in: .named("walletScene"))
+                                                    return CGRect(x: bounds.midX - proxy.size.width / 2, y: bounds.midY - proxy.size.height / 2,
+                                                                  width: proxy.size.width, height: proxy.size.height)
+                                                } action: { if presented == nil { paperFrames[record.id] = $0 } }
+                                                .rotationEffect(.degrees(tilt(index)))
+                                        }
+                                    }.padding(.horizontal, 10)
+                                }
+                                .onGeometryChange(for: CGFloat.self) { $0.size.height } action: {
+                                    if presented == nil { stackHeight = $0; measuredCount = records.count }
+                                }
+                                .padding(.top, stackTop(in: geometry))
+                                // Even at the last scroll position, the paper stays inside the pocket.
+                                Color.clear.frame(height: max(0, walletHeight + 20 - tuckedDepth)).id("walletEnd")
                             }
                             #if DEBUG
-                            WorkflowTestControls(workspace: workspace)
+                            if records.isEmpty { WorkflowTestControls(workspace: workspace) }
                             #endif
-                            if !records.isEmpty { Color.clear.frame(height: walletHeight + 30).id("walletEnd") }
-                        }.padding(.horizontal, 20).padding(.top, 14).padding(.bottom, records.isEmpty ? 24 : 0)
+                        }.padding(.horizontal, 20).padding(.top, records.isEmpty ? 14 : 0).padding(.bottom, records.isEmpty ? 24 : 0)
                             .onGeometryChange(for: CGFloat.self) { content in
                                 // Measure the actual stack end, including native rubber-banding.
                                 // For a short stack, its resting end is above the viewport bottom.
@@ -78,10 +90,13 @@ struct ReceiptWalletScene: View {
                     .scrollDisabled(presented != nil)
                     .accessibilityHidden(presented != nil)
                     .scrollBounceBehavior(.always)
-                    .scrollClipDisabled()
-                    .mask { paperViewportMask(bottomInset: records.isEmpty ? 0 : walletHeight - 5 + endBounce) }
+                    .walletScreenEdges(in: geometry)
                 }
                 if !records.isEmpty {
+                    pocketBacking(in: geometry)
+                        .offset(y: geometry.size.height - 32 - endBounce)
+                        .opacity(presented == nil ? 1 : 0)
+                        .zIndex(Double(records.count) + 1.9)
                     VStack(spacing: 0) {
                         Spacer(minLength: 0)
                         walletPocket { jumpToNewest += 1 }
@@ -95,13 +110,11 @@ struct ReceiptWalletScene: View {
                     .offset(y: -endBounce)
                     .opacity(presented == nil ? 1 : 0)
                     .accessibilityHidden(presented != nil)
-                    .allowsHitTesting(presented == nil)
                     .zIndex(Double(records.count + 2))
                 }
                 if let presented {
                     let selectedIndex = records.firstIndex { $0.id == presented.id } ?? records.count
                     liftedPaper(workspace.selected ?? presented, geometry: geometry)
-                        .mask { paperViewportMask(bottomInset: expanded ? 0 : walletHeight - 5 + endBounce) }
                         .zIndex(Double(selectedIndex + 1))
                     // Foreground papers live beside the lifted paper, rather than behind its overlay.
                     // Their z-order never changes when the selected paper returns.
@@ -112,13 +125,16 @@ struct ReceiptWalletScene: View {
                                 .rotationEffect(.degrees(tilt(index)))
                                 .offset(x: frame.minX, y: frame.minY + (expanded && !reduceMotion ? geometry.size.height + 350 : 0))
                                 .frame(width: geometry.size.width, height: geometry.size.height, alignment: .topLeading)
-                                .mask { paperViewportMask(bottomInset: walletHeight - 5 + endBounce) }
                                 .opacity(expanded && reduceMotion ? 0 : 1)
                                 .zIndex(Double(index + 1))
                                 .allowsHitTesting(false).accessibilityHidden(true)
                         }
                     }
                     if walletFrame != .zero {
+                        pocketBacking(in: geometry)
+                            .offset(y: walletFrame.maxY - 12 + (expanded && !reduceMotion ? geometry.size.height + 350 : 0))
+                            .opacity(expanded && reduceMotion ? 0 : 1)
+                            .zIndex(Double(records.count) + 1.9)
                         walletPocket {}
                             .frame(width: walletFrame.width, height: walletFrame.height)
                             .offset(x: walletFrame.minX, y: walletFrame.minY + (expanded && !reduceMotion ? geometry.size.height + 350 : 0))
@@ -129,7 +145,6 @@ struct ReceiptWalletScene: View {
                 }
             }
             .frame(width: geometry.size.width, height: geometry.size.height, alignment: .topLeading)
-            .clipped()
             .coordinateSpace(name: "walletScene")
             .animation(motion, value: records.map(\.id))
             .onChange(of: selectedID, initial: true) { _, next in
@@ -169,18 +184,24 @@ struct ReceiptWalletScene: View {
         .opacity(focus || (presented != nil && index > (selectedIndex ?? records.count)) || (expanded && reduceMotion) ? 0 : 1)
         .allowsHitTesting(presented == nil)
     }
-    private func paperViewportMask(bottomInset: CGFloat) -> some View {
-        VStack(spacing: 0) {
-            LinearGradient(colors: [.clear, .black], startPoint: .top, endPoint: .bottom).frame(height: 28)
-            Color.black
-            LinearGradient(colors: [.black, .clear], startPoint: .top, endPoint: .bottom).frame(height: 32)
-        }.padding(.bottom, max(0, bottomInset))
+    private func stackTop(in geometry: GeometryProxy) -> CGFloat {
+        let estimate = CGFloat(max(0, records.count - 1)) * (typeSize.isAccessibilitySize ? 258 : 136) + 244
+        let height = measuredCount == records.count && stackHeight > 0 ? stackHeight : estimate
+        let pocketTop = geometry.size.height - walletHeight - 20
+        return max(14, pocketTop + tuckedDepth - height)
     }
     private func tilt(_ index: Int) -> Double {
         typeSize.isAccessibilitySize ? 0 : [-1.0, 0.7, -0.5, 1.1][index % 4]
     }
     private func walletPocket(_ jump: @escaping () -> Void) -> some View {
         WalletCrown(count: records.count, jumpToLatest: jump).fixedSize(horizontal: false, vertical: true)
+            .allowsHitTesting(presented == nil)
+    }
+    private func pocketBacking(in geometry: GeometryProxy) -> some View {
+        // A separate, non-interactive layer conceals paper below the pocket without covering controls.
+        Color(uiColor: .systemGroupedBackground)
+            .frame(width: geometry.size.width, height: 32 + geometry.safeAreaInsets.bottom)
+            .allowsHitTesting(false).accessibilityHidden(true)
     }
     private func liftedPaper(_ record: ReceiptRecord, geometry: GeometryProxy) -> some View {
         ScrollView {
@@ -190,6 +211,7 @@ struct ReceiptWalletScene: View {
                               reduceMotion: reduceMotion, error: workspace.errorMessage,
                               loading: workspace.image == nil && workspace.errorMessage == nil)
         }
+        .walletScreenEdges(in: geometry)
         .scrollDisabled(!expanded)
         .onScrollGeometryChange(for: CGFloat.self) { $0.contentOffset.y + $0.contentInsets.top } action: { _, offset in
             if expanded { readingOffset = offset }
@@ -550,5 +572,21 @@ private struct EmptyWalletArtwork: View {
                 .frame(width: 218, height: 87)
                 .shadow(color: .black.opacity(scheme == .dark ? 0.35 : 0.1), radius: 18, x: 0, y: 10)
         }.accessibilityHidden(true)
+    }
+}
+
+private extension View {
+    func walletScreenEdges(in geometry: GeometryProxy) -> some View {
+        let top = geometry.safeAreaInsets.top
+        let bottom = geometry.safeAreaInsets.bottom
+        // Scroll beneath the system bars; preserve safe resting positions with content margins.
+        // The native effect belongs at the screen edges, not around a central paper rectangle.
+        return self
+            .scrollClipDisabled()
+            .scrollEdgeEffectStyle(.soft, for: .vertical)
+            .contentMargins(.top, top, for: .scrollContent)
+            .contentMargins(.bottom, bottom, for: .scrollContent)
+            .frame(width: geometry.size.width, height: geometry.size.height + top + bottom)
+            .offset(y: -top)
     }
 }

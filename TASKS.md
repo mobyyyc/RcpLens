@@ -72,6 +72,8 @@ The main chat coordinates these task chats. The user approves one task at a time
 
 - Bottom pocket/date follow-up (2026-10-08): fixed bottom wallet, independently scrolling tilted papers, soft top/bottom fades and a measured joint end bounce. Original depth persists throughout return. Native calendar review preserves unknown dates unless explicitly confirmed. Verified with 48 unit passes/one hardware skip, ten native passes and targeted final flow/bounce reruns. [Current evidence and exact scope](docs/evidence/t05-wallet-pocket/validation-summary.json). Release installed; design review and T06 approval remain pending.
 
+- Screen-edge/small-stack follow-up (2026-10-08): Settings-inspired native soft effects under system bars replace the center mask. One/two/three papers remain tucked 32 points into the pocket, with a separate non-interactive backing and actual Import tap checks. The collection List's hard clip and blank bottom spacer are removed. Eleven unique native cases verified across the full run and targeted final audit; twelve narrow documented contrast exceptions, zero unresolved findings. Historical unit baseline unchanged. [Final sources and exact scope](docs/evidence/t05-screen-edges/validation-summary.json). Design review and T06 approval remain pending.
+
 ## T06 — 06 · Exact item-level bill splitting
 
 - Status: queued

@@ -1,0 +1,11 @@
+{
+  "sourceCommit": "c1f1c6d0f2ba177f039f6105e4dc8fb8691aa6f2",
+  "rerunForThisUIOnlyChange": false,
+  "summary": {
+    "result": "Passed",
+    "totalTestCount": 49,
+    "passedTests": 48,
+    "failedTests": 0,
+    "skippedTests": 1
+  }
+}

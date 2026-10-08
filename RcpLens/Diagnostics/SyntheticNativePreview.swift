@@ -37,7 +37,7 @@ import UIKit
             try? await Task.sleep(for: .milliseconds(25))
         }
         guard !Task.isCancelled else { return }
-        if mode != "resume" { await workspace.seedSyntheticPreview(count: mode == "library" ? 500 : mode == "many" ? 30 : (mode == "empty" ? 0 : 3)) }
+        if mode != "resume" { await workspace.seedSyntheticPreview(count: mode == "library" ? 500 : mode == "many" ? 30 : mode == "one" ? 1 : mode == "two" ? 2 : (mode == "empty" ? 0 : 3)) }
         guard !Task.isCancelled else { return }
         if let receipt = mode == "long" ? workspace.orderedReceipts.dropFirst().first : workspace.orderedReceipts.first, ["detail", "review", "source", "long"].contains(mode) {
             workspace.open(receipt)
