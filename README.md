@@ -42,7 +42,7 @@ xcodebuild -project RcpLens.xcodeproj -scheme RcpLens -configuration Debug \
   CODE_SIGNING_ALLOWED=YES CODE_SIGN_IDENTITY=- test
 ```
 
-Replace the simulator ID when using another Mac. The current deployment target is iOS 27.0; physical-device signing and testing are deferred. No external dependencies, account or cloud provider is required.
+Replace the simulator ID when using another Mac. The current deployment target is iOS 27.0. To run on a physical iPhone, select your Personal Team in the app target’s Signing & Capabilities, connect and trust the phone, enable Developer Mode, select it as the run destination and use Run (Command-R). Keep personal signing settings local; the committed project does not select a team. Direct camera capture and full device validation remain upcoming. No external dependencies, account or cloud provider is required.
 
 Use local ad-hoc signing for Simulator Keychain access; no Apple account is required for these simulator checks. Xcode 27 displays simulated devices in Device Hub. Exact environment and foundation commands: [docs/FOUNDATION.md](docs/FOUNDATION.md). Current storage tests, fresh-process checks, protection limitations and integration API: [docs/STORAGE.md](docs/STORAGE.md).
 
@@ -53,3 +53,5 @@ One app target, one hosted XCTest target and a separately selected native UI-tes
 Private receipt images and extracted personal data must not enter Git. Use the ignored `private-receipts/` folder for consented inputs and private verification logs/results. Synthetic diagnostics use fictional content. Explicit local Debug test launches can read consented private inputs from a separate simulator inbox; private workflow reports expose only aggregates. Release contains no test importer or checked-reference controls.
 
 GitHub repository: [mobyyyc/RcpLens](https://github.com/mobyyyc/RcpLens). Local `main` tracks `origin/main`.
+
+Phone layout fixes and iPhone 15 Pro Simulator verification: [bottom insets, glass actions and wallet motion](docs/evidence/t07-phone-layout/README.md). After updating sources, use Xcode Run to refresh the installed phone app.

@@ -1,0 +1,132 @@
+{
+  "date": "2026-10-08",
+  "change": "Review and long-paper bottom insets, raised native glass actions, dark switch contrast, slower wallet follow-through",
+  "device": "iPhone 15 Pro Simulator, iOS 27.0",
+  "runs": [
+    {
+      "run": "ui6",
+      "resultBundle": "/tmp/rcplens-phone-layout-ui6.xcresult",
+      "passed": 8,
+      "failed": 1,
+      "cases": [
+        {
+          "test": "ReceiptSearchUITests/testFictionalImageImportReviewSplitShareSearchAndEvidence",
+          "seconds": 74.068
+        },
+        {
+          "test": "ReceiptSearchUITests/testHistoryDetailScrollsMatchContextWithLongPaper",
+          "seconds": 28.272
+        },
+        {
+          "test": "WalletInteractionTests/testChronologicalStackExpandsAndRestoresEachPaper",
+          "seconds": 17.951
+        },
+        {
+          "test": "WalletInteractionTests/testDarkReviewSwitchAndBottomContentRemainVisible",
+          "seconds": 15.715
+        },
+        {
+          "test": "WalletInteractionTests/testDetailContainsOnlySelectedPaperAcrossRepeatedReturns",
+          "seconds": 55.604
+        },
+        {
+          "test": "WalletInteractionTests/testElasticStackHasVariableGapsSpeedsAndReversibleScroll",
+          "seconds": 15.797
+        },
+        {
+          "test": "WalletInteractionTests/testManyReceiptsAndAccessibleMotionFallback",
+          "seconds": 25.055
+        },
+        {
+          "test": "WalletInteractionTests/testShortStacksRemainTuckedIntoPocket",
+          "seconds": 29.069
+        }
+      ],
+      "runtimeWarnings": [
+        {
+          "issueType": "Runtime Warning",
+          "message": "Invalid frame dimension (negative or non-finite)."
+        },
+        {
+          "issueType": "Runtime Warning",
+          "message": "Invalid frame dimension (negative or non-finite)."
+        }
+      ],
+      "sourceScope": "Before final home-reader size/inset fix. Eight cases passed; the footer regression failed and was repaired, then rerun in ui7. The two incorrectly scoped NativeAccessibility selectors executed no tests in ui6 and were run correctly in ui7."
+    },
+    {
+      "run": "ui7",
+      "resultBundle": "/tmp/rcplens-phone-layout-ui7.xcresult",
+      "passed": 4,
+      "failed": 0,
+      "cases": [
+        {
+          "test": "NativeAccessibilityTests/testEmptyWalletImportProminentContrastDarkAndLight",
+          "seconds": 12.295
+        },
+        {
+          "test": "NativeAccessibilityTests/testLargeTextReducedMotionOpaqueAndContrastTapPaths",
+          "seconds": 14.18
+        },
+        {
+          "test": "WalletInteractionTests/testChronologicalStackExpandsAndRestoresEachPaper",
+          "seconds": 18.033
+        },
+        {
+          "test": "WalletInteractionTests/testLongWalletReceiptFooterClearsRaisedActions",
+          "seconds": 11.626
+        }
+      ],
+      "runtimeWarnings": [
+        {
+          "issueType": "Runtime Warning",
+          "message": "Invalid frame dimension (negative or non-finite)."
+        }
+      ],
+      "sourceScope": "Final production sources"
+    },
+    {
+      "run": "ui8",
+      "resultBundle": "/tmp/rcplens-phone-layout-ui8.xcresult",
+      "passed": 2,
+      "failed": 0,
+      "cases": [
+        {
+          "test": "WalletInteractionTests/testDarkReviewSwitchAndBottomContentRemainVisible",
+          "seconds": 18.064
+        },
+        {
+          "test": "WalletInteractionTests/testDetailContainsOnlySelectedPaperAcrossRepeatedReturns",
+          "seconds": 56.378
+        }
+      ],
+      "runtimeWarnings": [
+        {
+          "issueType": "Runtime Warning",
+          "message": "Invalid frame dimension (negative or non-finite)."
+        }
+      ],
+      "sourceScope": "Final production sources"
+    }
+  ],
+  "uniquePassedCases": 11,
+  "finalSourceVerification": "ui7: four passes; ui8: two passes. Both use final production sources. The remaining five previously passing cases cover unaffected import/search/elastic/short-stack behavior; exact earlier scope is preserved in ui6-summary.json.",
+  "priorFailures": "ui1 used the non-UI scheme; ui2 failed to compile a complex test color expression. ui3/ui4/ui5 and ui6 exposed the home-reader footer outside its oversized viewport. Explicit reader sizing, full action-bar insets and return inset compensation fix that failure in ui7; ui8 verifies retained returns and review-to-detail again.",
+  "release": {
+    "simulator": "Built, strict signature verified, installed and launched normally without test arguments",
+    "physicalIOSSDK": "Release build passed with CODE_SIGNING_ALLOWED=NO; compilation only, no phone install or runtime certification",
+    "debugControlsExcluded": true
+  },
+  "preservation": {
+    "normalSimulatorReceipts": 12,
+    "normalSimulatorOriginals": 12,
+    "encryptedPayloadsAndWalletPreferences": "Unchanged from pre-work SHA-256 baseline",
+    "userLocalSigningConfiguration": "Preserved and excluded from this UI commit"
+  },
+  "limits": [
+    "No new OCR accuracy claims or parser/storage/split arithmetic changes; prior domain checks retained.",
+    "Review continues to emit an existing nonspecific SwiftUI invalid-frame diagnostic; the rendered controls/footer and tap paths pass. Exact warnings retained in result summaries.",
+    "Xcode tooling emits debugger lookup and cleanup simctl-path diagnostics; final ui7/ui8 commands succeed.",
+    "No physical device performance, lock enforcement, VoiceOver or camera certification; user will reload on iPhone with Command-R."
+  ]
+}

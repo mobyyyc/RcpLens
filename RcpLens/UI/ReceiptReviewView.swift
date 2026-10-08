@@ -11,7 +11,6 @@ struct ReceiptReviewView: View {
         Binding(get: { workspace.draft[keyPath: key] }, set: { value in workspace.updateDraft { $0[keyPath: key] = value } })
     }
     var body: some View {
-        VStack(spacing: 0) {
         Form {
             Section {
                 Label("Check details against the original.", systemImage: "doc.text.magnifyingglass")
@@ -58,7 +57,7 @@ struct ReceiptReviewView: View {
                 }
                 if workspace.draft.subtotal.isEmpty {
                     Toggle("Subtotal is not printed", isOn: Binding(get: { workspace.draft.subtotalNotPrinted }, set: { value in workspace.updateDraft { $0.subtotalNotPrinted = value } }))
-                        .accessibilityIdentifier("subtotalNotPrinted")
+                        .tint(.green).accessibilityIdentifier("subtotalNotPrinted")
                 }
             } header: { Text("Subtotal").foregroundStyle(Color(uiColor: .label)) }
             Section {
@@ -81,7 +80,7 @@ struct ReceiptReviewView: View {
             } header: { Text("Total").foregroundStyle(Color(uiColor: .label)) }
             Section {
                 Toggle("I checked the original", isOn: $workspace.draft.sourceChecked)
-                    .disabled(!workspace.draft.sourceOpened).accessibilityIdentifier("sourceCheck")
+                    .tint(.green).disabled(!workspace.draft.sourceOpened).accessibilityIdentifier("sourceCheck")
                 Text(workspace.draft.sourceOpened ? "Confirm every field and line. Editing clears this check; matching totals alone do not prove completeness." : "Open Original above and check every field and line, including anything recognition missed.")
                     .font(.footnote).foregroundStyle(.primary)
             } header: { Text("Source review").foregroundStyle(Color(uiColor: .label)) }
@@ -92,12 +91,13 @@ struct ReceiptReviewView: View {
                     Text("Choose a valid purchase date and check typed quantities or amounts before saving a draft. Missing fields can remain blank.").font(.footnote)
                 }
                 Text("Saved only on this device. The wallet is excluded from ordinary backup; no export or restore is available yet. Uninstalling or losing the device can lose your receipts.")
-                    .font(.footnote).foregroundStyle(.primary)
+                    .font(.footnote).foregroundStyle(.primary).accessibilityIdentifier("reviewStorageFooter")
             }
 
-        }.listSectionSpacing(20).scrollDismissesKeyboard(.interactively).clipped()
-        Color.clear.frame(height: typeSize.isAccessibilitySize ? 104 : 72).accessibilityHidden(true)
-        }.accessibilityIdentifier("reviewScreen")
+        }.listSectionSpacing(20).scrollDismissesKeyboard(.interactively)
+        .scrollClipDisabled().scrollEdgeEffectStyle(.soft, for: .vertical)
+        .contentMargins(.bottom, 28, for: .scrollContent)
+        .accessibilityIdentifier("reviewScreen")
         .sheet(isPresented: $selectingDate) {
             NavigationStack {
                 ScrollView {

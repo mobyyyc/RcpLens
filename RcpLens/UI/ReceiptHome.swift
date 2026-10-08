@@ -13,6 +13,7 @@ struct ReceiptHome: View {
     @State private var settings = false
     @State private var walletInformation = false
     @FocusState private var editing: String?
+    @Environment(\.dynamicTypeSize) private var typeSize
 
     var body: some View {
         let session = workspace.sessionID
@@ -68,29 +69,8 @@ struct ReceiptHome: View {
                             Button("Wallet information", systemImage: "info.circle") { walletInformation = true }
                                 .accessibilityIdentifier("walletInformation")
                         }
-                        ToolbarItemGroup(placement: .bottomBar) {
-                            Spacer()
-                            Button { importChoices = true } label: {
-                                HStack(spacing: 8) { Image(systemName: "plus"); Text("Import receipt") }
-                                    .font(.body.weight(.semibold)).padding(.horizontal, 12).frame(minHeight: 34)
-                            }
-                            .buttonStyle(ReceiptProminentStyle()).controlSize(.large)
-                            .accessibilityLabel("Import receipt").accessibilityIdentifier("import")
-                            Spacer()
-                        }
                     }
                     if workspace.flow == .detail {
-                        ToolbarItemGroup(placement: .bottomBar) {
-                            Button("Split", systemImage: "person.2") { workspace.splitVisible = true }
-                                .accessibilityIdentifier("splitOpen").disabled(workspace.saving || workspace.selected == nil || workspace.image == nil)
-                            Spacer()
-                            Button { workspace.edit() } label: {
-                                HStack(spacing: 8) { Image(systemName: "pencil"); Text("Edit receipt") }
-                                    .font(.body.weight(.semibold)).padding(.horizontal, 12).frame(minHeight: 34)
-                            }.buttonStyle(ReceiptProminentStyle()).controlSize(.large)
-                                .accessibilityIdentifier("edit").disabled(workspace.saving || workspace.image == nil)
-                            Spacer()
-                        }
                         ToolbarItem(placement: .topBarTrailing) {
                             Menu {
                                 if let record = workspace.selected {
@@ -105,14 +85,6 @@ struct ReceiptHome: View {
                         }
                     }
                     if workspace.flow == .review {
-                        ToolbarItem(placement: .bottomBar) {
-                            Button("Save draft") { editing = nil; workspace.save(asDraft: true) }
-                                .disabled(!workspace.draft.canSaveDraft || workspace.saving).accessibilityIdentifier("saveDraft")
-                        }
-                        ToolbarItem(placement: .bottomBar) {
-                            Button("Finish") { editing = nil; workspace.save(asDraft: false) }
-                                .buttonStyle(ReceiptProminentStyle()).disabled(!workspace.draft.canFinalize || workspace.saving).accessibilityIdentifier("finishSave")
-                        }
                         ToolbarItemGroup(placement: .keyboard) {
                             Spacer(); Button("Done") { editing = nil }.accessibilityIdentifier("keyboardDone")
                         }
@@ -146,6 +118,11 @@ struct ReceiptHome: View {
                         }
                     }
                     #endif
+                }
+            }
+            .safeAreaBar(edge: .bottom, spacing: 0) {
+                if workspace.availability == .ready && !workspace.privacyCovered && [.wallet, .detail, .review].contains(workspace.flow) {
+                    bottomActions.modifier(ReceiptActionBarLayout())
                 }
             }
             .confirmationDialog("Import a receipt", isPresented: $importChoices, titleVisibility: .visible) {
@@ -182,6 +159,57 @@ struct ReceiptHome: View {
         }
         .tint(.primary)
         .environment(\.receiptPaperAppearance, workspace.walletSettings.paperAppearance)
+    }
+    @ViewBuilder private var bottomActions: some View {
+        switch workspace.flow {
+        case .wallet:
+            HStack {
+                Spacer()
+                Button { importChoices = true } label: {
+                    Label("Import receipt", systemImage: "plus").padding(.horizontal, 12).frame(minHeight: 28)
+                }.buttonStyle(ReceiptProminentStyle()).accessibilityIdentifier("import")
+                Spacer()
+            }
+        case .detail:
+            if typeSize.isAccessibilitySize {
+                VStack(spacing: 12) {
+                    editAction
+                    Button("Split", systemImage: "person.2") { workspace.splitVisible = true }
+                        .buttonStyle(ReceiptSecondaryStyle()).accessibilityIdentifier("splitOpen")
+                        .disabled(workspace.saving || workspace.selected == nil || workspace.image == nil)
+                }.frame(maxWidth: .infinity)
+            } else {
+                HStack(spacing: 12) {
+                    Button { workspace.splitVisible = true } label: {
+                        Image(systemName: "person.2").frame(width: 24, height: 28)
+                    }.buttonStyle(ReceiptSecondaryStyle()).buttonBorderShape(.circle)
+                        .accessibilityLabel("Split").accessibilityIdentifier("splitOpen")
+                        .disabled(workspace.saving || workspace.selected == nil || workspace.image == nil)
+                    Spacer(minLength: 0)
+                    editAction.fixedSize(horizontal: true, vertical: false)
+                    Spacer(minLength: 0)
+                    Color.clear.frame(width: 56, height: 28).accessibilityHidden(true)
+                }
+            }
+        case .review:
+            HStack(spacing: 16) {
+                Button { editing = nil; workspace.save(asDraft: true) } label: {
+                    Text("Save draft").padding(.horizontal, 8).frame(minHeight: 44)
+                }.buttonStyle(ReceiptSecondaryStyle())
+                    .disabled(!workspace.draft.canSaveDraft || workspace.saving).accessibilityIdentifier("saveDraft")
+                Button { editing = nil; workspace.save(asDraft: false) } label: {
+                    Text("Finish").padding(.horizontal, 8).frame(minHeight: 44)
+                }.buttonStyle(ReceiptProminentStyle())
+                    .disabled(!workspace.draft.canFinalize || workspace.saving).accessibilityIdentifier("finishSave")
+            }.frame(maxWidth: .infinity)
+        case .loading, .reading, .failed: EmptyView()
+        }
+    }
+    private var editAction: some View {
+        Button { workspace.edit() } label: {
+            Label("Edit receipt", systemImage: "pencil").padding(.horizontal, 12).frame(minHeight: 28)
+        }.buttonStyle(ReceiptProminentStyle()).accessibilityIdentifier("edit")
+            .disabled(workspace.saving || workspace.image == nil)
     }
     private var title: String {
         switch workspace.flow {

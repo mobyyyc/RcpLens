@@ -1,0 +1,74 @@
+[
+  {
+    "file": "T07-history-detail-bottom.png",
+    "run": "ui6",
+    "test": "ReceiptSearchUITests/testHistoryDetailScrollsMatchContextWithLongPaper()",
+    "fictionalOnly": true
+  },
+  {
+    "file": "Elastic-stack-pulled.png",
+    "run": "ui6",
+    "test": "WalletInteractionTests/testElasticStackHasVariableGapsSpeedsAndReversibleScroll()",
+    "fictionalOnly": true
+  },
+  {
+    "file": "Elastic-stack-rest.png",
+    "run": "ui6",
+    "test": "WalletInteractionTests/testElasticStackHasVariableGapsSpeedsAndReversibleScroll()",
+    "fictionalOnly": true
+  },
+  {
+    "file": "Many-receipts-newest.png",
+    "run": "ui6",
+    "test": "WalletInteractionTests/testManyReceiptsAndAccessibleMotionFallback()",
+    "fictionalOnly": true
+  },
+  {
+    "file": "Empty-wallet-light.png",
+    "run": "ui7",
+    "test": "NativeAccessibilityTests/testEmptyWalletImportProminentContrastDarkAndLight()",
+    "fictionalOnly": true
+  },
+  {
+    "file": "Empty-wallet-dark.png",
+    "run": "ui7",
+    "test": "NativeAccessibilityTests/testEmptyWalletImportProminentContrastDarkAndLight()",
+    "fictionalOnly": true
+  },
+  {
+    "file": "Phone-layout-large-detail.png",
+    "run": "ui7",
+    "test": "NativeAccessibilityTests/testLargeTextReducedMotionOpaqueAndContrastTapPaths()",
+    "fictionalOnly": true
+  },
+  {
+    "file": "Phone-layout-large-review.png",
+    "run": "ui7",
+    "test": "NativeAccessibilityTests/testLargeTextReducedMotionOpaqueAndContrastTapPaths()",
+    "fictionalOnly": true
+  },
+  {
+    "file": "Phone-layout-long-wallet-bottom.png",
+    "run": "ui7",
+    "test": "WalletInteractionTests/testLongWalletReceiptFooterClearsRaisedActions()",
+    "fictionalOnly": true
+  },
+  {
+    "file": "Phone-layout-dark-review-bottom.png",
+    "run": "ui8",
+    "test": "WalletInteractionTests/testDarkReviewSwitchAndBottomContentRemainVisible()",
+    "fictionalOnly": true
+  },
+  {
+    "file": "Phone-layout-dark-review-switch.png",
+    "run": "ui8",
+    "test": "WalletInteractionTests/testDarkReviewSwitchAndBottomContentRemainVisible()",
+    "fictionalOnly": true
+  },
+  {
+    "file": "Transition-elastic-returned.png",
+    "run": "ui8",
+    "test": "WalletInteractionTests/testDetailContainsOnlySelectedPaperAcrossRepeatedReturns()",
+    "fictionalOnly": true
+  }
+]

@@ -300,9 +300,11 @@ import Vision
         receipt.tap(); XCTAssertTrue(app.buttons["edit"].waitForExistence(timeout: 15))
         app.buttons["edit"].tap(); XCTAssertTrue(app.buttons["saveDraft"].waitForExistence(timeout: 15))
         XCTAssertFalse(app.buttons["finishSave"].isEnabled)
+        let reviewShot = XCTAttachment(screenshot: app.screenshot()); reviewShot.name = "Phone-layout-large-review"; reviewShot.lifetime = .keepAlways; add(reviewShot)
         app.buttons["original"].tap(); XCTAssertTrue(app.buttons["sourceDone"].waitForExistence(timeout: 15)); app.buttons["sourceDone"].tap()
         app.buttons["back"].tap(); app.buttons["Discard changes"].tap()
         XCTAssertTrue(app.buttons["edit"].waitForExistence(timeout: 15))
+        let detailShot = XCTAttachment(screenshot: app.screenshot()); detailShot.name = "Phone-layout-large-detail"; detailShot.lifetime = .keepAlways; add(detailShot)
         app.terminate()
     }
 }
@@ -332,16 +334,22 @@ import Vision
         XCTAssertLessThan(upperGap, 245, "Papers retain overlap without changing chronological order")
         capture(app, "Elastic-stack-rest")
         let topY = upper.frame.minY, bottomY = nearPocket.frame.minY
+        let pocketY = app.staticTexts["walletHeading"].frame.minY
         let start = app.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.35))
         let end = app.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.30))
         start.press(forDuration: 0.1, thenDragTo: end, withVelocity: .slow, thenHoldForDuration: 0.2)
         let upperTravel = topY - upper.frame.minY, lowerTravel = bottomY - nearPocket.frame.minY
         XCTAssertGreaterThan(lowerTravel, 2)
         XCTAssertGreaterThan(upperTravel, lowerTravel * 1.8, "The same swipe moves papers faster in the reading zone")
+        let pulledPocketY = app.staticTexts["walletHeading"].frame.minY
+        XCTAssertLessThan(pulledPocketY, pocketY)
+        XCTAssertLessThan(pocketY - pulledPocketY, lowerTravel * 0.5)
         capture(app, "Elastic-stack-pulled")
         end.press(forDuration: 0.1, thenDragTo: start, withVelocity: .slow, thenHoldForDuration: 0.2)
         XCTAssertEqual(upper.frame.minY, topY, accuracy: 4, "Reversing the swipe restores the spacing continuously")
         XCTAssertEqual(nearPocket.frame.minY, bottomY, accuracy: 4)
+        XCTAssertGreaterThan(app.staticTexts["walletHeading"].frame.minY, pulledPocketY, "Pushing receipts back also moves the leather")
+        XCTAssertEqual(app.staticTexts["walletHeading"].frame.minY, pocketY, accuracy: 2)
         upper.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.18)).tap()
         XCTAssertTrue(app.buttons["original"].waitForExistence(timeout: 15)); app.buttons["back"].tap()
         XCTAssertTrue(upper.waitForExistence(timeout: 15)); XCTAssertEqual(upper.frame.minY, topY, accuracy: 4)
@@ -546,15 +554,18 @@ import Vision
         let firstY = previous.frame.minY
         let start = app.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.35))
         start.press(forDuration: 0.05, thenDragTo: app.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.29)))
-        XCTAssertLessThan(previous.frame.minY, firstY, "Swipe up must pull papers from the fixed pocket")
-        XCTAssertEqual(app.staticTexts["walletHeading"].frame.minY, pocketY, accuracy: 1, "Pocket stays fixed while papers scroll")
+        XCTAssertLessThan(previous.frame.minY, firstY, "Swipe up must pull papers out of the pocket")
+        let pocketTravel = pocketY - app.staticTexts["walletHeading"].frame.minY
+        XCTAssertGreaterThan(pocketTravel, 0.1, "The leather follows an upward pull gently")
+        XCTAssertLessThan(pocketTravel, (firstY - previous.frame.minY) * 0.5, "Leather moves more slowly than the papers")
         app.buttons["latestReceipt"].tap()
         let latest = app.buttons["receipt-29"]
         XCTAssertTrue(latest.waitForExistence(timeout: 15)); XCTAssertTrue(latest.isHittable)
         capture(app, "Many-receipts-newest")
         let endY = latest.frame.minY
+        let endPocketY = app.staticTexts["walletHeading"].frame.minY
         app.swipeUp(velocity: .fast)
-        XCTAssertEqual(app.staticTexts["walletHeading"].frame.minY, pocketY, accuracy: 1, "Pocket springs back after the final paper")
+        XCTAssertEqual(app.staticTexts["walletHeading"].frame.minY, endPocketY, accuracy: 1, "Pocket springs back after the final paper")
         XCTAssertEqual(latest.frame.minY, endY, accuracy: 1, "End pull must return to the last receipt without changing its position")
         latest.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.18)).tap()
         XCTAssertTrue(app.buttons["original"].waitForExistence(timeout: 15)); app.buttons["back"].tap()
@@ -587,6 +598,67 @@ import Vision
             XCTAssertTrue(paper.waitForExistence(timeout: 15)); XCTAssertEqual(paper.frame.minY, originalY, accuracy: 2)
             app.terminate()
         }
+    }
+    func testDarkReviewSwitchAndBottomContentRemainVisible() throws {
+        let app = XCUIApplication(); app.launchArguments = ["--t05-synthetic-preview", "review"]
+        app.launch(); XCTAssertTrue(app.buttons["saveDraft"].waitForExistence(timeout: 30))
+        let save = app.buttons["saveDraft"]
+        XCTAssertGreaterThanOrEqual(app.frame.maxY - save.frame.maxY, 50, "Actions clear the home indicator comfortably")
+        app.buttons["original"].tap()
+        XCTAssertTrue(app.buttons["sourceDone"].waitForExistence(timeout: 10)); app.buttons["sourceDone"].tap()
+        let check = app.switches["sourceCheck"]
+        for _ in 0..<12 {
+            if check.exists && check.isHittable && check.frame.maxY < save.frame.minY - 12 { break }
+            app.swipeUp()
+        }
+        XCTAssertTrue(check.isHittable)
+        if (check.value as? String) != "1" { check.coordinate(withNormalizedOffset: CGVector(dx: 0.92, dy: 0.5)).tap() }
+        XCTAssertEqual(check.value as? String, "1")
+        let image = try XCTUnwrap(check.screenshot().image.cgImage)
+        var bytes = [UInt8](repeating: 0, count: image.width * image.height * 4)
+        bytes.withUnsafeMutableBytes { buffer in
+            let context = CGContext(data: buffer.baseAddress, width: image.width, height: image.height,
+                bitsPerComponent: 8, bytesPerRow: image.width * 4, space: CGColorSpaceCreateDeviceRGB(),
+                bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue)!
+            context.draw(image, in: CGRect(x: 0, y: 0, width: image.width, height: image.height))
+        }
+        var coloredPixels = 0
+        for i in stride(from: 0, to: bytes.count, by: 4) {
+            let red = Double(bytes[i]), green = Double(bytes[i + 1]), blue = Double(bytes[i + 2])
+            if green > red * 1.25 && green > blue * 1.15 && green > 100 { coloredPixels += 1 }
+        }
+        XCTAssertGreaterThan(coloredPixels, 100, "The on track must contrast with the white switch thumb in dark appearance")
+        capture(app, "Phone-layout-dark-review-switch")
+        let footer = app.staticTexts["reviewStorageFooter"]
+        for _ in 0..<12 {
+            if footer.exists && footer.isHittable && footer.frame.maxY < save.frame.minY - 12 { break }
+            app.swipeUp()
+        }
+        XCTAssertTrue(footer.isHittable)
+        XCTAssertLessThan(footer.frame.maxY, save.frame.minY - 12, "The final review information clears the floating actions")
+        capture(app, "Phone-layout-dark-review-bottom")
+        save.tap(); XCTAssertTrue(app.buttons["edit"].waitForExistence(timeout: 10))
+        XCTAssertGreaterThanOrEqual(app.frame.maxY - app.buttons["edit"].frame.maxY, 50)
+        XCTAssertGreaterThanOrEqual(app.frame.maxY - app.buttons["splitOpen"].frame.maxY, 50)
+        app.terminate()
+    }
+    func testLongWalletReceiptFooterClearsRaisedActions() {
+        let app = launch("long-wallet")
+        XCTAssertGreaterThanOrEqual(app.frame.maxY - app.buttons["import"].frame.maxY, 50)
+        let paper = app.buttons["receipt-1"]
+        XCTAssertTrue(paper.waitForExistence(timeout: 20)); paper.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.07)).tap()
+        XCTAssertTrue(app.buttons["edit"].waitForExistence(timeout: 10))
+        let footer = app.descendants(matching: .any)["walletReceiptFooter"]
+        for _ in 0..<10 {
+            if footer.exists && footer.isHittable && footer.frame.maxY < app.buttons["edit"].frame.minY - 12 { break }
+            app.swipeUp()
+        }
+        capture(app, "Phone-layout-long-wallet-before-footer-check")
+        let tree = XCTAttachment(string: app.debugDescription); tree.name = "Phone-layout-long-wallet-tree"; tree.lifetime = .keepAlways; add(tree)
+        XCTAssertTrue(footer.isHittable)
+        XCTAssertLessThan(footer.frame.maxY, app.buttons["edit"].frame.minY - 12, "The paper bottom and footer can be read above the actions")
+        capture(app, "Phone-layout-long-wallet-bottom")
+        app.buttons["back"].tap(); XCTAssertTrue(paper.waitForExistence(timeout: 10)); app.terminate()
     }
     func testNativeDatePickerCancelClearAndSave() {
         let app = XCUIApplication()

@@ -73,7 +73,7 @@ struct ReceiptPurchaseHistoryView: View {
                     if workspace.receipts.contains(where: { $0.current.fields.purchaseDate == nil }) { Text("Date missing").tag(ReceiptHistoryChoice.missing) }
                 }.accessibilityIdentifier("searchMonthFilter")
                 if workspace.collection != "Archive" {
-                    Toggle("Include archived", isOn: $workspace.includeArchived).accessibilityIdentifier("searchIncludeArchived")
+                    Toggle("Include archived", isOn: $workspace.includeArchived).tint(.green).accessibilityIdentifier("searchIncludeArchived")
                 }
                 if workspace.merchantFilter != .all || workspace.monthFilter != .all {
                     Button("Clear filters") { workspace.merchantFilter = .all; workspace.monthFilter = .all }
