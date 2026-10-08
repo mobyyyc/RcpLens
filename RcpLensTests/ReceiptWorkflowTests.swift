@@ -5,9 +5,47 @@ import UniformTypeIdentifiers
 @testable import RcpLens
 
 final class ReceiptWorkflowTests: XCTestCase, @unchecked Sendable {
+    func testElasticStackIsOrderedReversibleAndAnchoredAtThePocket() {
+        for height: CGFloat in [480, 656, 820] {
+            let curve = ReceiptStackProjection(viewportHeight: height, readingY: height / 3 - 30, anchor: height - 332)
+            XCTAssertEqual(curve.position(curve.anchor), curve.anchor, accuracy: 0.0001)
+            for y: CGFloat in stride(from: -500, through: 2500, by: 20) {
+                let visibleY = curve.position(y)
+                XCTAssertEqual(curve.logicalPosition(visibleY), y, accuracy: 0.0001)
+                let gap = curve.position(y + 136) - visibleY
+                XCTAssertGreaterThanOrEqual(gap, 36 - 0.0001)
+                XCTAssertLessThanOrEqual(gap, 224 + 0.0001)
+            }
+            let focus = curve.logicalPosition(curve.readingY)
+            let speed = (curve.position(focus + 0.1) - curve.position(focus - 0.1)) / 0.2
+            XCTAssertEqual(speed, 224 / 136, accuracy: 0.001)
+            for pull: CGFloat in [0, 20, 100] {
+                XCTAssertEqual(curve.displayedPosition(curve.anchor - pull, endPull: pull), curve.anchor - pull, accuracy: 0.001)
+            }
+        }
+    }
     struct Key: ReceiptStoreKeyProvider {
         func loadKey() -> Data? { Data(repeating: 0x5a, count: 32) }
         func createKey() -> Data { Data(repeating: 0x5a, count: 32) }
+    }
+    @MainActor func testAddingTenDemoReceiptsPreservesExistingReceiptAndSettingsAndIsIdempotent() async throws {
+        let dir = directory(); defer { try? FileManager.default.removeItem(at: dir) }
+        let store = try ReceiptStore(directory: dir, keyProvider: Key())
+        let extraction = try ReceiptParser.extraction(OCRResult(lines: lines("FICTIONAL EXISTING CAD\n2026-10-07\nTEST ITEM 1.00\nSUBTOTAL 1.00\nTOTAL 1.00"), revision: 3))
+        let old = try await store.create(extraction: extraction, originalImage: SyntheticFixture.imageData(), mediaType: "image/png")
+        let preferences = ReceiptWalletSettings(leftSwipe: .delete, paperAppearance: .alwaysWhite)
+        try await store.saveWalletSettings(preferences); try await store.close()
+        let model = ReceiptWorkspace(directory: dir, keyProvider: Key())
+        model.activate(protectedDataAvailable: true); try await wait { model.availability == .ready }
+        let added = await model.addFictionalDemoReceipts()
+        XCTAssertEqual(added, 10); XCTAssertEqual(model.receipts.count, 11)
+        XCTAssertEqual(model.receipts.first { $0.id == old.id }, old)
+        XCTAssertEqual(model.walletSettings, preferences)
+        let samples = model.receipts.filter { $0.id != old.id }
+        XCTAssertTrue(samples.allSatisfy { ($0.current.fields.merchant ?? "").hasPrefix("DEMO ") && ReceiptCompletion.isComplete($0) })
+        let repeated = await model.addFictionalDemoReceipts()
+        XCTAssertEqual(repeated, 0); XCTAssertEqual(model.receipts.count, 11)
+        model.suspend()
     }
     private func lines(_ text: String) -> [ReceiptOCRLine] {
         text.split(separator: "\n").map { ReceiptOCRLine(id: UUID(), text: String($0), engineConfidence: nil) }

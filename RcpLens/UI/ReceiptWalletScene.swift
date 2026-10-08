@@ -1,6 +1,54 @@
 import SwiftUI
 import UIKit
 
+/// Monotone screen-space projection: widest spacing in the reading zone, tight spacing at the pocket.
+struct ReceiptStackProjection {
+    static let pitch: CGFloat = 136
+    static let paperHeight: CGFloat = 244
+    let anchor: CGFloat
+    let readingY: CGFloat
+    let viewportHeight: CGFloat
+    private let minimum: CGFloat = 36 / 136
+    private let amplitude: CGFloat = (224 - 36) / 136
+    private let width: CGFloat
+    private let focus: CGFloat
+
+    init(viewportHeight: CGFloat, readingY: CGFloat, anchor: CGFloat) {
+        self.viewportHeight = viewportHeight; self.readingY = readingY; self.anchor = anchor
+        width = max(60, min(130, viewportHeight * 0.15))
+        var low: CGFloat = -4000, high: CGFloat = 4000
+        for _ in 0..<40 {
+            let distance = (low + high) / 2
+            let span = minimum * distance + amplitude * width * tanh(distance / width)
+            if span < anchor - readingY { low = distance } else { high = distance }
+        }
+        focus = anchor - (low + high) / 2
+    }
+    func position(_ logicalY: CGFloat) -> CGFloat {
+        anchor + minimum * (logicalY - anchor)
+        + amplitude * width * (tanh((logicalY - focus) / width) - tanh((anchor - focus) / width))
+    }
+    func logicalPosition(_ displayedY: CGFloat) -> CGFloat {
+        var low = anchor - 20_000, high = anchor + 20_000
+        for _ in 0..<44 {
+            let middle = (low + high) / 2
+            if position(middle) < displayedY { low = middle } else { high = middle }
+        }
+        return (low + high) / 2
+    }
+    func displayedPosition(_ logicalY: CGFloat, endPull: CGFloat) -> CGFloat {
+        // Beyond the last receipt, preserve the shared paper-and-wallet rubber band.
+        position(logicalY + endPull) - endPull
+    }
+    func visibleIndices(baseY: CGFloat, count: Int, endPull: CGFloat) -> Range<Int> {
+        guard count > 0 else { return 0..<0 }
+        let start = Int(floor((logicalPosition(-300 + endPull) - endPull - baseY) / Self.pitch))
+        let end = Int(ceil((logicalPosition(viewportHeight + 60 + endPull) - endPull - baseY) / Self.pitch)) + 1
+        let first = max(0, min(count, start)), last = max(first, min(count, end))
+        return first..<last
+    }
+}
+
 /// One retained scene: papers leave in their screen order while the selected paper lifts in place.
 struct ReceiptWalletScene: View {
     @Bindable var workspace: ReceiptWorkspace
@@ -16,6 +64,7 @@ struct ReceiptWalletScene: View {
     @State private var jumpToNewest = 0
     @State private var stackHeight: CGFloat = 0
     @State private var measuredCount = 0
+    @State private var stackSceneY: CGFloat?
     private let tuckedDepth: CGFloat = 32
     @Environment(\.dynamicTypeSize) private var typeSize
     @Environment(\.accessibilityReduceMotion) private var systemMotion
@@ -24,9 +73,11 @@ struct ReceiptWalletScene: View {
     private var selectedID: UUID? { workspace.flow == .detail ? workspace.selected?.id : nil }
     private var records: [ReceiptRecord] { Array(workspace.orderedReceipts.filter { !$0.isArchived }.reversed()) }
     private var motion: Animation { reduceMotion ? .easeOut(duration: 0.12) : .spring(response: 0.56, dampingFraction: 0.86) }
+    private var elastic: Bool { !reduceMotion && !typeSize.isAccessibilitySize }
 
     var body: some View {
         GeometryReader { geometry in
+            let viewportHeight = geometry.size.height
             ZStack(alignment: .topLeading) {
                 if !records.isEmpty {
                     walletBack(in: geometry)
@@ -58,7 +109,9 @@ struct ReceiptWalletScene: View {
                                     if let notice = workspace.notice {
                                         Text(notice).font(.footnote).padding(.bottom, 16).opacity(selectedID == nil ? 1 : 0)
                                     }
-                                    LazyVStack(spacing: typeSize.isAccessibilitySize ? 14 : -108) {
+                                    if elastic {
+                                        elasticStack(in: geometry)
+                                    } else { LazyVStack(spacing: typeSize.isAccessibilitySize ? 14 : -108) {
                                         ForEach(Array(records.enumerated()), id: \.element.id) { index, record in
                                             card(record, index: index, height: geometry.size.height)
                                                 .id(record.id).zIndex(revealedID == record.id ? Double(records.count + 1) : Double(index + 1))
@@ -69,7 +122,7 @@ struct ReceiptWalletScene: View {
                                                 } action: { if presented == nil { paperFrames[record.id] = $0 } }
                                                 .rotationEffect(.degrees(tilt(index)))
                                         }
-                                    }.padding(.horizontal, 10)
+                                    }.padding(.horizontal, 10) }
                                 }
                                 .onGeometryChange(for: CGFloat.self) { $0.size.height } action: {
                                     if presented == nil { stackHeight = $0; measuredCount = records.count }
@@ -85,7 +138,7 @@ struct ReceiptWalletScene: View {
                             .onGeometryChange(for: CGFloat.self) { content in
                                 // Measure the actual stack end, including native rubber-banding.
                                 // For a short stack, its resting end is above the viewport bottom.
-                                let restingEnd = min(geometry.size.height, content.size.height)
+                                let restingEnd = min(viewportHeight, content.size.height)
                                 return max(0, restingEnd - content.frame(in: .named("walletScene")).maxY)
                             } action: { pull in
                                 if presented == nil { endBounce = reduceMotion ? 0 : pull }
@@ -181,6 +234,44 @@ struct ReceiptWalletScene: View {
             }
         }
     }
+    private func projection(in geometry: GeometryProxy) -> ReceiptStackProjection {
+        let fullHeight = geometry.size.height + geometry.safeAreaInsets.top + geometry.safeAreaInsets.bottom
+        return ReceiptStackProjection(viewportHeight: geometry.size.height,
+            readingY: fullHeight / 3 - geometry.safeAreaInsets.top,
+            anchor: geometry.size.height - walletHeight - 20 + tuckedDepth - ReceiptStackProjection.paperHeight)
+    }
+    private func elasticStack(in geometry: GeometryProxy) -> some View {
+        let snapshot = records
+        let curve = projection(in: geometry)
+        let baseY = stackSceneY ?? stackTop(in: geometry)
+        let visible = curve.visibleIndices(baseY: baseY, count: snapshot.count, endPull: endBounce)
+        let ids = visible.map { snapshot[$0].id }
+        return ZStack(alignment: .topLeading) {
+            ForEach(visible, id: \.self) { index in
+                let record = snapshot[index]
+                let y = curve.displayedPosition(baseY + CGFloat(index) * ReceiptStackProjection.pitch, endPull: endBounce)
+                card(record, index: index, height: geometry.size.height)
+                    .frame(height: ReceiptStackProjection.paperHeight)
+                    .id(record.id).zIndex(revealedID == record.id ? Double(records.count + 1) : Double(index + 1))
+                    .rotationEffect(.degrees(tilt(index)))
+                    .offset(y: y - baseY)
+                    .onGeometryChange(for: CGRect.self) { proxy in
+                        let bounds = proxy.frame(in: .named("walletScene"))
+                        return CGRect(x: bounds.midX - proxy.size.width / 2, y: bounds.midY - proxy.size.height / 2,
+                                      width: proxy.size.width, height: proxy.size.height)
+                    } action: { if presented == nil { paperFrames[record.id] = $0 } }
+            }
+        }
+        .frame(maxWidth: .infinity, alignment: .topLeading)
+        .frame(height: CGFloat(max(0, snapshot.count - 1)) * ReceiptStackProjection.pitch + ReceiptStackProjection.paperHeight, alignment: .topLeading)
+        .onGeometryChange(for: CGFloat.self) { $0.frame(in: .named("walletScene")).minY } action: {
+            if presented == nil { stackSceneY = $0 }
+        }
+        .onChange(of: ids, initial: true) { _, visibleIDs in
+            if presented == nil { paperFrames = paperFrames.filter { visibleIDs.contains($0.key) } }
+        }
+        .padding(.horizontal, 10)
+    }
     private func card(_ record: ReceiptRecord, index: Int, height: CGFloat) -> some View {
         let focus = presented?.id == record.id
         let selectedIndex = records.firstIndex { $0.id == presented?.id }
@@ -197,6 +288,10 @@ struct ReceiptWalletScene: View {
         .allowsHitTesting(presented == nil)
     }
     private func stackTop(in geometry: GeometryProxy) -> CGFloat {
+        if elastic {
+            let curve = projection(in: geometry)
+            return max(curve.logicalPosition(14), curve.anchor - CGFloat(max(0, records.count - 1)) * ReceiptStackProjection.pitch)
+        }
         let estimate = CGFloat(max(0, records.count - 1)) * (typeSize.isAccessibilitySize ? 258 : 136) + 244
         let height = measuredCount == records.count && stackHeight > 0 ? stackHeight : estimate
         let pocketTop = geometry.size.height - walletHeight - 20

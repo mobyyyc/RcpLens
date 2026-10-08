@@ -41,6 +41,7 @@ struct ReceiptSessionView: View {
                 workspace.activate(protectedDataAvailable: UIApplication.shared.isProtectedDataAvailable)
                 #if DEBUG
                 await SyntheticNativePreview.run(workspace)
+                await SyntheticNativePreview.addRequestedDemoReceipts(workspace)
                 #endif
             }
             .onChange(of: scenePhase) { _, phase in

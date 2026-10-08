@@ -1,0 +1,17 @@
+{
+  "build": "Succeeded",
+  "adHocSignatureVerified": true,
+  "debugMarkersChecked": [
+    "--add-demo-receipts",
+    "--t05-synthetic-preview",
+    "--t05-white-paper",
+    "--t05-local-test",
+    "--t05-slot",
+    "--synthetic-diagnostics",
+    "Synthetic diagnostics",
+    "Test reference",
+    "Test verify",
+    "Local test image"
+  ],
+  "debugMarkersPresent": []
+}

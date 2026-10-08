@@ -1,0 +1,21 @@
+{
+  "fullSuite": {
+    "result": "Passed",
+    "totalTestCount": 51,
+    "passedTests": 50,
+    "failedTests": 0,
+    "skippedTests": 1,
+    "runtimeWarnings": []
+  },
+  "sampleAdditionCase": {
+    "result": "Passed",
+    "totalTestCount": 1,
+    "passedTests": 1,
+    "failedTests": 0,
+    "skippedTests": 0,
+    "runtimeWarnings": []
+  },
+  "uniquePasses": 51,
+  "hardwareSkips": 1,
+  "scope": "Full domain/settings/storage suite plus projection math. Separate sample case verifies exactly ten additions, unchanged existing record/settings and idempotence. Unit runs precede a UI-only immutable render-snapshot fix; math and domain implementation unchanged."
+}

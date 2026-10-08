@@ -1,0 +1,16 @@
+{
+  "operation": "User-requested additive fictional samples in normal Simulator store",
+  "firstLaunch": {
+    "added": 10,
+    "requested": 10,
+    "total": 12
+  },
+  "secondLaunch": {
+    "added": 0,
+    "requested": 10,
+    "total": 12
+  },
+  "existingReceiptsPreservedByAdditiveOperation": true,
+  "persistedAcrossProcessRelaunch": true,
+  "ordinaryReceiptFieldsExported": false
+}

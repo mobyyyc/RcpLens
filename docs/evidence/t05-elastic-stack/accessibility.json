@@ -1,0 +1,21 @@
+{
+  "passedTests": 5,
+  "failedTests": 0,
+  "structureAuditTypes": [
+    "elementDetection",
+    "hitRegion",
+    "sufficientElementDescription"
+  ],
+  "contrastFindingsBySyntheticScenario": {
+    "wallet": 3,
+    "detail": 2,
+    "review": 3,
+    "source": 1,
+    "library": 3
+  },
+  "acceptedContrastExceptions": 12,
+  "unresolvedContrastFindings": 0,
+  "contrastAuditStatus": "FindingsWithNarrowDocumentedExceptions",
+  "certified": false,
+  "scope": "Final app sources; exception rules unchanged."
+}

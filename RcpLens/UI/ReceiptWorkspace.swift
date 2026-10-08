@@ -1,6 +1,9 @@
 import Foundation
 import Observation
 import UIKit
+#if DEBUG
+import CryptoKit
+#endif
 
 /// Main-actor presentation state. Only explicit user actions persist receipts or wallet preferences.
 @MainActor @Observable
@@ -348,6 +351,32 @@ final class ReceiptWorkspace {
         }
     }
     #if DEBUG
+    /// Explicit simulator action only; append ten marked samples without resetting records or settings.
+    func addFictionalDemoReceipts() async -> Int {
+        guard let store, active, !saving else { return 0 }
+        var added = 0
+        let session = sessionID, lease = permit
+        saving = true
+        defer { if isCurrent(session) { saving = false } }
+        do {
+            var existing = Set(receipts.map { $0.asset.sha256 })
+            for index in 0..<10 {
+                try Task.checkCancellation(); try lease.check()
+                let (bytes, draft) = SyntheticNativePreview.demoFixture(index: index)
+                let digest = Data(SHA256.hash(data: bytes))
+                if existing.contains(digest) { continue }
+                let result = try await Task.detached { try ReceiptRecognitionJob().run(ReceiptImage.decode(bytes)) }.value
+                _ = try await store.create(extraction: ReceiptParser.extraction(result), originalImage: bytes, mediaType: "image/png",
+                    correction: draft.fields, review: .sourceReviewed, reviewInput: JSONEncoder().encode(draft), permit: lease)
+                existing.insert(digest); added += 1
+            }
+            let records = try await store.receipts(); try lease.check()
+            if isCurrent(session) { receipts = records }
+        } catch {
+            if isCurrent(session) { notice = "Demo receipt setup did not finish. Existing receipts are preserved." }
+        }
+        return added
+    }
     /// Called only for the separate fictional-preview store configured at launch.
     func seedFictionalRecordsForPreview(count: Int) async {
         guard SyntheticNativePreview.enabled, let store, active else { return }

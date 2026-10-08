@@ -320,6 +320,32 @@ import UIKit
         let end = card.coordinate(withNormalizedOffset: CGVector(dx: left ? 0.15 : 0.85, dy: 0.18))
         start.press(forDuration: 0.05, thenDragTo: end)
     }
+    func testElasticStackHasVariableGapsSpeedsAndReversibleScroll() {
+        let app = launch("elastic")
+        XCTAssertTrue(app.staticTexts["13 saved"].waitForExistence(timeout: 45))
+        let upper = app.buttons["receipt-1"], nearPocket = app.buttons["receipt-6"]
+        let upperGap = app.buttons["receipt-2"].frame.minY - upper.frame.minY
+        let lowerGap = nearPocket.frame.minY - app.buttons["receipt-5"].frame.minY
+        XCTAssertGreaterThan(upperGap, lowerGap * 2, "The reading zone must expose more paper than the pocket zone")
+        XCTAssertGreaterThan(lowerGap, 30, "Compressed headers must remain separated")
+        XCTAssertLessThan(upperGap, 245, "Papers retain overlap without changing chronological order")
+        capture(app, "Elastic-stack-rest")
+        let topY = upper.frame.minY, bottomY = nearPocket.frame.minY
+        let start = app.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.35))
+        let end = app.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.30))
+        start.press(forDuration: 0.1, thenDragTo: end, withVelocity: .slow, thenHoldForDuration: 0.2)
+        let upperTravel = topY - upper.frame.minY, lowerTravel = bottomY - nearPocket.frame.minY
+        XCTAssertGreaterThan(lowerTravel, 2)
+        XCTAssertGreaterThan(upperTravel, lowerTravel * 1.8, "The same swipe moves papers faster in the reading zone")
+        capture(app, "Elastic-stack-pulled")
+        end.press(forDuration: 0.1, thenDragTo: start, withVelocity: .slow, thenHoldForDuration: 0.2)
+        XCTAssertEqual(upper.frame.minY, topY, accuracy: 4, "Reversing the swipe restores the spacing continuously")
+        XCTAssertEqual(nearPocket.frame.minY, bottomY, accuracy: 4)
+        upper.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.18)).tap()
+        XCTAssertTrue(app.buttons["original"].waitForExistence(timeout: 15)); app.buttons["back"].tap()
+        XCTAssertTrue(upper.waitForExistence(timeout: 15)); XCTAssertEqual(upper.frame.minY, topY, accuracy: 4)
+        app.terminate()
+    }
     private func paperBrightness(_ app: XCUIApplication, at point: CGPoint) throws -> Double {
         let image = try XCTUnwrap(app.screenshot().image.cgImage)
         let scale = CGFloat(image.width) / app.frame.width

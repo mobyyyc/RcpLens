@@ -1,0 +1,41 @@
+{
+  "focusedFinalRun": {
+    "result": "Passed",
+    "totalTestCount": 2,
+    "passedTests": 2,
+    "failedTests": 0,
+    "skippedTests": 0,
+    "runtimeWarnings": []
+  },
+  "remainingFinalCases": {
+    "result": "Passed",
+    "totalTestCount": 11,
+    "passedTests": 11,
+    "failedTests": 0,
+    "skippedTests": 0,
+    "runtimeWarnings": [
+      {
+        "issueType": "Runtime Warning",
+        "message": "Invalid frame dimension (negative or non-finite)."
+      },
+      {
+        "issueType": "Runtime Warning",
+        "message": "Invalid frame dimension (negative or non-finite)."
+      },
+      {
+        "issueType": "Runtime Warning",
+        "message": "Invalid frame dimension (negative or non-finite)."
+      }
+    ]
+  },
+  "recordedAnimationRerun": {
+    "result": "Passed",
+    "totalTestCount": 1,
+    "passedTests": 1,
+    "failedTests": 0,
+    "skippedTests": 0,
+    "runtimeWarnings": []
+  },
+  "uniqueCasesVerified": 13,
+  "scope": "Both final runs use identical final app/test sources. Focus: elastic gaps, actual different speeds, reverse swipe and projected-frame open/return; one/two/three rendered wallet occlusion. Remaining eleven: chronology, configurable delete, 30 receipts and fallback, native date, appearance, archive/star persistence and five native accessibility/import cases. Motion rerun duplicates the elastic case solely for final visual review."
+}

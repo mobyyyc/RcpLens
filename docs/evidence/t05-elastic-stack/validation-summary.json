@@ -1,0 +1,107 @@
+{
+  "date": "2026-10-08",
+  "milestone": "T05 elastic receipt stack and ten additive demo receipts; T06 awaits approval",
+  "exportedVisualEvidence": "Isolated fictional preview store only. Normal-store sample report contains aggregate counts only.",
+  "unitUniquePasses": 51,
+  "unitHardwareSkips": 1,
+  "unitScope": "50 full-suite passes plus one separate sample-addition case; preceding UI-only stable render-snapshot fix, unchanged math/domain sources.",
+  "nativeUniqueCasesVerified": 13,
+  "nativeFocusedFinalRun": {
+    "result": "Passed",
+    "totalTestCount": 2,
+    "passedTests": 2,
+    "failedTests": 0,
+    "skippedTests": 0,
+    "runtimeWarnings": []
+  },
+  "nativeRemainingFinalCases": {
+    "result": "Passed",
+    "totalTestCount": 11,
+    "passedTests": 11,
+    "failedTests": 0,
+    "skippedTests": 0,
+    "runtimeWarnings": [
+      {
+        "issueType": "Runtime Warning",
+        "message": "Invalid frame dimension (negative or non-finite)."
+      },
+      {
+        "issueType": "Runtime Warning",
+        "message": "Invalid frame dimension (negative or non-finite)."
+      },
+      {
+        "issueType": "Runtime Warning",
+        "message": "Invalid frame dimension (negative or non-finite)."
+      }
+    ]
+  },
+  "motionRecordingRerun": {
+    "result": "Passed",
+    "totalTestCount": 1,
+    "passedTests": 1,
+    "failedTests": 0,
+    "skippedTests": 0,
+    "runtimeWarnings": []
+  },
+  "testScope": "Final app sources verified across two disjoint native runs. Early diagnostic render-reset crashes resolved by immutable receipt snapshots; interrupted diagnostic run excluded from pass counts. New native checks measure upper-zone vs pocket gaps and travel distances during the same gesture, reverse to within four points, then open and return from the projected frame. Existing layer/swipe/date/settings/import/accessibility cases pass.",
+  "accessibility": {
+    "passedTests": 5,
+    "failedTests": 0,
+    "structureAuditTypes": [
+      "elementDetection",
+      "hitRegion",
+      "sufficientElementDescription"
+    ],
+    "contrastFindingsBySyntheticScenario": {
+      "wallet": 3,
+      "detail": 2,
+      "review": 3,
+      "source": 1,
+      "library": 3
+    },
+    "acceptedContrastExceptions": 12,
+    "unresolvedContrastFindings": 0,
+    "contrastAuditStatus": "FindingsWithNarrowDocumentedExceptions",
+    "certified": false,
+    "scope": "Final app sources; exception rules unchanged."
+  },
+  "visualReview": [
+    "Light/dark/always-white stack with thirteen fictional receipts",
+    "Wider upper-third reading area and compressed paper edges near pocket",
+    "Slow drag/reverse and retained detail return",
+    "One/two/three papers sandwiched between back/front",
+    "Large text and Reduced Motion retain regular layout"
+  ],
+  "demoAddition": {
+    "operation": "User-requested additive fictional samples in normal Simulator store",
+    "firstLaunch": {
+      "added": 10,
+      "requested": 10,
+      "total": 12
+    },
+    "secondLaunch": {
+      "added": 0,
+      "requested": 10,
+      "total": 12
+    },
+    "existingReceiptsPreservedByAdditiveOperation": true,
+    "persistedAcrossProcessRelaunch": true,
+    "ordinaryReceiptFieldsExported": false
+  },
+  "sourceManifest": "source-hashes.json",
+  "releaseVerification": "release-verification.json",
+  "releaseInstalledAndNormallyLaunched": true,
+  "simulator": {
+    "model": "iPhone 18 Pro",
+    "iOS": "27.0",
+    "id": "50661E83-1F58-466B-99F0-9DC517D8EC82"
+  },
+  "limits": [
+    "Hardware camera, device protection and VoiceOver remain for the iPhone phase",
+    "Narrow contrast exceptions do not certify device/material contrast",
+    "Three pre-existing review-screen invalid-frame runtime warnings recur in the same cases as the preceding leather-wallet run; native assertions pass",
+    "No new recognition accuracy score",
+    "User design review and T06 approval remain pending"
+  ],
+  "normalStoreSamplesRetainedAfterReleaseInstall": "Previously verified persisted encrypted samples; Release installed over Debug without uninstall, using same ordinary store/key."
+}

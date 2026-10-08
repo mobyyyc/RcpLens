@@ -53,3 +53,8 @@ The user clarified that fading belongs at the top and bottom of the screen, foll
 ### Leather wallet and receipt appearance · 2026-10-08
 
 The user requested a landscape wallet inspired by a cognac leather MagSafe pocket, with a shaped opening and material depth rather than a plain rounded rectangle. The user further specified that receipts sit between the wallet’s front and back: render the back beneath the paper stack and the front above it, preserving that order during transitions. Keep it at the bottom with receipts partly inserted and the existing animations, shadows, native edge effects and Glass interactions. Preserve the accepted empty-wallet illustration. Add a saved Receipt paper setting: Always white, or Match appearance (including dark paper in Dark Mode). Preserve current behavior as the default, and scope the choice to paper rather than system controls or wallet.
+
+
+### Elastic receipt stack · 2026-10-08
+
+The user requested a stretch/squeeze feeling: different receipt travel speeds at different screen heights, with widest separation around the upper third and gradual compression toward the wallet. Use a reversible monotone projection, preserve receipt size/order and retained detail-return frames, and keep the joint end spring and front/paper/back wallet layers. Respect Reduced Motion and large text. After implementation, append ten clearly marked fictional receipts to the normal Simulator wallet for hands-on testing without replacing existing receipts or preferences.
