@@ -54,8 +54,8 @@ import UIKit
         XCTAssertTrue(app.descendants(matching: .any)["detailScreen"].waitForExistence(timeout: 15))
         app.buttons["debugVerify"].tap()
         XCTAssertTrue(app.staticTexts["Local verification passed"].waitForExistence(timeout: 10), "Reviewed receipt did not survive app restart")
-        app.buttons["delete"].tap(); app.buttons["Delete receipt and original"].tap()
-        XCTAssertTrue(app.buttons["emptyImport"].waitForExistence(timeout: 15), "Deletion did not remove saved receipt")
+        app.buttons["receiptOptions"].tap(); app.buttons["delete"].tap(); app.buttons["Delete receipt and original"].tap()
+        XCTAssertTrue(app.buttons["import"].waitForExistence(timeout: 15), "Deletion did not remove saved receipt")
         XCTAssertFalse(app.buttons["receipt-0"].exists)
         app.terminate()
     }
@@ -80,17 +80,17 @@ import UIKit
         app.swipeUp(); app.buttons["debugImport"].tap()
         XCTAssertTrue(app.descendants(matching: .any)["reviewScreen"].waitForExistence(timeout: 20))
         app.buttons["back"].tap(); app.buttons["Discard changes"].tap()
-        XCTAssertTrue(app.buttons["emptyImport"].waitForExistence(timeout: 10))
+        XCTAssertTrue(app.buttons["import"].waitForExistence(timeout: 10))
         app.swipeUp(); app.buttons["debugImport"].tap()
         XCTAssertTrue(app.descendants(matching: .any)["reviewScreen"].waitForExistence(timeout: 20))
         XCUIDevice.shared.press(.home)
         app.activate()
-        XCTAssertTrue(app.buttons["emptyImport"].waitForExistence(timeout: 15), "Unsaved private work must be dropped across background")
+        XCTAssertTrue(app.buttons["import"].waitForExistence(timeout: 15), "Unsaved private work must be dropped across background")
         XCTAssertFalse(app.descendants(matching: .any)["reviewScreen"].exists)
     }
     func testPhotoPickerImportAndEditableControls() throws {
         let app = XCUIApplication(); app.launchArguments = ["--t05-local-test", "--t05-slot", "5", "--t05-synthetic-input"]; app.launch()
-        XCTAssertTrue(app.buttons["emptyImport"].waitForExistence(timeout: 15)); app.buttons["emptyImport"].tap()
+        XCTAssertTrue(app.buttons["import"].waitForExistence(timeout: 15)); app.buttons["import"].tap()
         app.buttons["Photo library"].tap()
         // Match the individual image, not the grid whose combined label includes every photo.
         let photo = app.images.matching(NSPredicate(format: "label BEGINSWITH 'Photo,' AND label CONTAINS '2036'")).firstMatch
@@ -102,7 +102,7 @@ import UIKit
         app.buttons["Printed text"].tap()
         XCTAssertTrue(app.staticTexts["SYNTHETIC STORE"].waitForExistence(timeout: 10), "The selected photo OCR must match the known synthetic receipt")
         app.buttons["sourceDone"].tap()
-        let merchant = app.textFields["merchantField"]
+        let merchant = app.descendants(matching: .any)["merchantField"]
         merchant.tap()
         let previous = merchant.value as? String ?? ""
         merchant.typeText(String(repeating: XCUIKeyboardKey.delete.rawValue, count: previous.count) + "FICTIONAL PHOTO SHOP")
@@ -152,9 +152,20 @@ import UIKit
             print("Synthetic accessibility scenario: " + mode)
             let app = XCUIApplication(); app.launchArguments = ["--t05-synthetic-preview", mode, "--t05-light"]
             app.launch()
-            let anchor = mode == "wallet" ? app.buttons["receipt-0"] : (mode == "detail" ? app.buttons["edit"] : (mode == "review" ? app.buttons["saveDraft"] : (mode == "source" ? app.buttons["sourceDone"] : app.navigationBars["All receipts"])))
+            let anchor = mode == "wallet" ? app.buttons["receipt-0"] : (mode == "detail" ? app.buttons["edit"] : (mode == "review" ? app.buttons["saveDraft"] : (mode == "source" ? app.buttons["sourceDone"] : app.buttons["walletTab"])))
             XCTAssertTrue(anchor.waitForExistence(timeout: 30), "Synthetic native scenario failed to prepare")
-            try app.performAccessibilityAudit(for: [.elementDetection, .hitRegion, .sufficientElementDescription])
+            try app.performAccessibilityAudit(for: [.elementDetection, .hitRegion, .sufficientElementDescription]) { issue in
+                var detail: [String: Any] = ["scenario": mode, "reason": issue.compactDescription, "details": issue.detailedDescription]
+                if let element = issue.element {
+                    let f = element.frame
+                    detail["label"] = element.label; detail["identifier"] = element.identifier
+                    detail["frame"] = [f.origin.x, f.origin.y, f.width, f.height]
+                }
+                if let data = try? JSONSerialization.data(withJSONObject: detail, options: [.sortedKeys]), let line = String(data: data, encoding: .utf8) { print("T05_STRUCTURE_ISSUE " + line) }
+                let tree = XCTAttachment(string: app.debugDescription); tree.name = "Synthetic-AX-" + mode
+                tree.lifetime = .keepAlways; self.add(tree)
+                return false // Structural findings remain failures, never waived as contrast exceptions.
+            }
             // Keep the native contrast findings as diagnostics: this SDK flags even solid black-on-white text.
             // Only individually measured/identified fixture exceptions are accepted; all other findings fail.
             // This does not certify all native material states or device accessibility.
@@ -172,20 +183,21 @@ import UIKit
                     let screenshot = element.screenshot()
                     let measured = self.pixelContrast(screenshot)
                     if let measured { detail["foreground"] = measured.foreground; detail["background"] = measured.background; detail["measuredRatio"] = measured.ratio }
-                    let walletLabels = ["1 items · Tap to open", "2026-10-07", "2026-10-06", "2026-10-05", "CAD 12.34"]
-                    let detailLabels = ["2026-10-07 · CAD", "12.34", "Quantity not recorded"]
+                    let walletLabels = ["2026-10-07", "2026-10-06", "2026-10-05", "CAD 12.34"]
+                    let detailLabels = ["2026-10-07 · CAD", "12.34", "Qty unknown", "Saved on this device"]
                     if element.elementType == .staticText, element.isEnabled,
-                       (mode == "wallet" && walletLabels.contains(element.label) || mode == "detail" && detailLabels.contains(element.label)),
+                       (mode == "wallet" && walletLabels.contains(element.label) || mode == "detail" && detailLabels.contains(element.label) || mode == "library" && element.label == "2026-10-07"),
                        let measured, measured.foreground == "#000000", measured.ratio >= 7 {
                         accepted = true; classification = "measured-black-reading-text-sdk-finding"
                     } else if element.elementType == .button, element.isEnabled,
-                              (mode == "review" && element.identifier == "saveDraft" || mode == "source" && element.identifier == "sourceDone"),
+                              (mode == "review" && ["saveDraft", "original"].contains(element.identifier) || mode == "source" && element.identifier == "sourceDone" || mode == "detail" && element.identifier == "original" || mode == "wallet" && element.identifier == "allReceipts"),
                               let measured, measured.foreground == "#000000", measured.ratio >= 7 {
                         accepted = true; classification = "measured-native-glass-label-sdk-finding"
                     } else if mode == "review", element.identifier == "finishSave", !element.isEnabled {
                         accepted = true; classification = "intentionally-disabled-native-finish"
                     } else if mode == "library", element.elementType == .staticText, element.label == "SYNTHETIC CORNER",
-                              (f.intersects(app.buttons["walletTab"].frame) || f.intersects(app.buttons["allReceipts"].frame)) {
+                              f.intersects(app.buttons["import"].frame),
+                              let measured, measured.foreground == "#000000", measured.ratio >= 7 {
                         accepted = true; classification = "native-list-row-partly-under-floating-toolbar"
                     }
                     let attachment = XCTAttachment(screenshot: screenshot)
@@ -200,12 +212,54 @@ import UIKit
             app.terminate()
         }
     }
+    func testReceiptOptionsAndDeleteConfirmation() throws {
+        let app = XCUIApplication(); app.launchArguments = ["--t05-synthetic-preview", "wallet", "--t05-light"]
+        app.launch()
+        XCTAssertTrue(app.buttons["receipt-0"].waitForExistence(timeout: 30)); app.buttons["receipt-0"].tap()
+        XCTAssertTrue(app.buttons["edit"].waitForExistence(timeout: 15))
+        XCTAssertEqual(app.buttons.matching(identifier: "original").count, 1)
+        app.buttons["receiptOptions"].tap(); app.buttons["Storage details"].tap()
+        XCTAssertTrue(app.buttons["Done"].waitForExistence(timeout: 10)); app.buttons["Done"].tap()
+        app.buttons["receiptOptions"].tap(); app.buttons["delete"].tap()
+        XCTAssertTrue(app.buttons["Delete receipt and original"].waitForExistence(timeout: 10))
+        app.buttons["Cancel"].tap()
+        XCTAssertTrue(app.buttons["edit"].isHittable)
+        app.buttons["receiptOptions"].tap(); app.buttons["delete"].tap()
+        app.buttons["Delete receipt and original"].tap()
+        XCTAssertTrue(app.staticTexts["2 saved"].waitForExistence(timeout: 15))
+        XCTAssertEqual(app.buttons.matching(identifier: "import").count, 1)
+        app.terminate()
+    }
+    func testSingleImportAndCollectionNavigation() throws {
+        for mode in ["empty", "wallet"] {
+            let app = XCUIApplication(); app.launchArguments = ["--t05-synthetic-preview", mode, "--t05-light"]
+            app.launch()
+            let importer = app.buttons["import"]
+            XCTAssertTrue(importer.waitForExistence(timeout: 30))
+            XCTAssertEqual(app.buttons.matching(identifier: "import").count, 1)
+            XCTAssertEqual(app.buttons.matching(NSPredicate(format: "label == 'Import receipt'")).count, 1)
+            XCTAssertFalse(app.buttons["emptyImport"].exists)
+            XCTAssertFalse(app.buttons["walletTab"].exists)
+            XCTAssertTrue(importer.isHittable)
+            app.buttons["walletInformation"].tap()
+            XCTAssertTrue(app.staticTexts.matching(NSPredicate(format: "label BEGINSWITH %@", "Receipts are excluded from automatic backup.")).firstMatch.waitForExistence(timeout: 10))
+            app.buttons["Done"].tap()
+            if mode == "wallet" {
+                app.buttons["allReceipts"].tap()
+                XCTAssertTrue(app.buttons["walletTab"].waitForExistence(timeout: 10))
+                XCTAssertEqual(app.buttons.matching(identifier: "import").count, 1)
+                app.buttons["walletTab"].tap()
+                XCTAssertTrue(app.buttons["receipt-0"].waitForExistence(timeout: 10))
+            }
+            app.terminate()
+        }
+    }
     func testEmptyWalletImportProminentContrastDarkAndLight() throws {
         for mode in ["dark", "light"] {
             let app = XCUIApplication()
             app.launchArguments = ["--t05-synthetic-preview", "empty"] + (mode == "light" ? ["--t05-light"] : [])
             app.launch()
-            let button = app.buttons["emptyImport"]
+            let button = app.buttons["import"]
             XCTAssertTrue(button.waitForExistence(timeout: 30))
             let measured = try XCTUnwrap(pixelContrast(button.screenshot()))
             XCTAssertEqual(measured.foreground, mode == "dark" ? "#000000" : "#FFFFFF")

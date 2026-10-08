@@ -1,0 +1,18 @@
+{
+  "syntheticOnly": true,
+  "measurements": [
+    {
+      "background": "#F9F9F9",
+      "foreground": "#000000",
+      "mode": "dark",
+      "ratio": 19.946130734663996
+    },
+    {
+      "background": "#0E0D0F",
+      "foreground": "#FFFFFF",
+      "mode": "light",
+      "ratio": 19.388077475995708
+    }
+  ],
+  "scope": "Opaque glyph-interior sRGB samples, not all native material states."
+}

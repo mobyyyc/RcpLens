@@ -17,6 +17,7 @@ ROOT = Path(__file__).resolve().parents[1]
 PRIVATE = ROOT / 'private-receipts'
 EVIDENCE = ROOT / 'docs/evidence/t05'
 SIMULATOR = '50661E83-1F58-466B-99F0-9DC517D8EC82'
+DERIVED_DATA = '/tmp/RcpLens-T05-DerivedData'
 ENV = {**os.environ, 'DEVELOPER_DIR': '/Applications/Xcode.app/Contents/Developer'}
 
 
@@ -37,7 +38,7 @@ def write(path, obj):
 
 
 def prepare(private=True):
-    command(['xcrun', 'simctl', 'install', SIMULATOR, '/tmp/RcpLens-T05-DerivedData/Build/Products/Debug-iphonesimulator/RcpLens.app'])
+    command(['xcrun', 'simctl', 'install', SIMULATOR, str(Path(DERIVED_DATA)/'Build/Products/Debug-iphonesimulator/RcpLens.app')])
     container = Path(command(['xcrun', 'simctl', 'get_app_container', SIMULATOR, 'com.mobyyyc.RcpLens', 'data']))
     inbox = container / 'Documents/T05TestInbox'
     if private and inbox.exists(): shutil.rmtree(inbox)
@@ -83,7 +84,7 @@ def run(private, accessibility=False):
     source_files = list((ROOT/'RcpLens').rglob('*.swift')) + list((ROOT/'RcpLensUITests').rglob('*.swift')) + [ROOT/'RcpLens.xcodeproj/project.pbxproj']
     write(run/'source-hashes.json',{str(path.relative_to(ROOT)):hashlib.sha256(path.read_bytes()).hexdigest() for path in sorted(source_files)})
     result = subprocess.run(['xcodebuild','-project','RcpLens.xcodeproj','-scheme','T05Workflow','-configuration','Debug',
-        '-destination',f'platform=iOS Simulator,id={SIMULATOR}','-derivedDataPath','/tmp/RcpLens-T05-DerivedData',
+        '-destination',f'platform=iOS Simulator,id={SIMULATOR}','-derivedDataPath',DERIVED_DATA,
         '-resultBundlePath',str(run/'tests.xcresult'),'-parallel-testing-enabled','NO',
         '-only-testing:'+target,'CODE_SIGNING_ALLOWED=YES','CODE_SIGN_IDENTITY=-','test'], env=env,capture_output=True,cwd=ROOT)
     (run/'test.log').write_bytes(result.stdout + result.stderr); (run/'test.log').chmod(0o600)
@@ -124,8 +125,10 @@ def run(private, accessibility=False):
 
 
 def main():
-    parser = argparse.ArgumentParser(); parser.add_argument('action',choices=['prepare','prepare-synthetic','private','synthetic','accessibility']); parser.add_argument('--simulator',default=SIMULATOR); args = parser.parse_args()
+    parser = argparse.ArgumentParser(); parser.add_argument('action',choices=['prepare','prepare-synthetic','private','synthetic','accessibility']); parser.add_argument('--simulator',default=SIMULATOR); parser.add_argument('--evidence-directory',type=Path,default=EVIDENCE); parser.add_argument('--derived-data',default=DERIVED_DATA); args = parser.parse_args()
     globals()['SIMULATOR'] = args.simulator
+    globals()['EVIDENCE'] = args.evidence_directory
+    globals()['DERIVED_DATA'] = args.derived_data
     try:
         if args.action in ['prepare','prepare-synthetic']: prepare(args.action == 'prepare'); return 0
         return run(args.action == 'private',args.action == 'accessibility')

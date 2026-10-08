@@ -30,3 +30,7 @@ Camera until the simulator version is ready; accounts/cloud sync; warranty/tax/r
 
 ## Pending preferences and inputs
 Exact phone iOS version before device testing. Five private HEIC receipt images and checked human references remain Git-ignored: two Costco, two No Frills and one T&T. T03 measured this small pilot; T05 verified all five reference-assisted save/restart/correction/delete workflows, with two finished and three retained as unresolved drafts. This does not replace the raw-accuracy benchmark or measure human correction time. Expanded retailer coverage remains future validation. Simulator local Foundation Models generation and synthetic Vision OCR were verified in T01. Image-assisted model extraction was tested on the Mac; Apple's OCRTool is unavailable in Simulator. Phone performance, hardware file-protection enforcement, device VoiceOver and full native material contrast verification remain unverified. Simulator contrast findings have individually documented measured exceptions in the [demo report](IMPORT_DEMO.md).
+
+## Native design correction · 2026-10-08
+
+The user rejected the initial T05 empty-wallet presentation. The revision retains Paper lift while replacing duplicate import/Original actions and tab-like toolbar icons with one labeled Import action, explicit collection navigation, smaller layered artwork, stronger receipt hierarchy and compact review guidance. Storage limitations remain in Wallet information and the save/review flow. [Native audit and redesign](UI_REDESIGN.md). T06 still requires approval.

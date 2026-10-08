@@ -1,0 +1,24 @@
+{
+  "result": "Passed",
+  "totalTestCount": 5,
+  "passedTests": 5,
+  "failedTests": 0,
+  "skippedTests": 0,
+  "kind": "accessibility",
+  "structureAuditTypes": [
+    "elementDetection",
+    "hitRegion",
+    "sufficientElementDescription"
+  ],
+  "contrastFindingsBySyntheticScenario": {
+    "wallet": 4,
+    "detail": 3,
+    "review": 3,
+    "source": 1,
+    "library": 1
+  },
+  "contrastAuditStatus": "FindingsWithNarrowDocumentedExceptions",
+  "contrastScope": "Diagnostics only, never certified by the green structural/interaction test result.",
+  "acceptedContrastExceptions": 12,
+  "unresolvedContrastFindings": 0
+}

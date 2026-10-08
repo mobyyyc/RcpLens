@@ -13,7 +13,9 @@ ENV = {**os.environ, "DEVELOPER_DIR": "/Applications/Xcode.app/Contents/Develope
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--simulator", default="50661E83-1F58-466B-99F0-9DC517D8EC82")
+    parser.add_argument("--output-directory", type=Path, default=ROOT / "docs/evidence/t05")
     args = parser.parse_args()
+    args.output_directory.mkdir(parents=True, exist_ok=True)
     def command(parts):
         result = subprocess.run(parts, env=ENV, capture_output=True)
         if result.returncode: raise RuntimeError("synthetic_preview_tool_failed")
@@ -31,8 +33,8 @@ def main():
                 if ready.exists(): break
                 time.sleep(.1)
             if not ready.exists(): raise RuntimeError("synthetic_preview_not_ready")
-            time.sleep(.7)
-            command(["xcrun", "simctl", "io", sim, "screenshot", str(ROOT / "docs/evidence/t05" / (name + ".png"))])
+            time.sleep(1.5)
+            command(["xcrun", "simctl", "io", sim, "screenshot", str(args.output_directory / (name + ".png"))])
             print(json.dumps({"synthetic_screen": mode, "captured": True}), flush=True)
     finally:
         command(["xcrun", "simctl", "launch", "--terminate-running-process", sim, "com.mobyyyc.RcpLens"])

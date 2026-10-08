@@ -9,10 +9,10 @@ struct ReceiptReviewView: View {
         Binding(get: { workspace.draft[keyPath: key] }, set: { value in workspace.updateDraft { $0[keyPath: key] = value } })
     }
     var body: some View {
+        VStack(spacing: 0) {
         Form {
             Section {
-                Label("Check the paper before finishing", systemImage: "doc.text.magnifyingglass").font(.headline)
-                Text("Check every purchase, quantity, discount and tax against the original. Reading can miss or misread details.")
+                Label("Check details against the original.", systemImage: "doc.text.magnifyingglass")
                     .font(.subheadline).foregroundStyle(.primary)
                 if let extraction = workspace.extraction {
                     if extraction.issues.contains(where: { $0.code == "date_order_check" }) {
@@ -24,14 +24,14 @@ struct ReceiptReviewView: View {
                 }
             }
             Section {
-                LabeledContent("Merchant") { TextField("Required", text: field(\.merchant)).multilineTextAlignment(.trailing).focused(editing, equals: "merchant").accessibilityIdentifier("merchantField") }
+                LabeledContent("Merchant") { TextField("Required", text: field(\.merchant), axis: typeSize > .large ? .vertical : .horizontal).multilineTextAlignment(.trailing).focused(editing, equals: "merchant").accessibilityIdentifier("merchantField") }
                 LabeledContent("Date") { TextField("YYYY-MM-DD", text: field(\.date)).multilineTextAlignment(.trailing).focused(editing, equals: "date").keyboardType(.numbersAndPunctuation).accessibilityIdentifier("dateField") }
                 Picker("Currency", selection: field(\.currency)) {
                     Text("Choose currency").tag("")
                     ForEach(ExactInput.currencies.keys.sorted(), id: \.self) { Text($0).tag($0) }
                 }.accessibilityIdentifier("currencyField")
-                Text("Amounts are printed line extensions, not unit prices. Quantity is optional; blank stays unknown.").font(.footnote).foregroundStyle(.primary)
             } header: { Text("Receipt").foregroundStyle(Color(uiColor: .label)) }
+            footer: { Text("Use printed line amounts. Leave unknown quantities blank.").foregroundStyle(Color(uiColor: .label)) }
             Section {
                 ForEach(workspace.draft.lines.filter { $0.kind == "purchase" }) { line in
                     ReceiptLineEditor(workspace: workspace, id: line.id, editing: editing)
@@ -50,8 +50,6 @@ struct ReceiptReviewView: View {
                 }
             } header: { Text("Subtotal").foregroundStyle(Color(uiColor: .label)) }
             Section {
-                Text("Enter discounts as negative amounts. Add only printed tax, deposit or adjustment amounts; the app does not infer missing tax.")
-                    .font(.footnote).foregroundStyle(.primary)
                 ForEach(workspace.draft.lines.filter { $0.kind != "purchase" }) { line in
                     ReceiptLineEditor(workspace: workspace, id: line.id, editing: editing)
                 }
@@ -60,7 +58,8 @@ struct ReceiptReviewView: View {
                         Button(kind.capitalized) { workspace.updateDraft { $0.lines.append(.blank(kind: kind)) } }
                     }
                 } label: { Label("Add adjustment", systemImage: "plus").frame(minHeight: 44) }.accessibilityIdentifier("addAdjustment")
-            } header: { Text("Discounts, tax and other adjustments").foregroundStyle(Color(uiColor: .label)) }
+            } header: { Text("Adjustments").foregroundStyle(Color(uiColor: .label)) }
+            footer: { Text("Discounts are negative. Enter printed taxes and fees only.").foregroundStyle(Color(uiColor: .label)) }
             Section {
                 LabeledContent("Printed total") {
                     TextField("Required to finish", text: field(\.total)).keyboardType(.numbersAndPunctuation)
@@ -69,11 +68,9 @@ struct ReceiptReviewView: View {
                 reconciliation
             } header: { Text("Total").foregroundStyle(Color(uiColor: .label)) }
             Section {
-                Button("Compare with original", systemImage: "doc.viewfinder") { editing.wrappedValue = nil; workspace.showSource() }
-                    .frame(minHeight: 44).accessibilityIdentifier("compareOriginal")
-                Toggle("I checked every field and line against the original", isOn: $workspace.draft.sourceChecked)
+                Toggle("I checked the original", isOn: $workspace.draft.sourceChecked)
                     .disabled(!workspace.draft.sourceOpened).accessibilityIdentifier("sourceCheck")
-                Text(workspace.draft.sourceOpened ? "Changing a field clears this confirmation. Matching totals alone do not prove completeness." : "Open the original first. Review all lines, including ones recognition missed.")
+                Text(workspace.draft.sourceOpened ? "Confirm every field and line. Editing clears this check; matching totals alone do not prove completeness." : "Open Original above and check every field and line, including anything recognition missed.")
                     .font(.footnote).foregroundStyle(.primary)
             } header: { Text("Source review").foregroundStyle(Color(uiColor: .label)) }
             Section {
@@ -86,7 +83,9 @@ struct ReceiptReviewView: View {
                     .font(.footnote).foregroundStyle(.primary)
             }
 
-        }.scrollDismissesKeyboard(.interactively).accessibilityIdentifier("reviewScreen")
+        }.listSectionSpacing(20).scrollDismissesKeyboard(.interactively).clipped()
+        Color.clear.frame(height: typeSize.isAccessibilitySize ? 104 : 72).accessibilityHidden(true)
+        }.accessibilityIdentifier("reviewScreen")
     }
     private var reconciliation: some View {
         VStack(alignment: .leading, spacing: 10) {
@@ -152,17 +151,15 @@ struct ReceiptDetailView: View {
         ScrollView {
             VStack(alignment: .leading, spacing: 20) {
                 if !ReceiptCompletion.isComplete(record) {
-                    Label("Needs review", systemImage: "exclamationmark.circle").font(.headline)
-                    Text("Open Edit to fill missing details and check the total against the original.").font(.subheadline)
-                } else { Label("Source reviewed", systemImage: "checkmark.circle").font(.subheadline) }
+                    Label("Needs review", systemImage: "exclamationmark.circle").font(.footnote.weight(.medium))
+                    Text("Edit to check missing fields and totals.").font(.footnote)
+                } else { Label("Reviewed", systemImage: "checkmark.circle").font(.footnote.weight(.medium)) }
                 if let error = workspace.errorMessage { Text(error).font(.subheadline) }
                 if record.current.fields.currency == nil {
                     Text("Currency still needs confirmation. Amounts below are the saved editable text; they cannot be reconciled yet.").font(.subheadline)
                 }
                 ReceiptPaper(fields: record.current.fields, input: record.current.reviewInput.flatMap { try? JSONDecoder().decode(ReceiptReviewDraft.self, from: $0) })
-                Text("Original kept unchanged.").font(.footnote).foregroundStyle(.primary)
-                Button("View original", systemImage: "doc.viewfinder") { workspace.showSource() }.buttonStyle(.bordered).frame(minHeight: 44)
-                Text("On this device only · no automatic backup").font(.footnote).foregroundStyle(.primary)
+                Label("Saved on this device", systemImage: "lock").font(.footnote).foregroundStyle(.primary)
                 #if DEBUG
                 WorkflowDetailTestControls(workspace: workspace)
                 #endif
@@ -190,7 +187,7 @@ struct ReceiptPaper: View {
                         HStack(alignment: .top) { Text(item.description ?? "Description missing"); Spacer(minLength: 20); Text(money(item.amount, raw: input?.lines.first { $0.id == item.id }?.amount)).monospacedDigit() }
                         VStack(alignment: .leading, spacing: 4) { Text(item.description ?? "Description missing"); Text(money(item.amount, raw: input?.lines.first { $0.id == item.id }?.amount)).monospacedDigit() }
                     }
-                    Text(item.quantity.map { "Quantity \(ExactInput.quantity($0))" } ?? "Quantity not recorded").font(.caption).foregroundStyle(.primary)
+                    Text(item.quantity.map { "Quantity \(ExactInput.quantity($0))" } ?? "Qty unknown").font(.caption).foregroundStyle(.primary)
                 }.accessibilityElement(children: .combine)
             }
             if fields.items.isEmpty { Text("Purchases missing").foregroundStyle(.primary) }
@@ -202,9 +199,9 @@ struct ReceiptPaper: View {
             Divider()
             amountRow("Total", fields.total, raw: input?.total).font(.title3.weight(.semibold))
         }.padding(24).frame(maxWidth: .infinity, alignment: .leading)
-            .background(Color(uiColor: .secondarySystemGroupedBackground), in: RoundedRectangle(cornerRadius: 16))
-            .overlay { RoundedRectangle(cornerRadius: 16).stroke(.primary.opacity(0.12)) }
-            .shadow(color: .black.opacity(0.07), radius: 10, y: 5)
+            .background(Color(uiColor: .secondarySystemGroupedBackground), in: RoundedRectangle(cornerRadius: 22))
+            .overlay { RoundedRectangle(cornerRadius: 22).stroke(.primary.opacity(0.08), lineWidth: 0.5) }
+            .shadow(color: .black.opacity(0.08), radius: 18, y: 8)
     }
     private func amountRow(_ name: String, _ value: ReceiptMoney?, raw: String? = nil) -> some View {
         LabeledContent(name) { Text(money(value, raw: raw)).monospacedDigit().foregroundStyle(.primary) }.foregroundStyle(.primary).accessibilityElement(children: .combine)

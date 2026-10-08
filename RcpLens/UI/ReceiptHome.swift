@@ -4,16 +4,12 @@ import UniformTypeIdentifiers
 
 struct ReceiptHome: View {
     @Bindable var workspace: ReceiptWorkspace
-    @Environment(\.accessibilityReduceMotion) private var systemReduceMotion
-    private var reduceMotion: Bool { ReceiptAccessibility.reduceMotion(systemReduceMotion) }
-    @Environment(\.accessibilityReduceTransparency) private var reduceTransparency
-    @Environment(\.colorSchemeContrast) private var systemContrast
-    private var contrast: ColorSchemeContrast { ReceiptAccessibility.contrast(systemContrast) }
     @State private var importChoices = false
     @State private var photos = false
     @State private var files = false
     @State private var discard = false
     @State private var delete = false
+    @State private var walletInformation = false
     @FocusState private var editing: String?
 
     var body: some View {
@@ -35,12 +31,12 @@ struct ReceiptHome: View {
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .background(Color(uiColor: .systemGroupedBackground))
             #if DEBUG
-            .safeAreaInset(edge: .top, spacing: 0) {
-                if SyntheticNativePreview.enabled { Text("Synthetic preview").font(.caption2).foregroundStyle(.primary).padding(.horizontal, 16).padding(.vertical, 4).frame(maxWidth: .infinity, alignment: .trailing) }
+            .safeAreaInset(edge: .bottom, spacing: 0) {
+                if SyntheticNativePreview.enabled { Text("Synthetic preview").font(.system(size: 11)).foregroundStyle(.primary).padding(.horizontal, 16).padding(.vertical, 4).frame(maxWidth: .infinity, alignment: .trailing) }
             }
             #endif
             .navigationTitle(title)
-            .navigationBarTitleDisplayMode(workspace.flow == .wallet ? .large : .inline)
+            .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 if workspace.availability == .ready && !workspace.privacyCovered {
                     if workspace.flow != .wallet {
@@ -53,30 +49,53 @@ struct ReceiptHome: View {
                     }
                     if workspace.image != nil {
                         ToolbarItem(placement: .topBarTrailing) {
-                            Button("Original", systemImage: "doc.viewfinder") { editing = nil; workspace.showSource() }
+                            Button { editing = nil; workspace.showSource() } label: { Text("Original") }
                                 .accessibilityIdentifier("original").disabled(workspace.saving)
                         }
                     }
                     if workspace.flow == .wallet {
-                        ToolbarItemGroup(placement: .bottomBar) {
-                            Button("Wallet", systemImage: "wallet.bifold") { workspace.library = false }.accessibilityIdentifier("walletTab")
-                            Button("All receipts", systemImage: "list.bullet.rectangle") { workspace.library = true }.accessibilityIdentifier("allReceipts")
-                            Spacer()
+                        if workspace.library {
+                            ToolbarItem(placement: .topBarLeading) {
+                                Button("Wallet", systemImage: "chevron.left") { workspace.library = false }
+                                    .accessibilityIdentifier("walletTab")
+                            }
+                        } else if !workspace.receipts.isEmpty {
+                            ToolbarItem(placement: .topBarTrailing) {
+                                Button("All receipts") { workspace.library = true }.accessibilityIdentifier("allReceipts")
+                            }
                         }
-                        ToolbarItem(placement: .bottomBar) {
-                            Button("Import", systemImage: "plus") { importChoices = true }
-                                .buttonStyle(ReceiptProminentStyle()).accessibilityIdentifier("import")
+                        ToolbarItem(placement: .topBarTrailing) {
+                            Button("Wallet information", systemImage: "info.circle") { walletInformation = true }
+                                .accessibilityIdentifier("walletInformation")
+                        }
+                        ToolbarItemGroup(placement: .bottomBar) {
+                            Spacer()
+                            Button { importChoices = true } label: {
+                                HStack(spacing: 8) { Image(systemName: "plus"); Text("Import receipt") }
+                                    .font(.body.weight(.semibold)).padding(.horizontal, 12).frame(minHeight: 34)
+                            }
+                            .buttonStyle(ReceiptProminentStyle()).controlSize(.large)
+                            .accessibilityLabel("Import receipt").accessibilityIdentifier("import")
+                            Spacer()
                         }
                     }
                     if workspace.flow == .detail {
                         ToolbarItemGroup(placement: .bottomBar) {
-                            Button("Edit", systemImage: "pencil") { workspace.edit() }.buttonStyle(ReceiptProminentStyle())
+                            Spacer()
+                            Button { workspace.edit() } label: {
+                                HStack(spacing: 8) { Image(systemName: "pencil"); Text("Edit receipt") }
+                                    .font(.body.weight(.semibold)).padding(.horizontal, 12).frame(minHeight: 34)
+                            }.buttonStyle(ReceiptProminentStyle()).controlSize(.large)
                                 .accessibilityIdentifier("edit").disabled(workspace.saving)
                             Spacer()
                         }
-                        ToolbarItem(placement: .bottomBar) {
-                            Button("Delete", systemImage: "trash", role: .destructive) { delete = true }
-                                .accessibilityIdentifier("delete").disabled(workspace.saving)
+                        ToolbarItem(placement: .topBarTrailing) {
+                            Menu {
+                                Button("Storage details", systemImage: "info.circle") { walletInformation = true }
+                                Button("Delete receipt", systemImage: "trash", role: .destructive) { delete = true }
+                                    .accessibilityIdentifier("delete")
+                            } label: { Image(systemName: "ellipsis") }
+                            .accessibilityLabel("Receipt options").accessibilityIdentifier("receiptOptions")
                         }
                     }
                     if workspace.flow == .review {
@@ -137,17 +156,19 @@ struct ReceiptHome: View {
             .confirmationDialog("Discard unsaved changes?", isPresented: $discard, titleVisibility: .visible) {
                 Button("Discard changes", role: .destructive) { workspace.finishEditing() }
             } message: { Text("Only receipts you explicitly saved are kept.") }
-            .confirmationDialog("Delete this receipt?", isPresented: $delete, titleVisibility: .visible) {
+            .alert("Delete this receipt?", isPresented: $delete) {
                 Button("Delete receipt and original", role: .destructive) { workspace.deleteSelected() }
+                Button("Cancel", role: .cancel) {}
             } message: { Text("This removes all revisions and the original from this app. Copies in Photos or Files remain there.") }
             .sheet(isPresented: $workspace.sourceVisible) { ReceiptSourceView(workspace: workspace) }
+            .sheet(isPresented: $walletInformation) { WalletInformationView() }
             .disabled(workspace.saving)
         }
         .tint(.primary)
     }
     private var title: String {
         switch workspace.flow {
-        case .wallet: workspace.library ? "All receipts" : "Your wallet"
+        case .wallet: ""
         case .review: "Review receipt"
         case .detail: "Receipt"
         case .failed: "Import needs attention"
@@ -190,34 +211,85 @@ struct ReceiptHome: View {
     private var wallet: some View {
         Group {
             if workspace.library { ReceiptLibraryView(workspace: workspace) }
-            else {
-                ScrollView {
-                    VStack(alignment: .leading, spacing: 28) {
-                        if let notice = workspace.notice { Text(notice).font(.subheadline).accessibilityIdentifier("notice") }
-                        Text("Keep the paper. Remember the purchase.").font(.title3).foregroundStyle(.primary)
-                        if workspace.receipts.isEmpty {
-                            PaperPocket(workspace: workspace, records: [])
-                            VStack(alignment: .leading, spacing: 12) {
-                                Text("Your first receipt belongs here").font(.title2.weight(.semibold))
-                                Text("Import a photo, check the printed details, then save it. Drafts can wait for later.").foregroundStyle(.primary)
-                                Button("Import receipt", systemImage: "plus") { importChoices = true }.buttonStyle(ReceiptProminentStyle())
-                                    .frame(minHeight: 44).accessibilityIdentifier("emptyImport")
-                            }
-                        } else {
-                            PaperPocket(workspace: workspace, records: Array(workspace.orderedReceipts.prefix(3)))
-                            Button("Browse all \(workspace.receipts.count) receipts", systemImage: "list.bullet") { workspace.library = true }
-                                .buttonStyle(.bordered).frame(minHeight: 44).accessibilityIdentifier("browseAll")
+            else if workspace.receipts.isEmpty {
+                GeometryReader { geometry in
+                    ScrollView {
+                        VStack(spacing: 24) {
+                            if let notice = workspace.notice { Text(notice).font(.subheadline).accessibilityIdentifier("notice") }
+                            EmptyWalletArtwork().frame(width: 240, height: 190)
+                            VStack(spacing: 10) {
+                                Text("A place for your receipts").font(.title2.weight(.semibold))
+                                Text("Import a photo. Keep the details.")
+                                    .font(.body).foregroundStyle(.primary)
+                            }.multilineTextAlignment(.center)
+                            Label("Private · on this device", systemImage: "lock")
+                                .font(.footnote).foregroundStyle(.primary).padding(.top, 4)
+                            debugControls
                         }
-                        Text("On this device only. No automatic backup. Uninstalling the app or losing the device can lose your receipts.")
-                            .font(.footnote).foregroundStyle(.primary)
-                        #if DEBUG
-                        WorkflowTestControls(workspace: workspace)
-                        if !SyntheticNativePreview.enabled { NavigationLink("Synthetic diagnostics") { DiagnosticsView() }.font(.footnote) }
-                        #endif
-                    }.padding(24)
+                        .padding(.horizontal, 28).padding(.vertical, 32)
+                        .frame(maxWidth: .infinity, minHeight: max(0, geometry.size.height - 64))
+                    }
+                }
+            } else {
+                ScrollView {
+                    VStack(alignment: .leading, spacing: 24) {
+                        if let notice = workspace.notice { Text(notice).font(.subheadline).accessibilityIdentifier("notice") }
+                        HStack {
+                            Text("Recent receipts").font(.headline)
+                            Spacer()
+                            Text("\(workspace.receipts.count) saved").font(.subheadline).foregroundStyle(.primary)
+                        }
+                        PaperPocket(workspace: workspace, records: Array(workspace.orderedReceipts.prefix(3)))
+                        debugControls
+                    }.padding(.horizontal, 20).padding(.top, 12).padding(.bottom, 32)
                 }
             }
-        }.accessibilityIdentifier("walletScreen")
+        }
+        .safeAreaInset(edge: .top, spacing: 0) {
+            Text(workspace.library ? "All receipts" : "Wallet").font(.largeTitle.weight(.bold))
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(.horizontal, 20).padding(.top, 4).padding(.bottom, 16)
+                .accessibilityAddTraits(.isHeader)
+        }
+        .accessibilityIdentifier("walletScreen")
+    }
+    @ViewBuilder private var debugControls: some View {
+        #if DEBUG
+        WorkflowTestControls(workspace: workspace)
+        #endif
+    }
+}
+
+/// Illustration only: no fake receipt data or competing action.
+private struct EmptyWalletArtwork: View {
+    @Environment(\.colorScheme) private var scheme
+    var body: some View {
+        ZStack(alignment: .bottom) {
+            RoundedRectangle(cornerRadius: 16)
+                .fill(Color(uiColor: .secondarySystemGroupedBackground))
+                .overlay(alignment: .top) {
+                    VStack(alignment: .leading, spacing: 10) {
+                        RoundedRectangle(cornerRadius: 2).fill(.primary.opacity(0.23)).frame(width: 52, height: 5)
+                        ForEach(0..<4) { index in
+                            HStack {
+                                RoundedRectangle(cornerRadius: 2).fill(.primary.opacity(0.12)).frame(width: index == 2 ? 52 : 72, height: 3)
+                                Spacer()
+                                RoundedRectangle(cornerRadius: 2).fill(.primary.opacity(0.12)).frame(width: 24, height: 3)
+                            }
+                        }
+                    }.padding(20)
+                }
+                .overlay { RoundedRectangle(cornerRadius: 16).stroke(.primary.opacity(0.08), lineWidth: 0.5) }
+                .frame(width: 164, height: 166).rotationEffect(.degrees(-6)).offset(x: -4, y: -18)
+                .shadow(color: .black.opacity(scheme == .dark ? 0.4 : 0.1), radius: 16, x: 0, y: 9)
+            RoundedRectangle(cornerRadius: 23)
+                .fill(LinearGradient(colors: [Color(uiColor: .tertiarySystemGroupedBackground), Color(uiColor: .secondarySystemGroupedBackground)], startPoint: .top, endPoint: .bottom))
+                .overlay { RoundedRectangle(cornerRadius: 23).stroke(.primary.opacity(0.12), lineWidth: 0.5) }
+                .overlay(alignment: .top) { Capsule().fill(.primary.opacity(0.1)).frame(height: 1).padding(.horizontal, 18).padding(.top, 12) }
+                .overlay { Image(systemName: "wallet.bifold").font(.system(size: 23, weight: .light)).foregroundStyle(.primary.opacity(0.55)) }
+                .frame(width: 218, height: 87)
+                .shadow(color: .black.opacity(scheme == .dark ? 0.35 : 0.1), radius: 18, x: 0, y: 10)
+        }.accessibilityHidden(true)
     }
 }
 
@@ -227,80 +299,105 @@ private struct PaperPocket: View {
     @Environment(\.accessibilityReduceMotion) private var systemReduceMotion
     private var reduceMotion: Bool { ReceiptAccessibility.reduceMotion(systemReduceMotion) }
     @Environment(\.dynamicTypeSize) private var typeSize
+    @Environment(\.colorScheme) private var scheme
     @Environment(\.colorSchemeContrast) private var systemContrast
     private var contrast: ColorSchemeContrast { ReceiptAccessibility.contrast(systemContrast) }
     @State private var pull: CGFloat = 0
     var body: some View {
         VStack(spacing: 0) {
-            if records.isEmpty {
-                RoundedRectangle(cornerRadius: 12).fill(Color(uiColor: .secondarySystemGroupedBackground))
-                    .frame(height: 100).overlay { Image(systemName: "doc.text").font(.largeTitle).foregroundStyle(.tertiary) }
-                    .padding(.horizontal, 28).rotationEffect(.degrees(reduceMotion ? 0 : -2))
-                    .accessibilityHidden(true)
-            } else {
-                VStack(spacing: typeSize.isAccessibilitySize ? 14 : -6) {
-                    ForEach(Array(records.enumerated()), id: \.element.id) { index, record in
-                        Button { workspace.open(record) } label: {
-                            VStack(alignment: .leading, spacing: 8) {
-                                ReceiptSummary(record: record)
-                                if index == records.count - 1 {
-                                    Text("\(record.current.fields.items.count) items · Tap to open")
-                                        .font(.caption).foregroundStyle(.primary)
-                                }
-                            }.padding(18).frame(maxWidth: .infinity, alignment: .leading)
-                                .background(Color(uiColor: .secondarySystemGroupedBackground), in: RoundedRectangle(cornerRadius: 12))
-                                .overlay(alignment: .topTrailing) {
-                                    if !typeSize.isAccessibilitySize {
-                                        Image(systemName: "triangle.fill").font(.caption).foregroundStyle(Color(uiColor: .systemGroupedBackground))
-                                            .rotationEffect(.degrees(180)).padding(8).accessibilityHidden(true)
-                                    }
-                                }
-                                .overlay { RoundedRectangle(cornerRadius: 12).stroke(.primary.opacity(contrast == .increased ? 0.7 : 0.09)) }
-                                .shadow(color: .black.opacity(0.08), radius: 5, y: 3)
-                        }.buttonStyle(.plain)
-                            .rotationEffect(.degrees(reduceMotion || typeSize.isAccessibilitySize ? 0 : (index % 2 == 0 ? -1.2 : 1.1)))
-                            .offset(y: index == 0 ? pull : 0)
-                            .zIndex(Double(records.count - index))
-                            .accessibilityIdentifier("receipt-\(index)")
-                            .accessibilityHint("Opens receipt and original evidence")
-                            .simultaneousGesture(DragGesture(minimumDistance: 24).onChanged { value in
-                                guard index == 0, !reduceMotion, !typeSize.isAccessibilitySize, value.translation.height < -20 else { return }
-                                pull = max(-60, value.translation.height / 2)
-                            }.onEnded { value in
-                                guard index == 0, !reduceMotion, !typeSize.isAccessibilitySize else { return }
-                                withAnimation(.easeOut(duration: 0.22)) { pull = 0 }
-                                if value.translation.height < -64 { workspace.open(record) }
-                            })
-                    }
-                }.padding(.horizontal, typeSize.isAccessibilitySize ? 0 : 16)
+            VStack(spacing: typeSize.isAccessibilitySize ? 14 : -8) {
+                ForEach(Array(records.enumerated()), id: \.element.id) { index, record in
+                    Button { workspace.open(record) } label: {
+                        ReceiptSummary(record: record)
+                            .padding(20).frame(maxWidth: .infinity, alignment: .leading)
+                            .background(Color(uiColor: .secondarySystemGroupedBackground), in: RoundedRectangle(cornerRadius: 18))
+                            .overlay { RoundedRectangle(cornerRadius: 18).stroke(.primary.opacity(contrast == .increased ? 0.6 : 0.1), lineWidth: 0.5) }
+                            .shadow(color: .black.opacity(scheme == .dark ? 0.35 : 0.09), radius: 12, x: 0, y: 7)
+                    }.buttonStyle(.plain)
+                        .rotationEffect(.degrees(reduceMotion || typeSize.isAccessibilitySize ? 0 : (index % 2 == 0 ? -0.7 : 0.5)))
+                        .offset(y: index == 0 ? pull : 0)
+                        .zIndex(Double(records.count - index))
+                        .accessibilityIdentifier("receipt-\(index)")
+                        .accessibilityHint("Opens receipt and original")
+                        .simultaneousGesture(DragGesture(minimumDistance: 24).onChanged { value in
+                            guard index == 0, !reduceMotion, !typeSize.isAccessibilitySize, value.translation.height < -20 else { return }
+                            pull = max(-60, value.translation.height / 2)
+                        }.onEnded { value in
+                            guard index == 0, !reduceMotion, !typeSize.isAccessibilitySize else { return }
+                            withAnimation(.easeOut(duration: 0.22)) { pull = 0 }
+                            if value.translation.height < -64 { workspace.open(record) }
+                        })
+                }
+            }.padding(.horizontal, typeSize.isAccessibilitySize ? 0 : 12)
+            if !typeSize.isAccessibilitySize {
+                HStack(spacing: 8) {
+                    Image(systemName: "wallet.bifold").font(.subheadline)
+                    Text("RcpLens").font(.subheadline.weight(.medium))
+                    Spacer()
+                }.padding(.horizontal, 20).frame(height: 54)
+                    .background(Color(uiColor: .tertiarySystemGroupedBackground), in: UnevenRoundedRectangle(topLeadingRadius: 8, bottomLeadingRadius: 22, bottomTrailingRadius: 22, topTrailingRadius: 8))
+                    .overlay { UnevenRoundedRectangle(topLeadingRadius: 8, bottomLeadingRadius: 22, bottomTrailingRadius: 22, topTrailingRadius: 8).stroke(.primary.opacity(0.1), lineWidth: 0.5) }
+                    .shadow(color: .black.opacity(0.1), radius: 14, y: 8)
+                    .padding(.top, -2).accessibilityHidden(true)
             }
-            HStack {
-                Image(systemName: "wallet.bifold")
-                Text("RcpLens").font(.headline)
-                Spacer()
-                Text(records.isEmpty ? "LOCAL WALLET" : "RECENT RECEIPTS").font(.caption2.weight(.medium))
-            }.padding(24).frame(minHeight: 100)
-                .background(Color(uiColor: .tertiarySystemFill), in: UnevenRoundedRectangle(topLeadingRadius: 12, bottomLeadingRadius: 24, bottomTrailingRadius: 24, topTrailingRadius: 12))
-                .overlay { UnevenRoundedRectangle(topLeadingRadius: 12, bottomLeadingRadius: 24, bottomTrailingRadius: 24, topTrailingRadius: 12).stroke(.primary.opacity(0.1)) }
-                .shadow(color: .black.opacity(0.06), radius: 9, y: 6)
-                .padding(.top, -3).accessibilityHidden(true)
-        }.padding(.top, 10)
+        }.padding(.top, 8)
+    }
+}
+
+private struct WalletInformationView: View {
+    @Environment(\.dismiss) private var dismiss
+    var body: some View {
+        NavigationStack {
+            List {
+                Section {
+                    Label("Private by default", systemImage: "lock")
+                    Text("Recognition and receipt storage stay on this device.")
+                }
+                Section("Storage") {
+                    Text("Receipts are excluded from automatic backup. There is no export or restore yet. Uninstalling the app or losing this device can lose your receipts.")
+                }
+                Section("Before you leave") {
+                    Text("Save your draft before leaving the app. Backgrounding clears unsaved work.")
+                }
+                #if DEBUG
+                if !SyntheticNativePreview.enabled {
+                    Section("Development") { NavigationLink("Synthetic diagnostics") { DiagnosticsView() } }
+                }
+                #endif
+            }.navigationTitle("Your local wallet").navigationBarTitleDisplayMode(.inline)
+                .toolbar { ToolbarItem(placement: .confirmationAction) { Button("Done") { dismiss() } } }
+        }
     }
 }
 
 struct ReceiptSummary: View {
     let record: ReceiptRecord
+    @Environment(\.dynamicTypeSize) private var typeSize
+    private var total: String {
+        record.current.fields.total.map { "\($0.currency.code) \(ExactInput.format($0.minorUnits, scale: $0.currency.minorUnitScale))" } ?? "Total missing"
+    }
+    private var merchant: some View {
+        VStack(alignment: .leading, spacing: 6) {
+            Text(record.current.fields.merchant ?? "Merchant missing").font(.headline).fixedSize(horizontal: false, vertical: true)
+            Text(ExactInput.dateText(record.current.fields.purchaseDate).nilIfEmpty ?? "Date missing").font(.footnote)
+        }
+    }
     var body: some View {
-        VStack(alignment: .leading, spacing: 5) {
-            Text(record.current.fields.merchant ?? "Merchant missing").font(.headline).foregroundStyle(.primary)
-            HStack(alignment: .top) {
-                Text(ExactInput.dateText(record.current.fields.purchaseDate).nilIfEmpty ?? "Date missing").font(.subheadline)
-                Spacer(minLength: 12)
-                Text(record.current.fields.total.map { "\($0.currency.code) \(ExactInput.format($0.minorUnits, scale: $0.currency.minorUnitScale))" } ?? "Total missing")
-                    .font(.subheadline.monospacedDigit())
-            }.foregroundStyle(.primary)
-            if !ReceiptCompletion.isComplete(record) { Label("Needs review", systemImage: "exclamationmark.circle").font(.caption).foregroundStyle(.primary) }
-        }.accessibilityElement(children: .combine)
+        VStack(alignment: .leading, spacing: 10) {
+            if typeSize.isAccessibilitySize {
+                merchant
+                Text(total).font(.headline.monospacedDigit())
+            } else {
+                HStack(alignment: .top, spacing: 16) {
+                    merchant
+                    Spacer(minLength: 4)
+                    Text(total).font(.headline.monospacedDigit()).fixedSize(horizontal: true, vertical: false)
+                }
+            }
+            if !ReceiptCompletion.isComplete(record) {
+                Label("Needs review", systemImage: "exclamationmark.circle").font(.caption.weight(.medium))
+            }
+        }.foregroundStyle(.primary).accessibilityElement(children: .combine)
     }
 }
 
@@ -317,6 +414,7 @@ struct ReceiptLibraryView: View {
         return String(format: "%04d-%02d", date.year, date.month)
     }
     var body: some View {
+        VStack(spacing: 0) {
         List {
             Section {
                 Picker("Store", selection: $workspace.merchantFilter) {
@@ -337,6 +435,8 @@ struct ReceiptLibraryView: View {
                     }
                 } header: { Text(group).foregroundStyle(Color(uiColor: .label)) }
             }
+        }.clipped()
+        Color.clear.frame(height: 72).accessibilityHidden(true)
         }.accessibilityIdentifier("receiptLibrary")
     }
 }

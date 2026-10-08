@@ -1,0 +1,73 @@
+{
+  "task": "T05 design follow-up",
+  "date": "2026-10-08",
+  "status": "Verified and installed for user design review",
+  "nativeAccessibilityAndNavigation": {
+    "aggregate": {
+      "result": "Passed",
+      "totalTestCount": 5,
+      "passedTests": 5,
+      "failedTests": 0,
+      "skippedTests": 0,
+      "kind": "accessibility",
+      "structureAuditTypes": [
+        "elementDetection",
+        "hitRegion",
+        "sufficientElementDescription"
+      ],
+      "contrastFindingsBySyntheticScenario": {
+        "wallet": 4,
+        "detail": 3,
+        "review": 3,
+        "source": 1,
+        "library": 1
+      },
+      "contrastAuditStatus": "FindingsWithNarrowDocumentedExceptions",
+      "contrastScope": "Diagnostics only, never certified by the green structural/interaction test result.",
+      "acceptedContrastExceptions": 12,
+      "unresolvedContrastFindings": 0
+    },
+    "run": "private-receipts/evaluation/t05/20261008-004938",
+    "xcresult": "private-receipts/evaluation/t05/20261008-004938/tests.xcresult",
+    "sourceHashManifest": "private-receipts/evaluation/t05/20261008-004938/source-hashes.json",
+    "currentApplicationAndUITestSourcesMatch": true
+  },
+  "nativePhotoImportAndEditing": {
+    "aggregate": {
+      "result": "Passed",
+      "totalTestCount": 2,
+      "passedTests": 2,
+      "failedTests": 0,
+      "skippedTests": 0,
+      "kind": "synthetic"
+    },
+    "run": "private-receipts/evaluation/t05/20261008-005119",
+    "xcresult": "private-receipts/evaluation/t05/20261008-005119/tests.xcresult",
+    "sourceHashManifest": "private-receipts/evaluation/t05/20261008-005119/source-hashes.json",
+    "currentApplicationAndUITestSourcesMatch": true
+  },
+  "release": "release-verification.json",
+  "currentSourceHashManifest": "source-hashes.json",
+  "contrast": {
+    "certified": false,
+    "acceptedMeasuredOrDisabledExceptions": 12,
+    "unresolvedFindings": 0,
+    "diagnostics": "contrast-diagnostics.json",
+    "samples": "contrast/",
+    "lightDarkImport": "prominent-button.json"
+  },
+  "previousUnitSuite": {
+    "commit": "95e69ed",
+    "passed": 43,
+    "physicalDeviceSkipped": 1,
+    "scope": "Prior functional suite preserved; this follow-up changes presentation/tests only and does not claim a rerun of these unit tests or private references."
+  },
+  "privateInputsExposed": false,
+  "ordinaryReleaseLaunchRestored": true,
+  "limits": [
+    "Physical-device VoiceOver and hardware lock enforcement remain deferred",
+    "Contrast samples do not certify every Liquid Glass state",
+    "No new private extraction accuracy or correction-speed claim"
+  ],
+  "screenshotsVisuallyReviewed": true
+}

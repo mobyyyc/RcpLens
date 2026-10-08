@@ -45,3 +45,7 @@ Request approval for T06 — exact item-level bill splitting. Implement a determ
 
 ## Latest task commit
 T05 handoff commit message: `feat: add native receipt import and review workflow`. The exact signed commit hash and GitHub synchronization are verified after the commit and reported in the main chat; use Git history for the hash. Previous task commit: `8da4c92` — `feat: add encrypted local receipt storage and provenance`.
+
+## T05 design follow-up · 2026-10-08
+
+The user requested a native design audit and redesign after seeing the empty wallet. Removed duplicate import/Original actions and decorative tab-like controls, tightened the Paper lift wallet, made primary actions explicit, reduced instructional clutter and moved storage details into an accessible sheet. [Audit and native screenshots](docs/UI_REDESIGN.md). Seven final native checks passed, including actual Photos/keyboard editing, unique Import, collection navigation, storage disclosure, delete cancellation/confirmation, large text and strict structural audits. Fresh Release signature/Debug-control exclusion verified; 12 specific measured/disabled contrast exceptions documented. T06 remains awaiting approval. Follow-up commit message: `fix: redesign wallet and receipt navigation`; exact signed commit hash is reported after GitHub synchronization.
