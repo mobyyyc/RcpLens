@@ -1,0 +1,65 @@
+{
+  "baselineCommit": "23f4ef78e1647d8fb0645a58c6f15e98c4bdf1e8",
+  "status": "Implemented, verified and installed; user review pending",
+  "diagnosis": "History/search mounted the home wallet detail scene and its geometry-based scroll surface below a fixed match-context safeAreaInset. The opaque inset could cover the status/content and the wallet scene supplied the unwanted stack animation.",
+  "implementation": "Library detail mounts ReceiptSearchDetailView directly. Context/status/paper/footer share native scroll layout; receipt content fades in with a 12pt upward movement over 0.22s easeOut. Reduce Motion uses opacity only over 0.12s. Home wallet scene/transition code unchanged.",
+  "native": [
+    {
+      "xcresult": "/tmp/rcplens-search-detail/ui1.xcresult",
+      "passed": 4,
+      "failed": 0,
+      "runtimeWarnings": [],
+      "cases": [
+        "ReceiptSearchUITests.testHistoryDetailScrollsMatchContextWithLongPaper",
+        "ReceiptSearchUITests.testLargeTextReducedMotionDarkSearchAndStructuralAccessibility",
+        "ReceiptSearchUITests.testNativeCurrentRawSKUUnparsedAndRemovedEvidenceNavigation",
+        "WalletInteractionTests.testDetailContainsOnlySelectedPaperAcrossRepeatedReturns"
+      ]
+    },
+    {
+      "xcresult": "/tmp/rcplens-search-detail/ui-edit.xcresult",
+      "passed": 1,
+      "failed": 0,
+      "runtimeWarnings": [
+        {
+          "issueType": "Runtime Warning",
+          "message": "Invalid frame dimension (negative or non-finite)."
+        }
+      ],
+      "cases": [
+        "ReceiptSearchUITests.testNativeEditArchiveIncludeRestoreDeleteAndRelaunch"
+      ]
+    }
+  ],
+  "structuralAudit": "elementDetection, hitRegion, sufficientElementDescription; no waivers",
+  "newRegression": "No wallet heading or preview receipt buttons in search detail; match context clears status and scrolls away; footer reachable for long receipt; source access and return query retained; receipt-level result without match uses same reader.",
+  "screenshotsVisuallyReviewed": [
+    "T07-history-detail-top.png",
+    "T07-history-detail-bottom.png",
+    "T07-large-dark-match-context.png"
+  ],
+  "sourceSnapshot": "source-hashes.json",
+  "sourceDrift": [],
+  "release": {
+    "app": "/tmp/RcpLens-SearchDetail-Release/Build/Products/Release-iphonesimulator/RcpLens.app",
+    "binarySHA256": "382b363e58af2655f24e90d2b2c2894ba4a474254b29e207ad6541bc869413d0",
+    "buildLog": "/tmp/rcplens-search-detail/release.log",
+    "signatureVerified": true,
+    "debugMarkersAbsent": [
+      "--t05-synthetic-preview",
+      "searchDemoImport",
+      "FICTIONAL CORNER MART",
+      "T05SyntheticPreviewStore",
+      "--t05-local-test",
+      "--add-demo-receipts"
+    ],
+    "normalInstallAndLaunch": true
+  },
+  "normalStore": {
+    "encryptedReceiptsUnchanged": 12,
+    "encryptedOriginalsUnchanged": 12,
+    "encryptedPreferencesUnchanged": true,
+    "comparison": "Encrypted payload SHA256 by UUID, identical to the verified pre-T07 snapshot; no decoding or normal screenshots/Photos access"
+  },
+  "scope": "UI and native test follow-up only. Search/domain/storage/split code and existing unit sources unchanged; prior 83-pass/one hardware skip unit evidence retained, not rerun. Native timings/contrast/device VoiceOver/camera are not certified by this run."
+}

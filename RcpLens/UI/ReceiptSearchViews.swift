@@ -1,5 +1,51 @@
 import SwiftUI
 
+/// History opens a reading surface directly; only the home wallet lifts a paper from its stack.
+struct ReceiptSearchDetailView: View {
+    @Bindable var workspace: ReceiptWorkspace
+    @Environment(\.accessibilityReduceMotion) private var systemReduceMotion
+    @State private var revealed = false
+    private var reduceMotion: Bool { ReceiptAccessibility.reduceMotion(systemReduceMotion) }
+
+    var body: some View {
+        ScrollView {
+            if let record = workspace.selected {
+                VStack(alignment: .leading, spacing: 20) {
+                    if let match = workspace.searchMatch {
+                        ReceiptSearchContext(workspace: workspace, match: match)
+                    }
+                    VStack(alignment: .leading, spacing: 20) {
+                        HStack(alignment: .top) {
+                            Label(ReceiptCompletion.isComplete(record) ? "Reviewed" : "Needs review",
+                                  systemImage: ReceiptCompletion.isComplete(record) ? "checkmark.circle" : "exclamationmark.circle")
+                            Spacer()
+                            if record.isStarred { Image(systemName: "star.fill").accessibilityLabel("Starred") }
+                        }.font(.footnote.weight(.medium)).fixedSize(horizontal: false, vertical: true)
+                        ReceiptPaper(fields: record.current.fields,
+                                     input: record.current.reviewInput.flatMap { try? JSONDecoder().decode(ReceiptReviewDraft.self, from: $0) })
+                        VStack(alignment: .leading, spacing: 18) {
+                            if workspace.image == nil && workspace.errorMessage == nil { ProgressView("Loading original").font(.footnote) }
+                            if let error = workspace.errorMessage { Text(error).font(.subheadline) }
+                            if record.current.fields.currency == nil { Text("Currency needs confirmation. Edit to check the saved amounts.").font(.footnote) }
+                            Label("Saved on this device", systemImage: "lock").font(.footnote)
+                                .accessibilityIdentifier("searchReceiptFooter")
+                        }
+                    }
+                    .padding(.horizontal, 30)
+                    .opacity(revealed ? 1 : 0)
+                    .offset(y: reduceMotion || revealed ? 0 : 12)
+                }.padding(.top, 12).padding(.bottom, 24)
+            }
+        }
+        // Context and paper share normal scroll layout; there is no fixed search-header occlusion.
+        .scrollClipDisabled().scrollEdgeEffectStyle(.soft, for: .vertical)
+        .accessibilityIdentifier("detailScreen")
+        .onAppear {
+            withAnimation(.easeOut(duration: reduceMotion ? 0.12 : 0.22)) { revealed = true }
+        }
+    }
+}
+
 struct ReceiptPurchaseHistoryView: View {
     @Bindable var workspace: ReceiptWorkspace
     private var results: [ReceiptSearchIndex.Result] {

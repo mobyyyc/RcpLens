@@ -37,6 +37,44 @@ import Vision
         }
         XCTAssertTrue(element.isHittable)
     }
+    func testHistoryDetailScrollsMatchContextWithLongPaper() throws {
+        let app = XCUIApplication()
+        app.launchArguments = ["--t05-synthetic-preview", "long-wallet", "--t05-light"]
+        app.launch()
+        XCTAssertTrue(app.buttons["allReceipts"].waitForExistence(timeout: 30))
+        app.buttons["allReceipts"].tap()
+        search("milk", app: app)
+        let first = matches(app).firstMatch
+        reveal(first, app: app); first.tap()
+        XCTAssertTrue(app.buttons["edit"].waitForExistence(timeout: 10))
+        let original = app.buttons["searchOriginal"]
+        XCTAssertTrue(original.waitForExistence(timeout: 10))
+        XCTAssertFalse(app.staticTexts["walletHeading"].exists, "Search detail must not mount the home wallet")
+        XCTAssertEqual(app.buttons.matching(NSPredicate(format: "identifier BEGINSWITH 'receipt-'" )).count, 0)
+        let status = app.staticTexts["Reviewed"]
+        XCTAssertGreaterThan(status.frame.minY, original.frame.maxY, "The match context must not cover the status")
+        capture(app, "history-detail-top")
+        let originalY = original.frame.minY
+        let footer = app.descendants(matching: .any)["searchReceiptFooter"]
+        reveal(footer, app: app)
+        XCTAssertTrue(footer.isHittable, "The whole long receipt must remain scrollable")
+        XCTAssertTrue(!original.isHittable || original.frame.minY < originalY - 100,
+                      "Match context must scroll away with the receipt instead of staying over it")
+        capture(app, "history-detail-bottom")
+        reveal(original, app: app)
+        XCTAssertGreaterThan(status.frame.minY, original.frame.maxY)
+        original.tap(); XCTAssertTrue(app.buttons["sourceDone"].waitForExistence(timeout: 10))
+        app.buttons["sourceDone"].tap()
+        returnToResults(app)
+        XCTAssertEqual(app.searchFields.firstMatch.value as? String, "milk", "Returning preserves the search")
+        // Receipt-level results use the same reading view even without a match context.
+        let receipt = receipts(app).firstMatch; reveal(receipt, app: app); receipt.tap()
+        XCTAssertTrue(app.buttons["edit"].waitForExistence(timeout: 10))
+        XCTAssertFalse(app.buttons["searchOriginal"].exists)
+        XCTAssertFalse(app.staticTexts["walletHeading"].exists)
+        reveal(app.descendants(matching: .any)["searchReceiptFooter"], app: app)
+        returnToResults(app); app.terminate()
+    }
     func testFictionalImageImportReviewSplitShareSearchAndEvidence() throws {
         let app = XCUIApplication(); app.launchArguments = ["--t05-synthetic-preview", "search-import", "--t05-light"]
         app.launch(); XCTAssertTrue(app.buttons["searchDemoImport"].waitForExistence(timeout: 30)); app.buttons["searchDemoImport"].tap()

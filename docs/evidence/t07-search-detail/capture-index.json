@@ -1,0 +1,52 @@
+[
+  {
+    "image": "T07-history-detail-bottom.png",
+    "test": "ReceiptSearchUITests/testHistoryDetailScrollsMatchContextWithLongPaper()",
+    "sha256": "cf438971ae175f7e40b59f2d3d2bca4756c18b0c78587b92dff4a69e98ff2b68"
+  },
+  {
+    "image": "T07-history-detail-top.png",
+    "test": "ReceiptSearchUITests/testHistoryDetailScrollsMatchContextWithLongPaper()",
+    "sha256": "11fb4fd4b235f988ef6b59b2eb14b84b4f1f416bd1398c4e6793b0aecf4e2e6e"
+  },
+  {
+    "image": "T07-search-structure-audit.png",
+    "test": "ReceiptSearchUITests/testLargeTextReducedMotionDarkSearchAndStructuralAccessibility()",
+    "sha256": "ef80cb48d6b302bf818640acc01b1511ffdedd031516f5e8a5f839bce4783596"
+  },
+  {
+    "image": "T07-large-dark-full-match-details.png",
+    "test": "ReceiptSearchUITests/testLargeTextReducedMotionDarkSearchAndStructuralAccessibility()",
+    "sha256": "f04a3d9802c24e68d1b4a39d5a18ce2034b6520af089c51d4f48d797a474598e"
+  },
+  {
+    "image": "T07-large-dark-match-context.png",
+    "test": "ReceiptSearchUITests/testLargeTextReducedMotionDarkSearchAndStructuralAccessibility()",
+    "sha256": "cb3f0dd3e9b4f64b30d2697df7cccfa939d4954f5954f4e79b1dfee0ee074d91"
+  },
+  {
+    "image": "T07-large-dark-search.png",
+    "test": "ReceiptSearchUITests/testLargeTextReducedMotionDarkSearchAndStructuralAccessibility()",
+    "sha256": "19aacd5f4fdfa4f32ae6cfdc1485b96cef1099969566198814b1c8e887a35e0b"
+  },
+  {
+    "image": "T07-removed-original-result.png",
+    "test": "ReceiptSearchUITests/testNativeCurrentRawSKUUnparsedAndRemovedEvidenceNavigation()",
+    "sha256": "bbb770bf8cfb70a0f47f18162fe975a89b79751a5ac3e294aaffe2d5ae1213d0"
+  },
+  {
+    "image": "T07-unparsed-source-result.png",
+    "test": "ReceiptSearchUITests/testNativeCurrentRawSKUUnparsedAndRemovedEvidenceNavigation()",
+    "sha256": "43b63b3b1515e5b493a5f532c3dc44171eb8fc49d0fe6e541469e726c49ceed5"
+  },
+  {
+    "image": "T07-linked-original-evidence.png",
+    "test": "ReceiptSearchUITests/testNativeCurrentRawSKUUnparsedAndRemovedEvidenceNavigation()",
+    "sha256": "1de4c0e8821f61b1dcd916ab9d7a439162b79f04d9f4c108d44bbc889b30e76c"
+  },
+  {
+    "image": "T07-original-description-results.png",
+    "test": "ReceiptSearchUITests/testNativeCurrentRawSKUUnparsedAndRemovedEvidenceNavigation()",
+    "sha256": "7d894ba260eb696d75f77a3474f573418c910472e3d82a9831111bad69c67871"
+  }
+]

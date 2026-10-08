@@ -227,6 +227,8 @@ struct ReceiptHome: View {
         Group {
             if workspace.library && workspace.flow == .wallet {
                 ReceiptLibraryView(workspace: workspace)
+            } else if workspace.library && workspace.flow == .detail {
+                ReceiptSearchDetailView(workspace: workspace)
             } else {
                 ReceiptWalletScene(workspace: workspace) { record in
                     deleteTarget = record; delete = true
@@ -238,9 +240,6 @@ struct ReceiptHome: View {
                     }
                 }
             }
-        }
-        .safeAreaInset(edge: .top, spacing: 0) {
-            if workspace.flow == .detail, let match = workspace.searchMatch { ReceiptSearchContext(workspace: workspace, match: match) }
         }
     }
     @ViewBuilder private var debugControls: some View {
