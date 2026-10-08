@@ -23,7 +23,7 @@ def main():
     sim = args.simulator
     container = Path(command(["xcrun", "simctl", "get_app_container", sim, "com.mobyyyc.RcpLens", "data"]))
     scenarios = [("native-" + mode, mode, ["--t05-light"]) for mode in ["wallet", "detail", "review", "source", "library"]]
-    scenarios += [("native-dark-wallet", "wallet", []), ("native-large-text", "review", ["--t05-large-text", "--t05-reduce-motion", "--t05-opaque", "--t05-contrast"]), ("native-empty", "empty", []), ("native-light-empty", "empty", ["--t05-light"])]
+    scenarios += [("native-long-wallet", "long-wallet", ["--t05-light"]), ("native-long-detail", "long", ["--t05-light"]), ("native-dark-wallet", "wallet", []), ("native-large-text", "review", ["--t05-large-text", "--t05-reduce-motion", "--t05-opaque", "--t05-contrast"]), ("native-empty", "empty", []), ("native-light-empty", "empty", ["--t05-light"])]
     try:
         for name, mode, flags in scenarios:
             ready = container / "Library/Caches/t05-synthetic-preview.json"

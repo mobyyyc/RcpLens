@@ -1,5 +1,7 @@
 # T05 follow-up · Native design audit and redesign
 
+**Latest design:** [Wallet stack, in-place paper expansion and configurable actions](WALLET_DESIGN.md). The audit below records the earlier redesign.
+
 Requested by the user on 2026-10-08 after reviewing the running empty wallet. This is an authorized T05 design correction; T06 is still awaiting approval.
 
 ## Audit

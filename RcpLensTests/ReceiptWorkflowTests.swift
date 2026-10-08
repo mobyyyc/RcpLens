@@ -261,6 +261,26 @@ final class ReceiptWorkflowTests: XCTestCase, @unchecked Sendable {
         XCTAssertFalse(ReceiptPrivacyCover.isCovered)
     }
 
+    @MainActor func testImmediatePaperOpeningWaitsForOriginalAndCannotResurrectAfterReturn() async throws {
+        let dir = directory(); defer { try? FileManager.default.removeItem(at: dir) }
+        let store = try ReceiptStore(directory: dir, keyProvider: Key())
+        let extraction = try ReceiptParser.extraction(OCRResult(lines: lines("FICTIONAL SHOP CAD\n2026-10-07\nTEST ITEM 1.00\nSUBTOTAL 1.00\nTOTAL 1.00"), revision: 3))
+        _ = try await store.create(extraction: extraction, originalImage: SyntheticFixture.imageData(), mediaType: "image/png")
+        try await store.close()
+        let model = ReceiptWorkspace(directory: dir, keyProvider: Key())
+        model.activate(protectedDataAvailable: true); try await wait { model.availability == .ready }
+        let record = try XCTUnwrap(model.receipts.first)
+        model.open(record)
+        XCTAssertEqual(model.flow, .detail); XCTAssertEqual(model.selected?.id, record.id)
+        XCTAssertNil(model.image)
+        model.edit(); XCTAssertEqual(model.flow, .detail, "Editing must wait for immutable evidence")
+        model.backToWallet(); try await Task.sleep(for: .milliseconds(150))
+        XCTAssertEqual(model.flow, .wallet); XCTAssertNil(model.selected); XCTAssertNil(model.image)
+        model.open(record); try await wait { model.image != nil }
+        model.edit(); XCTAssertEqual(model.flow, .review)
+        model.suspend(); XCTAssertNil(model.selected); XCTAssertNil(model.image)
+    }
+
     @MainActor func testCommittedSaveAndDeleteRemainTruthfulWhenWalletRefreshFails() async throws {
         let dir = directory(); defer { try? FileManager.default.removeItem(at: dir) }
         let model = ReceiptWorkspace(directory: dir, keyProvider: Key())
@@ -272,7 +292,7 @@ final class ReceiptWorkflowTests: XCTestCase, @unchecked Sendable {
         XCTAssertNotNil(model.errorMessage)
         XCTAssertEqual(model.receipts.map(\.id), [committedID], "A committed receipt is reopenable even before a successful list refresh")
         model.backToWallet(); model.open(try XCTUnwrap(model.receipts.first))
-        try await wait { model.flow == .detail }
+        try await wait { model.flow == .detail && model.image != nil }
         model.edit(); model.draft = draft(); model.draft.merchant = "SYNTHETIC REVISED STORE"
         model.failNextListRefresh = true; model.save(asDraft: false)
         try await wait { model.flow == .detail && !model.saving }

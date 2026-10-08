@@ -2,7 +2,7 @@
 
 An iOS-only personal purchase memory app. Import a receipt, correct it quickly, save it, split items with other people and find purchases later.
 
-Status: T01–T05 accepted. The native imported-image demo supports review, drafts, exact reconciliation, local saving, reopening and deletion. Item splitting and purchase search follow in T06/T07, each awaiting approval. See [native redesign](docs/UI_REDESIGN.md), [demo verification](docs/IMPORT_DEMO.md), [MVP_PLAN.md](MVP_PLAN.md), [TASKS.md](TASKS.md), [PROGRESS.md](PROGRESS.md), and [docs/PRODUCT.md](docs/PRODUCT.md).
+Status: T01–T05 accepted. The native imported-image demo supports review, drafts, exact reconciliation, local saving, reopening and deletion. Item splitting and purchase search follow in T06/T07, each awaiting approval. The home wallet now holds a chronological paper stack with in-place expansion, archive/star and configurable swipe actions. See [wallet design](docs/WALLET_DESIGN.md), [native redesign](docs/UI_REDESIGN.md), [demo verification](docs/IMPORT_DEMO.md), [MVP_PLAN.md](MVP_PLAN.md), [TASKS.md](TASKS.md), [PROGRESS.md](PROGRESS.md), and [docs/PRODUCT.md](docs/PRODUCT.md).
 
 ## Try the receipt demo on your Mac
 
@@ -17,7 +17,7 @@ DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer \
 
 You can drag the image from Finder into Terminal to insert its path. **Import → Files** also accepts images available inside the simulated device's Files browser.
 
-Review merchant, date, currency, purchases, adjustments and totals. Open **Original** to compare the source; fields can be edited and lines added or removed. **Save draft** keeps incomplete work as **Needs review**. **Finish** requires complete fields, exact reconciliation and your original-source confirmation. Both actions stay in the bottom bar. Saved receipts can be reopened and edited; **Receipt options → Delete receipt** removes them after confirmation. **All receipts** in the Wallet header opens month and store filters. The bottom bar has one labeled **Import receipt** action. Wallet information is available through the info control.
+Review merchant, date, currency, purchases, adjustments and totals. Open **Original** to compare the source; fields can be edited and lines added or removed. **Save draft** keeps incomplete work as **Needs review**. **Finish** requires complete fields, exact reconciliation and your original-source confirmation. Both actions stay in the bottom bar. Saved receipts can be reopened and edited; **Receipt options → Delete receipt** removes them after confirmation. **All receipts** in the Wallet header opens month and store filters. Receipts are oldest at the top and newest at the bottom, with newer paper in front. Tap a paper to expand it, then return to restore the stack. Swipe left for Archive or right for Star, then tap the revealed action. Settings lets you change either direction and open Archive or Starred. Unarchive restores a paper to its chronological position. The bottom bar has one labeled **Import receipt** action. Wallet information is available through the info control.
 
 Save before leaving the app: backgrounding discards unsaved work. Saved receipts remain on this device, excluded from ordinary backup, with no export/restore yet. Uninstalling the app or losing the device can lose them. Recognition uses local Vision and deterministic parsing; manual review is required. Apple Intelligence is not required for this workflow.
 

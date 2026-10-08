@@ -34,3 +34,7 @@ Exact phone iOS version before device testing. Five private HEIC receipt images 
 ## Native design correction · 2026-10-08
 
 The user rejected the initial T05 empty-wallet presentation. The revision retains Paper lift while replacing duplicate import/Original actions and tab-like toolbar icons with one labeled Import action, explicit collection navigation, smaller layered artwork, stronger receipt hierarchy and compact review guidance. Storage limitations remain in Wallet information and the save/review flow. [Native audit and redesign](UI_REDESIGN.md). T06 still requires approval.
+
+## Wallet interaction follow-up · 2026-10-08
+
+The user requested the wallet at the top, oldest-to-newest vertical paper order, newest-first layering behind the wallet, paper previews with bottom fades for long content, and expansion within the same scene with surrounding papers leaving from their respective edges. Return restores the stack. Archive and star are now explicitly in scope: archive moves receipts into Archive; star preserves chronology. Swipes reveal configured actions for a tap; deletion always confirms. Left defaults to Archive and right to Star, with Archive/Star/Delete/None in Settings. See [wallet design](WALLET_DESIGN.md).

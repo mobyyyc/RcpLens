@@ -294,7 +294,8 @@ actor ReceiptStore {
             try Self.verifyAsset(old, db: database, cipher: cipher)
             let next = ReceiptRecord(id: old.id, createdAt: old.createdAt, updatedAt: now,
                 original: old.original, asset: old.asset,
-                revisions: old.revisions + [ReceiptRevision(id: UUID(), createdAt: now, fields: fields, review: review, reviewInput: reviewInput)])
+                revisions: old.revisions + [ReceiptRevision(id: UUID(), createdAt: now, fields: fields, review: review, reviewInput: reviewInput)],
+                organization: old.organization)
             try database.run("UPDATE receipts SET payload = ?, updated_at = ? WHERE id = ?",
                              [.blob(try encode(next)), .integer(try Self.milliseconds(now)), .text(id.uuidString)])
             #if DEBUG
@@ -302,6 +303,48 @@ actor ReceiptStore {
             #endif
             try permit?.check()
             return next
+        }
+    }
+
+    /// Organization does not rewrite purchase evidence or invent a correction revision.
+    @discardableResult
+    func organize(id: UUID, expectedRevision: UUID, action: ReceiptWalletAction,
+                  permit: ReceiptOperationPermit? = nil) throws -> ReceiptRecord {
+        try permit?.check()
+        guard action == .archive || action == .star else { throw ReceiptStoreError.corruptStore }
+        return try database.transaction(permit: permit) {
+            guard var record = try load(id) else { throw ReceiptStoreError.notFound }
+            guard record.current.id == expectedRevision else { throw ReceiptStoreError.editConflict }
+            var organization = record.organization ?? ReceiptOrganization()
+            if action == .archive { organization.archived.toggle() } else { organization.starred.toggle() }
+            record.organization = organization
+            try database.run("UPDATE receipts SET payload = ? WHERE id = ?", [.blob(try encode(record)), .text(id.uuidString)])
+            #if DEBUG
+            try fault?(.beforeCommit)
+            #endif
+            try permit?.check()
+            return record
+        }
+    }
+
+    func walletSettings() throws -> ReceiptWalletSettings {
+        let rows = try database.run("SELECT value FROM metadata WHERE name = 'wallet-settings'")
+        guard let row = rows.first else { return ReceiptWalletSettings() }
+        guard case .blob(let sealed) = row[0] else { throw ReceiptStoreError.corruptStore }
+        let bytes = try cipher.open(sealed, context: "RcpLens/wallet-settings/v1")
+        do { return try JSONDecoder().decode(ReceiptWalletSettings.self, from: bytes) }
+        catch { throw ReceiptStoreError.corruptStore }
+    }
+
+    func saveWalletSettings(_ settings: ReceiptWalletSettings, permit: ReceiptOperationPermit? = nil) throws {
+        try permit?.check()
+        let payload = try cipher.seal(JSONEncoder().encode(settings), context: "RcpLens/wallet-settings/v1")
+        try database.transaction(permit: permit) {
+            try database.run("INSERT INTO metadata(name, value) VALUES ('wallet-settings', ?) ON CONFLICT(name) DO UPDATE SET value = excluded.value", [.blob(payload)])
+            #if DEBUG
+            try fault?(.beforeCommit)
+            #endif
+            try permit?.check()
         }
     }
 

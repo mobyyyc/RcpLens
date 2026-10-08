@@ -144,33 +144,11 @@ private struct ReceiptLineEditor: View {
     }
 }
 
-struct ReceiptDetailView: View {
-    var workspace: ReceiptWorkspace
-    let record: ReceiptRecord
-    var body: some View {
-        ScrollView {
-            VStack(alignment: .leading, spacing: 20) {
-                if !ReceiptCompletion.isComplete(record) {
-                    Label("Needs review", systemImage: "exclamationmark.circle").font(.footnote.weight(.medium))
-                    Text("Edit to check missing fields and totals.").font(.footnote)
-                } else { Label("Reviewed", systemImage: "checkmark.circle").font(.footnote.weight(.medium)) }
-                if let error = workspace.errorMessage { Text(error).font(.subheadline) }
-                if record.current.fields.currency == nil {
-                    Text("Currency still needs confirmation. Amounts below are the saved editable text; they cannot be reconciled yet.").font(.subheadline)
-                }
-                ReceiptPaper(fields: record.current.fields, input: record.current.reviewInput.flatMap { try? JSONDecoder().decode(ReceiptReviewDraft.self, from: $0) })
-                Label("Saved on this device", systemImage: "lock").font(.footnote).foregroundStyle(.primary)
-                #if DEBUG
-                WorkflowDetailTestControls(workspace: workspace)
-                #endif
-            }.padding(24)
-        }.accessibilityIdentifier("detailScreen")
-    }
-}
-
 struct ReceiptPaper: View {
     let fields: ReceiptFields
     var input: ReceiptReviewDraft? = nil
+    var paperSpace: Namespace.ID? = nil
+    var paperID: UUID? = nil
     @Environment(\.dynamicTypeSize) private var typeSize
     private func money(_ value: ReceiptMoney?, raw: String? = nil) -> String {
         value.map { ExactInput.format($0.minorUnits, scale: $0.currency.minorUnitScale) } ?? raw?.nilIfEmpty ?? "Missing"
@@ -199,9 +177,8 @@ struct ReceiptPaper: View {
             Divider()
             amountRow("Total", fields.total, raw: input?.total).font(.title3.weight(.semibold))
         }.padding(24).frame(maxWidth: .infinity, alignment: .leading)
-            .background(Color(uiColor: .secondarySystemGroupedBackground), in: RoundedRectangle(cornerRadius: 22))
-            .overlay { RoundedRectangle(cornerRadius: 22).stroke(.primary.opacity(0.08), lineWidth: 0.5) }
-            .shadow(color: .black.opacity(0.08), radius: 18, y: 8)
+            .background { ReceiptPaperBackground() }
+            .receiptPaperGeometry(id: paperID, space: paperSpace)
     }
     private func amountRow(_ name: String, _ value: ReceiptMoney?, raw: String? = nil) -> some View {
         LabeledContent(name) { Text(money(value, raw: raw)).monospacedDigit().foregroundStyle(.primary) }.foregroundStyle(.primary).accessibilityElement(children: .combine)

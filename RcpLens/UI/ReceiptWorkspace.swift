@@ -2,7 +2,7 @@ import Foundation
 import Observation
 import UIKit
 
-/// Main-actor presentation state. Nothing here is persisted until an explicit Save action.
+/// Main-actor presentation state. Only explicit user actions persist receipts or wallet preferences.
 @MainActor @Observable
 final class ReceiptWorkspace {
     enum Availability: Equatable { case closed, opening, ready, failed(String) }
@@ -22,6 +22,8 @@ final class ReceiptWorkspace {
     var sessionID = UUID()
     var privacyCovered = false
     var library = false
+    var collection = "All receipts"
+    var walletSettings = ReceiptWalletSettings()
     var merchantFilter = "All stores"
     var monthFilter = "All months"
     var active = false
@@ -58,9 +60,10 @@ final class ReceiptWorkspace {
                 guard self.isCurrent(session) else { try? await opened.close(); return }
                 self.store = opened
                 let records = try await opened.receipts()
+                let settings = try await opened.walletSettings()
                 try lease.check()
                 guard self.isCurrent(session) else { return }
-                self.receipts = records; self.availability = .ready
+                self.receipts = records; self.walletSettings = settings; self.availability = .ready
             } catch is CancellationError { }
             catch { if self.isCurrent(session) { self.availability = .failed(Self.storageMessage(error)) } }
         }
@@ -77,6 +80,7 @@ final class ReceiptWorkspace {
         draft = ReceiptReviewDraft(); sourceVisible = false; sourceLineIDs = []
         errorMessage = nil; notice = nil; saving = false; flow = .wallet; availability = .closed
         merchantFilter = "All stores"; monthFilter = "All months"; library = false
+        collection = "All receipts"; walletSettings = ReceiptWalletSettings()
     }
     func retryOpen() { suspend(); activate(protectedDataAvailable: UIApplication.shared.isProtectedDataAvailable) }
     private func isCurrent(_ session: UUID) -> Bool { active && sessionID == session && !Task.isCancelled }
@@ -174,23 +178,25 @@ final class ReceiptWorkspace {
     func open(_ record: ReceiptRecord) {
         guard let store, active, !saving else { return }
         task?.cancel(); let session = sessionID
-        selected = nil; image = nil; extraction = nil
-        flow = .loading; errorMessage = nil
+        selected = record; image = nil; extraction = record.original
+        flow = .detail; errorMessage = nil
         task = Task { [weak self] in
             do {
                 guard let current = try await store.receipt(id: record.id) else { throw ReceiptStoreError.notFound }
                 let bytes = try await store.originalImage(receiptID: record.id)
-                let decoded = try ReceiptImage.decode(bytes)
-                guard let self, self.isCurrent(session), self.flow == .loading else { return }
+                let decoded = try await Task.detached(priority: .userInitiated) { try ReceiptImage.decode(bytes) }.value
+                guard let self, self.isCurrent(session), self.flow == .detail, self.selected?.id == record.id else { return }
                 self.selected = current; self.image = decoded; self.extraction = current.original; self.flow = .detail
+                if let index = self.receipts.firstIndex(where: { $0.id == current.id }) { self.receipts[index] = current }
             } catch {
                 guard let self, self.isCurrent(session) else { return }
-                self.flow = .failed; self.errorMessage = Self.storageMessage(error)
+                guard self.selected?.id == record.id, self.flow == .detail else { return }
+                self.errorMessage = Self.storageMessage(error)
             }
         }
     }
     func edit() {
-        guard let selected, !saving else { return }
+        guard let selected, image != nil, !saving else { return }
         if let bytes = selected.current.reviewInput, let input = try? JSONDecoder().decode(ReceiptReviewDraft.self, from: bytes) { draft = input }
         else { draft = ReceiptReviewDraft(fields: selected.current.fields) }
         draft.sourceChecked = false; draft.sourceOpened = false
@@ -246,8 +252,10 @@ final class ReceiptWorkspace {
             }
         }
     }
-    func deleteSelected() {
-        guard active, !saving, let selected, let store else { return }
+    func deleteSelected() { if let selected { deleteReceipt(selected) } }
+    func deleteReceipt(_ record: ReceiptRecord) {
+        guard active, !saving, let store else { return }
+        let selected = record
         let session = sessionID, lease = permit
         saving = true
         task = Task { [weak self] in
@@ -270,7 +278,43 @@ final class ReceiptWorkspace {
                 guard let self, self.isCurrent(session) else { return }
                 self.saving = false
                 if committed { self.notice = "Receipt deleted, but the wallet could not refresh. Reopen the wallet to try again." }
-                else { self.errorMessage = Self.storageMessage(error) }
+                else { self.errorMessage = Self.storageMessage(error); if self.flow == .wallet { self.notice = self.errorMessage } }
+            }
+        }
+    }
+    func organize(_ record: ReceiptRecord, action: ReceiptWalletAction) {
+        guard active, !saving, let store, action == .archive || action == .star else { return }
+        let session = sessionID, lease = permit
+        saving = true
+        task = Task { [weak self] in
+            do {
+                let updated = try await store.organize(id: record.id, expectedRevision: record.current.id, action: action, permit: lease)
+                try lease.check()
+                guard let self, self.isCurrent(session) else { return }
+                if let index = self.receipts.firstIndex(where: { $0.id == record.id }) { self.receipts[index] = updated }
+                if self.selected?.id == record.id { self.selected = updated }
+                self.saving = false
+                if action == .archive && self.flow == .detail { self.backToWallet() }
+            } catch {
+                guard let self, self.isCurrent(session) else { return }
+                self.saving = false; self.notice = Self.storageMessage(error)
+                if self.flow == .detail { self.errorMessage = self.notice }
+            }
+        }
+    }
+    func setWalletSettings(_ settings: ReceiptWalletSettings) {
+        guard active, !saving, let store else { return }
+        let session = sessionID, lease = permit
+        saving = true
+        task = Task { [weak self] in
+            do {
+                try await store.saveWalletSettings(settings, permit: lease)
+                try lease.check()
+                guard let self, self.isCurrent(session) else { return }
+                self.walletSettings = settings; self.saving = false
+            } catch {
+                guard let self, self.isCurrent(session) else { return }
+                self.saving = false; self.notice = Self.storageMessage(error)
             }
         }
     }
@@ -308,20 +352,26 @@ final class ReceiptWorkspace {
     func seedFictionalRecordsForPreview(count: Int) async {
         guard SyntheticNativePreview.enabled, let store, active else { return }
         do {
+            try Task.checkCancellation()
             try await store.purgeAllReceipts()
+            try await store.saveWalletSettings(ReceiptWalletSettings())
+            walletSettings = ReceiptWalletSettings()
             var fixtures: [(Data, ReceiptReviewDraft, ReceiptExtraction)] = []
             for index in 0..<3 {
+                try Task.checkCancellation()
                 let (bytes, draft) = SyntheticNativePreview.fixture(index: index)
                 let result = try await Task.detached { try ReceiptRecognitionJob().run(ReceiptImage.decode(bytes)) }.value
                 fixtures.append((bytes, draft, try ReceiptParser.extraction(result)))
             }
             for index in 0..<count {
+                try Task.checkCancellation()
                 let (bytes, draft, extraction) = fixtures[index % 3]
                 _ = try await store.create(extraction: extraction, originalImage: bytes, mediaType: "image/png", correction: draft.fields,
                     review: .sourceReviewed, reviewInput: JSONEncoder().encode(draft), permit: permit)
             }
             receipts = try await store.receipts()
-        } catch { notice = "Synthetic preview setup failed." }
+        } catch is CancellationError { }
+        catch { notice = "Synthetic preview setup failed." }
     }
     #endif
 

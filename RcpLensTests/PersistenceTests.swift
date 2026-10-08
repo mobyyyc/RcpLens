@@ -47,6 +47,75 @@ final class PersistenceTests: XCTestCase {
         try ReceiptSQLiteDatabase(url: url.appendingPathComponent("receipts.sqlite"), create: false)
     }
 
+    func testWalletOrganizationAndSettingsSurviveEditsAndReopen() async throws {
+        let url = try directory(); defer { clean(url) }
+        let store = try ReceiptStore(directory: url, keyProvider: FixedKey(bytes: key))
+        let original = extraction(), bytes = try image()
+        let record = try await store.create(extraction: original, originalImage: bytes, mediaType: "image/png", now: time)
+        // A historical document without organization remains readable with the same evidence.
+        var document = try XCTUnwrap(JSONSerialization.jsonObject(with: JSONEncoder().encode(record)) as? [String: Any])
+        document.removeValue(forKey: "organization")
+        let legacy = try JSONDecoder().decode(ReceiptRecord.self, from: JSONSerialization.data(withJSONObject: document))
+        XCTAssertFalse(legacy.isStarred); XCTAssertFalse(legacy.isArchived); XCTAssertEqual(legacy.original, original)
+        let starred = try await store.organize(id: record.id, expectedRevision: record.current.id, action: .star)
+        let archived = try await store.organize(id: record.id, expectedRevision: record.current.id, action: .archive)
+        XCTAssertTrue(starred.isStarred); XCTAssertTrue(archived.isStarred); XCTAssertTrue(archived.isArchived)
+        XCTAssertEqual(archived.revisions, record.revisions); XCTAssertEqual(archived.updatedAt, record.updatedAt)
+        let edited = try await store.revise(id: record.id, expectedRevision: record.current.id, fields: record.current.fields, now: time.addingTimeInterval(1))
+        XCTAssertTrue(edited.isArchived); XCTAssertTrue(edited.isStarred)
+        let settings = ReceiptWalletSettings(leftSwipe: .delete, rightSwipe: .none)
+        try await store.saveWalletSettings(settings)
+        try await store.close()
+        let reopened = try ReceiptStore(directory: url, keyProvider: FixedKey(bytes: key))
+        let loaded = try await reopened.receipt(id: record.id)
+        let restored = try XCTUnwrap(loaded)
+        let preferences = try await reopened.walletSettings()
+        let asset = try await reopened.originalImage(receiptID: record.id)
+        XCTAssertEqual(restored, edited); XCTAssertEqual(preferences, settings); XCTAssertEqual(asset, bytes)
+        let unarchived = try await reopened.organize(id: record.id, expectedRevision: edited.current.id, action: .archive)
+        XCTAssertFalse(unarchived.isArchived); XCTAssertTrue(unarchived.isStarred)
+        let dbBytes = try Data(contentsOf: url.appendingPathComponent("receipts.sqlite"))
+        XCTAssertNil(dbBytes.range(of: Data("leftSwipe".utf8)))
+        XCTAssertNil(dbBytes.range(of: Data("starred".utf8)))
+        try await reopened.close()
+    }
+
+    func testWalletActionsRejectStaleEditsAndRevokedWrites() async throws {
+        let url = try directory(); defer { clean(url) }
+        let store = try ReceiptStore(directory: url, keyProvider: FixedKey(bytes: key))
+        let record = try await store.create(extraction: extraction(), originalImage: image(), mediaType: "image/png", now: time)
+        let edited = try await store.revise(id: record.id, expectedRevision: record.current.id, fields: record.current.fields, now: time.addingTimeInterval(1))
+        do {
+            _ = try await store.organize(id: record.id, expectedRevision: record.current.id, action: .archive)
+            XCTFail("Stale receipt must not be organized")
+        } catch { XCTAssertEqual(error as? ReceiptStoreError, .editConflict) }
+        let permit = ReceiptOperationPermit(); permit.revoke()
+        do { _ = try await store.organize(id: record.id, expectedRevision: edited.current.id, action: .star, permit: permit); XCTFail("Revoked write") }
+        catch { XCTAssertTrue(error is CancellationError) }
+        do { try await store.saveWalletSettings(.init(leftSwipe: .delete, rightSwipe: .delete), permit: permit); XCTFail("Revoked settings") }
+        catch { XCTAssertTrue(error is CancellationError) }
+        let current = try await store.receipt(id: record.id), settings = try await store.walletSettings()
+        XCTAssertEqual(current, edited); XCTAssertEqual(settings, ReceiptWalletSettings())
+        try await store.close()
+    }
+
+    func testWalletActionsRollbackAtCommitBoundary() async throws {
+        let url = try directory(); defer { clean(url) }
+        let initial = try ReceiptStore(directory: url, keyProvider: FixedKey(bytes: key))
+        let record = try await initial.create(extraction: extraction(), originalImage: image(), mediaType: "image/png", now: time)
+        try await initial.close()
+        let failing = try ReceiptStore(directory: url, keyProvider: FixedKey(bytes: key), fault: { if $0 == .beforeCommit { throw ReceiptStoreError.injectedFailure } })
+        do { _ = try await failing.organize(id: record.id, expectedRevision: record.current.id, action: .star); XCTFail("Injected failure") }
+        catch { XCTAssertEqual(error as? ReceiptStoreError, .injectedFailure) }
+        do { try await failing.saveWalletSettings(.init(leftSwipe: .delete, rightSwipe: .none)); XCTFail("Injected failure") }
+        catch { XCTAssertEqual(error as? ReceiptStoreError, .injectedFailure) }
+        try await failing.close()
+        let reopened = try ReceiptStore(directory: url, keyProvider: FixedKey(bytes: key))
+        let restored = try await reopened.receipt(id: record.id), settings = try await reopened.walletSettings()
+        XCTAssertEqual(restored, record); XCTAssertEqual(settings, ReceiptWalletSettings())
+        try await reopened.close()
+    }
+
     func testCreateEditCloseReopenPreservesOriginalAndUnknowns() async throws {
         let url = try directory(); defer { clean(url) }
         let store = try ReceiptStore(directory: url, keyProvider: FixedKey(bytes: key))

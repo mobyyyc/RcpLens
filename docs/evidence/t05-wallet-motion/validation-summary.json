@@ -1,0 +1,74 @@
+{
+  "date": "2026-10-08",
+  "milestone": "T05 Wallet interaction follow-up; T06 awaits user approval",
+  "syntheticVisualEvidenceOnly": true,
+  "unit": {
+    "passed": 47,
+    "failed": 0,
+    "skipped": 1,
+    "resultBundle": "/tmp/RcpLens-Wallet-Unit-Verified.xcresult",
+    "skip": "Physical-device file protection"
+  },
+  "walletInteraction": {
+    "passed": 4,
+    "failed": 0,
+    "resultBundle": "/tmp/RcpLens-Wallet-Final-Transition.xcresult"
+  },
+  "nativeImport": {
+    "passed": 2,
+    "failed": 0,
+    "publicSummary": "synthetic-ui-tests.json"
+  },
+  "accessibility": {
+    "result": "Passed",
+    "totalTestCount": 5,
+    "passedTests": 5,
+    "failedTests": 0,
+    "skippedTests": 0,
+    "kind": "accessibility",
+    "structureAuditTypes": [
+      "elementDetection",
+      "hitRegion",
+      "sufficientElementDescription"
+    ],
+    "contrastFindingsBySyntheticScenario": {
+      "wallet": 2,
+      "detail": 2,
+      "review": 3,
+      "source": 1,
+      "library": 0
+    },
+    "contrastAuditStatus": "FindingsWithNarrowDocumentedExceptions",
+    "contrastScope": "Diagnostics only, never certified by the green structural/interaction test result.",
+    "acceptedContrastExceptions": 8,
+    "unresolvedContrastFindings": 0
+  },
+  "verificationScope": "Unit, import and accessibility checks precede only the final paper opacity/background animation adjustment. Final Wallet interaction checks and Release build include that adjustment. Settled screenshots and accessibility semantics are unchanged.",
+  "reviewedVisualStates": [
+    "empty light/dark",
+    "chronological wallet",
+    "long preview fades",
+    "standardized expanded paper",
+    "swipe action label",
+    "30-receipt newest position",
+    "review form",
+    "original evidence",
+    "500-receipt library",
+    "accessibility text size",
+    "opening and returning video frames"
+  ],
+  "sourceManifest": "source-hashes.json",
+  "release": "release-verification.json",
+  "limits": [
+    "Physical camera, device protection and VoiceOver await iPhone testing",
+    "Simulator contrast exceptions are documented, not device certification",
+    "No new recognition accuracy evaluation",
+    "User approval of the revised design remains pending"
+  ],
+  "releaseInstalledAndNormallyLaunched": true,
+  "simulator": {
+    "model": "iPhone 18 Pro",
+    "iOS": "27.0",
+    "id": "50661E83-1F58-466B-99F0-9DC517D8EC82"
+  }
+}

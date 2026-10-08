@@ -225,6 +225,10 @@ struct ReceiptRecord: Codable, Equatable, Sendable, Identifiable {
     let original: ReceiptExtraction
     let asset: ReceiptAsset
     let revisions: [ReceiptRevision]
+    /// Optional for compatibility with encrypted documents written before wallet actions existed.
+    var organization: ReceiptOrganization? = nil
+    var isArchived: Bool { organization?.archived ?? false }
+    var isStarred: Bool { organization?.starred ?? false }
     var current: ReceiptRevision { revisions.last! }
 
     func validate() throws {
@@ -248,4 +252,30 @@ struct ReceiptRecord: Codable, Equatable, Sendable, Identifiable {
         guard revisions.first!.fields == original.fields, revisions.first!.review == .draft,
               asset.byteCount > 0, asset.sha256.count == 32 else { throw ReceiptValidationError.invalidEvidence }
     }
+}
+
+struct ReceiptOrganization: Codable, Equatable, Sendable {
+    var archived = false
+    var starred = false
+}
+
+enum ReceiptWalletAction: String, Codable, CaseIterable, Sendable, Identifiable {
+    case archive, star, delete, none
+    var id: String { rawValue }
+    var title: String {
+        switch self { case .archive: "Archive"; case .star: "Star"; case .delete: "Delete"; case .none: "None" }
+    }
+    var symbol: String {
+        switch self { case .archive: "archivebox"; case .star: "star"; case .delete: "trash"; case .none: "minus" }
+    }
+    func title(for record: ReceiptRecord) -> String {
+        if self == .archive && record.isArchived { return "Unarchive" }
+        if self == .star && record.isStarred { return "Unstar" }
+        return title
+    }
+}
+
+struct ReceiptWalletSettings: Codable, Equatable, Sendable {
+    var leftSwipe: ReceiptWalletAction = .archive
+    var rightSwipe: ReceiptWalletAction = .star
 }
