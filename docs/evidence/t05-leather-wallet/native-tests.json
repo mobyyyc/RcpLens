@@ -1,0 +1,25 @@
+{
+  "fullRun": {
+    "result": "Failed",
+    "totalTestCount": 12,
+    "passedTests": 11,
+    "failedTests": 1,
+    "skippedTests": 0
+  },
+  "finalLayerCheck": {
+    "result": "Passed",
+    "totalTestCount": 1,
+    "passedTests": 1,
+    "failedTests": 0,
+    "skippedTests": 0
+  },
+  "finalRenderingChecks": {
+    "result": "Passed",
+    "totalTestCount": 3,
+    "passedTests": 3,
+    "failedTests": 0,
+    "skippedTests": 0
+  },
+  "uniqueCasesVerified": 12,
+  "scope": "Seven Wallet interaction cases and five native accessibility/navigation cases, all using the isolated fictional preview store. Eleven passed in the full run; the layer case passed on a focused rerun after replacing an invalid accessibility-container lookup with measurements relative to the visible heading. App sources did not change between runs."
+}

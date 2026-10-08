@@ -275,7 +275,28 @@ enum ReceiptWalletAction: String, Codable, CaseIterable, Sendable, Identifiable 
     }
 }
 
+enum ReceiptPaperAppearance: String, Codable, CaseIterable, Sendable, Identifiable {
+    case matchAppearance, alwaysWhite
+    var id: String { rawValue }
+    var title: String { self == .alwaysWhite ? "Always white" : "Match appearance" }
+}
+
 struct ReceiptWalletSettings: Codable, Equatable, Sendable {
-    var leftSwipe: ReceiptWalletAction = .archive
-    var rightSwipe: ReceiptWalletAction = .star
+    var leftSwipe: ReceiptWalletAction
+    var rightSwipe: ReceiptWalletAction
+    var paperAppearance: ReceiptPaperAppearance
+
+    init(leftSwipe: ReceiptWalletAction = .archive, rightSwipe: ReceiptWalletAction = .star,
+         paperAppearance: ReceiptPaperAppearance = .matchAppearance) {
+        self.leftSwipe = leftSwipe; self.rightSwipe = rightSwipe; self.paperAppearance = paperAppearance
+    }
+
+    private enum CodingKeys: String, CodingKey { case leftSwipe, rightSwipe, paperAppearance }
+    init(from decoder: Decoder) throws {
+        let values = try decoder.container(keyedBy: CodingKeys.self)
+        leftSwipe = try values.decode(ReceiptWalletAction.self, forKey: .leftSwipe)
+        rightSwipe = try values.decode(ReceiptWalletAction.self, forKey: .rightSwipe)
+        // Existing encrypted preferences predate receipt appearance.
+        paperAppearance = try values.decodeIfPresent(ReceiptPaperAppearance.self, forKey: .paperAppearance) ?? .matchAppearance
+    }
 }

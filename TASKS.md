@@ -74,6 +74,8 @@ The main chat coordinates these task chats. The user approves one task at a time
 
 - Screen-edge/small-stack follow-up (2026-10-08): Settings-inspired native soft effects under system bars replace the center mask. One/two/three papers remain tucked 32 points into the pocket, with a separate non-interactive backing and actual Import tap checks. The collection List's hard clip and blank bottom spacer are removed. Eleven unique native cases verified across the full run and targeted final audit; twelve narrow documented contrast exceptions, zero unresolved findings. Historical unit baseline unchanged. [Final sources and exact scope](docs/evidence/t05-screen-edges/validation-summary.json). Design review and T06 approval remain pending.
 
+- Leather wallet/paper appearance follow-up (2026-10-08): landscape cognac pocket with scooped mouth, welt, stitching, grain and subtle pressed mark. The rear panel stays behind receipts and the front ahead of them, including transitions. Settings persists Always white or Match appearance without changing system chrome. Legacy preferences remain readable. Forty-nine unit passes plus one hardware skip; twelve unique native cases verified across full run and focused layer rerun, including rendered occlusion, preference relaunch and prior interactions. Twelve existing narrow contrast exceptions, zero unresolved findings. After removing the rear panel’s clipped outer shadow, three affected rendering/transition cases passed again with final app sources; the other native checks precede this cosmetic change. [Exact scope and previews](docs/evidence/t05-leather-wallet/validation-summary.json). Design review and T06 approval remain pending.
+
 ## T06 — 06 · Exact item-level bill splitting
 
 - Status: queued

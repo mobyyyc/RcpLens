@@ -207,7 +207,7 @@ struct ReceiptPaper: View {
         value.map { ExactInput.format($0.minorUnits, scale: $0.currency.minorUnitScale) } ?? raw?.nilIfEmpty ?? "Missing"
     }
     var body: some View {
-        content.background { if showsSurface { ReceiptPaperBackground() } }
+        content.background { if showsSurface { ReceiptPaperBackground() } }.receiptPaperStyle()
     }
     private var content: some View {
         VStack(alignment: .leading, spacing: 18) {

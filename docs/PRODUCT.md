@@ -48,3 +48,8 @@ The user superseded the top wallet crown: keep the pocket at the bottom while th
 ### Screen edges and small collections · 2026-10-08
 
 The user clarified that fading belongs at the top and bottom of the screen, following Settings, rather than around a center frame. Use native progressive scroll edge effects beneath the system controls; retain the separate fade within long preview papers. Position short stacks against the bottom pocket so a small portion of the newest paper always remains inside the wallet. Pocket backing must conceal inserted paper without blocking the Import control.
+
+
+### Leather wallet and receipt appearance · 2026-10-08
+
+The user requested a landscape wallet inspired by a cognac leather MagSafe pocket, with a shaped opening and material depth rather than a plain rounded rectangle. The user further specified that receipts sit between the wallet’s front and back: render the back beneath the paper stack and the front above it, preserving that order during transitions. Keep it at the bottom with receipts partly inserted and the existing animations, shadows, native edge effects and Glass interactions. Preserve the accepted empty-wallet illustration. Add a saved Receipt paper setting: Always white, or Match appearance (including dark paper in Dark Mode). Preserve current behavior as the default, and scope the choice to paper rather than system controls or wallet.

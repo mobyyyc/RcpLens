@@ -354,8 +354,9 @@ final class ReceiptWorkspace {
         do {
             try Task.checkCancellation()
             try await store.purgeAllReceipts()
-            try await store.saveWalletSettings(ReceiptWalletSettings())
-            walletSettings = ReceiptWalletSettings()
+            let settings = ReceiptWalletSettings(paperAppearance: ProcessInfo.processInfo.arguments.contains("--t05-white-paper") ? .alwaysWhite : .matchAppearance)
+            try await store.saveWalletSettings(settings)
+            walletSettings = settings
             var fixtures: [(Data, ReceiptReviewDraft, ReceiptExtraction)] = []
             for index in 0..<3 {
                 try Task.checkCancellation()

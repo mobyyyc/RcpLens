@@ -28,6 +28,13 @@ struct ReceiptWalletScene: View {
     var body: some View {
         GeometryReader { geometry in
             ZStack(alignment: .topLeading) {
+                if !records.isEmpty {
+                    walletBack(in: geometry)
+                        .offset(x: 20, y: geometry.size.height - walletHeight - 32 - endBounce)
+                        .opacity(presented == nil ? 1 : 0)
+                        .zIndex(-1)
+                        .allowsHitTesting(false).accessibilityHidden(true)
+                }
                 ScrollViewReader { proxy in
                     ScrollView {
                         VStack(spacing: 0) {
@@ -131,6 +138,11 @@ struct ReceiptWalletScene: View {
                         }
                     }
                     if walletFrame != .zero {
+                        walletBack(in: geometry)
+                            .offset(x: walletFrame.minX, y: walletFrame.minY - 12 + (expanded && !reduceMotion ? geometry.size.height + 350 : 0))
+                            .opacity(expanded && reduceMotion ? 0 : 1)
+                            .zIndex(-1)
+                            .allowsHitTesting(false).accessibilityHidden(true)
                         pocketBacking(in: geometry)
                             .offset(y: walletFrame.maxY - 12 + (expanded && !reduceMotion ? geometry.size.height + 350 : 0))
                             .opacity(expanded && reduceMotion ? 0 : 1)
@@ -203,6 +215,9 @@ struct ReceiptWalletScene: View {
             .frame(width: geometry.size.width, height: 32 + geometry.safeAreaInsets.bottom)
             .allowsHitTesting(false).accessibilityHidden(true)
     }
+    private func walletBack(in geometry: GeometryProxy) -> some View {
+        WalletBackPanel().frame(width: geometry.size.width - 40, height: walletHeight + 12)
+    }
     private func liftedPaper(_ record: ReceiptRecord, geometry: GeometryProxy) -> some View {
         ScrollView {
             WalletLiftedPaper(record: record, expanded: expanded, origin: origin,
@@ -258,6 +273,7 @@ private struct WalletLiftedPaper: View {
             .frame(width: paperWidth, height: paperHeight, alignment: .topLeading)
             .clipShape(ReceiptPaperEdge())
             .background { ReceiptPaperBackground(fade: !expanded && record.current.fields.items.count > 3 && !typeSize.isAccessibilitySize ? 1 : 0) }
+            .receiptPaperStyle()
             .rotationEffect(.degrees(reading ? 0 : tilt))
             .offset(x: reading ? 30 : origin.minX, y: reading ? 52 : origin.minY + returnOffset)
             VStack(alignment: .leading, spacing: 18) {
@@ -278,26 +294,125 @@ private struct WalletCrown: View {
     @Environment(\.colorScheme) private var scheme
     var body: some View {
         HStack(alignment: .center, spacing: 14) {
-            Image(systemName: "wallet.bifold").font(.title2.weight(.light))
             VStack(alignment: .leading, spacing: 5) {
-                Text("Wallet").font(.title2.weight(.semibold)).accessibilityIdentifier("walletHeading")
+                Text("Wallet").font(.system(.title2, design: .serif, weight: .semibold))
+                    .shadow(color: .white.opacity(scheme == .dark ? 0.08 : 0.25), radius: 0, y: 1)
+                    .accessibilityIdentifier("walletHeading")
                 Text("\(count) saved").font(.subheadline)
             }
             Spacer(minLength: 6)
             if count > 3 {
                 Button(action: jumpToLatest) { Image(systemName: "arrow.down").frame(width: 44, height: 44) }
                     .buttonStyle(.glass).accessibilityLabel("Jump to newest receipt").accessibilityIdentifier("latestReceipt")
+            } else {
+                Image(systemName: "wallet.bifold").font(.title2.weight(.light)).opacity(0.75).accessibilityHidden(true)
             }
         }
-        .foregroundStyle(scheme == .dark ? Color.white : Color.primary).padding(22).frame(maxWidth: .infinity, alignment: .leading)
-        .background {
-            RoundedRectangle(cornerRadius: 25).fill(LinearGradient(colors: scheme == .dark ? [Color(white: 0.24), Color(white: 0.12)] : [Color(white: 0.96), Color(white: 0.86)], startPoint: .topLeading, endPoint: .bottomTrailing))
-        }
-        .overlay { RoundedRectangle(cornerRadius: 25).stroke(.primary.opacity(0.12), lineWidth: 0.5) }
-        .overlay(alignment: .bottom) { Capsule().fill(.primary.opacity(0.12)).frame(height: 1).padding(.horizontal, 22).padding(.bottom, 13) }
-        .shadow(color: .black.opacity(0.22), radius: 14, y: 8)
+        .foregroundStyle(scheme == .dark ? Color(red: 0.99, green: 0.92, blue: 0.83) : Color(red: 0.12, green: 0.06, blue: 0.03))
+        .padding(.horizontal, 28).padding(.top, 26).padding(.bottom, 26)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background { LeatherWalletSurface() }
         .accessibilityElement(children: .contain)
+        .accessibilityIdentifier("walletPocket")
     }
+}
+
+/// A shallow scooped mouth sits in front of the inserted papers, with a separate leather welt.
+private struct WalletPocketFace: Shape {
+    func path(in r: CGRect) -> Path {
+        let w = r.width, h = r.height, corner: CGFloat = min(28, h / 3)
+        var p = Path()
+        p.move(to: CGPoint(x: 0, y: corner))
+        p.addQuadCurve(to: CGPoint(x: corner, y: 8), control: CGPoint(x: 0, y: 8))
+        p.addCurve(to: CGPoint(x: w - corner, y: 8), control1: CGPoint(x: w * 0.3, y: 18), control2: CGPoint(x: w * 0.7, y: 18))
+        p.addQuadCurve(to: CGPoint(x: w, y: corner), control: CGPoint(x: w, y: 8))
+        p.addLine(to: CGPoint(x: w, y: h - corner))
+        p.addQuadCurve(to: CGPoint(x: w - corner, y: h), control: CGPoint(x: w, y: h))
+        p.addLine(to: CGPoint(x: corner, y: h))
+        p.addQuadCurve(to: CGPoint(x: 0, y: h - corner), control: CGPoint(x: 0, y: h))
+        p.closeSubpath(); return p
+    }
+}
+
+private struct WalletStitch: Shape {
+    func path(in r: CGRect) -> Path {
+        var p = Path()
+        p.move(to: CGPoint(x: 9, y: 32)); p.addLine(to: CGPoint(x: 9, y: r.height - 28))
+        p.addQuadCurve(to: CGPoint(x: 28, y: r.height - 9), control: CGPoint(x: 9, y: r.height - 9))
+        p.addLine(to: CGPoint(x: r.width - 28, y: r.height - 9))
+        p.addQuadCurve(to: CGPoint(x: r.width - 9, y: r.height - 28), control: CGPoint(x: r.width - 9, y: r.height - 9))
+        p.addLine(to: CGPoint(x: r.width - 9, y: 32)); return p
+    }
+}
+
+private struct LeatherWalletSurface: View {
+    @Environment(\.colorScheme) private var scheme
+    private var dark: Bool { scheme == .dark }
+    var body: some View {
+        ZStack {
+            // Only the front welt and face belong here. The back is a scene sibling below all papers.
+            WalletPocketFace().fill(LinearGradient(colors: dark ? [Color(red: 0.49, green: 0.32, blue: 0.21), Color(red: 0.25, green: 0.14, blue: 0.08)] : [Color(red: 0.81, green: 0.62, blue: 0.43), Color(red: 0.49, green: 0.28, blue: 0.16)], startPoint: .top, endPoint: .bottom))
+                .overlay { WalletPocketFace().stroke(.white.opacity(0.16), lineWidth: 1) }
+            WalletPocketFace().fill(Color(red: 0.18, green: 0.09, blue: 0.05)).padding(.horizontal, 6).padding(.top, 1).padding(.bottom, 6)
+            WalletPocketFace()
+                .fill(LinearGradient(colors: dark ? [Color(red: 0.48, green: 0.31, blue: 0.20), Color(red: 0.34, green: 0.19, blue: 0.11)] : [Color(red: 0.78, green: 0.57, blue: 0.39), Color(red: 0.67, green: 0.43, blue: 0.27)], startPoint: .topLeading, endPoint: .bottomTrailing))
+                .overlay {
+                    Canvas { context, size in
+                        // Fixed, sparse grain: no image assets, randomness or moving texture.
+                        for row in 0..<Int(size.height / 3) {
+                            for column in 0..<Int(size.width / 3) {
+                                let seed = (row * 37 + column * 17) % 19
+                                let rect = CGRect(x: CGFloat(column * 3) + CGFloat(seed % 3) * 0.3,
+                                                  y: CGFloat(row * 3), width: 0.7, height: 0.9)
+                                context.fill(Path(ellipseIn: rect), with: .color(seed % 2 == 0 ? .white.opacity(0.08) : .black.opacity(0.07)))
+                            }
+                        }
+                    }.clipShape(WalletPocketFace())
+                }
+                .overlay { WalletPocketFace().stroke(.black.opacity(0.22), lineWidth: 1) }
+                .overlay { WalletPocketFace().stroke(.white.opacity(0.14), lineWidth: 0.7).padding(1) }
+                .overlay {
+                    WalletStitch().stroke(.black.opacity(0.22), style: StrokeStyle(lineWidth: 2.5, lineCap: .round, dash: [2, 5]))
+                    WalletStitch().stroke(Color(red: 0.94, green: 0.76, blue: 0.55).opacity(dark ? 0.38 : 0.65), style: StrokeStyle(lineWidth: 1, lineCap: .round, dash: [2, 5]))
+                        .offset(y: -0.5)
+                }
+                .padding(.horizontal, 4).padding(.bottom, 4)
+        }
+        .compositingGroup()
+        .shadow(color: .black.opacity(dark ? 0.4 : 0.2), radius: 14, y: 8)
+        .shadow(color: .black.opacity(0.18), radius: 2, y: 2)
+        .allowsHitTesting(false).accessibilityHidden(true)
+    }
+}
+
+private struct WalletBackPanel: View {
+    @Environment(\.colorScheme) private var scheme
+    var body: some View {
+        RoundedRectangle(cornerRadius: 28)
+            .fill(LinearGradient(colors: scheme == .dark ? [Color(red: 0.35, green: 0.21, blue: 0.13), Color(red: 0.25, green: 0.14, blue: 0.08)] : [Color(red: 0.62, green: 0.40, blue: 0.25), Color(red: 0.49, green: 0.28, blue: 0.16)], startPoint: .top, endPoint: .bottom))
+            .overlay { RoundedRectangle(cornerRadius: 28).stroke(.white.opacity(0.2), lineWidth: 0.8) }
+            .overlay { RoundedRectangle(cornerRadius: 24).stroke(.black.opacity(0.22), lineWidth: 1).padding(4) }
+    }
+}
+
+private struct ReceiptPaperAppearanceKey: EnvironmentKey {
+    static let defaultValue: ReceiptPaperAppearance = .matchAppearance
+}
+extension EnvironmentValues {
+    var receiptPaperAppearance: ReceiptPaperAppearance {
+        get { self[ReceiptPaperAppearanceKey.self] }
+        set { self[ReceiptPaperAppearanceKey.self] = newValue }
+    }
+}
+private struct ReceiptPaperStyle: ViewModifier {
+    @Environment(\.receiptPaperAppearance) private var appearance
+    @Environment(\.colorScheme) private var scheme
+    func body(content: Content) -> some View {
+        content.environment(\.colorScheme, appearance == .alwaysWhite ? .light : scheme)
+    }
+}
+extension View {
+    func receiptPaperStyle() -> some View { modifier(ReceiptPaperStyle()) }
 }
 
 /// A modest torn edge and opaque reading surface; long previews fade toward their bottom.
@@ -422,6 +537,7 @@ private struct ReceiptPreviewSurface: View {
                 } else { Color.black }
             }
             .background { ReceiptPaperBackground(fade: fades ? 1 : 0) }
+            .receiptPaperStyle()
     }
 }
 
@@ -487,6 +603,15 @@ struct ReceiptWalletSettingsView: View {
     var body: some View {
         NavigationStack {
             Form {
+                Section {
+                    Picker("Receipt paper", selection: Binding(get: { workspace.walletSettings.paperAppearance }, set: { appearance in
+                        var settings = workspace.walletSettings
+                        settings.paperAppearance = appearance
+                        workspace.setWalletSettings(settings)
+                    })) {
+                        ForEach(ReceiptPaperAppearance.allCases) { Text($0.title).tag($0) }
+                    }.accessibilityIdentifier("paperAppearanceSetting")
+                } header: { Text("Appearance") } footer: { Text("Keep receipts white, or let the paper follow Light and Dark Mode.") }
                 Section {
                     actionPicker("Swipe left", left: true).accessibilityIdentifier("leftSwipeSetting")
                     actionPicker("Swipe right", left: false).accessibilityIdentifier("rightSwipeSetting")

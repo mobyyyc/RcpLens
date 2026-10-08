@@ -63,7 +63,7 @@ final class PersistenceTests: XCTestCase {
         XCTAssertEqual(archived.revisions, record.revisions); XCTAssertEqual(archived.updatedAt, record.updatedAt)
         let edited = try await store.revise(id: record.id, expectedRevision: record.current.id, fields: record.current.fields, now: time.addingTimeInterval(1))
         XCTAssertTrue(edited.isArchived); XCTAssertTrue(edited.isStarred)
-        let settings = ReceiptWalletSettings(leftSwipe: .delete, rightSwipe: .none)
+        let settings = ReceiptWalletSettings(leftSwipe: .delete, rightSwipe: .none, paperAppearance: .alwaysWhite)
         try await store.saveWalletSettings(settings)
         try await store.close()
         let reopened = try ReceiptStore(directory: url, keyProvider: FixedKey(bytes: key))
@@ -76,8 +76,22 @@ final class PersistenceTests: XCTestCase {
         XCTAssertFalse(unarchived.isArchived); XCTAssertTrue(unarchived.isStarred)
         let dbBytes = try Data(contentsOf: url.appendingPathComponent("receipts.sqlite"))
         XCTAssertNil(dbBytes.range(of: Data("leftSwipe".utf8)))
+        XCTAssertNil(dbBytes.range(of: Data("alwaysWhite".utf8)))
         XCTAssertNil(dbBytes.range(of: Data("starred".utf8)))
         try await reopened.close()
+    }
+
+    func testExistingWalletPreferencesKeepSwipeActionsAndDefaultPaperAppearance() throws {
+        let legacy = Data(#"{"leftSwipe":"delete","rightSwipe":"none"}"#.utf8)
+        let decoded = try JSONDecoder().decode(ReceiptWalletSettings.self, from: legacy)
+        XCTAssertEqual(decoded, ReceiptWalletSettings(leftSwipe: .delete, rightSwipe: .none))
+        for appearance in ReceiptPaperAppearance.allCases {
+            let preferences = ReceiptWalletSettings(leftSwipe: .none, rightSwipe: .archive, paperAppearance: appearance)
+            XCTAssertEqual(try JSONDecoder().decode(ReceiptWalletSettings.self, from: JSONEncoder().encode(preferences)), preferences)
+        }
+        // Unknown values indicate corruption or a future format, rather than silently replacing a choice.
+        XCTAssertThrowsError(try JSONDecoder().decode(ReceiptWalletSettings.self,
+            from: Data(#"{"leftSwipe":"archive","rightSwipe":"star","paperAppearance":"invalid"}"#.utf8)))
     }
 
     func testWalletActionsRejectStaleEditsAndRevokedWrites() async throws {

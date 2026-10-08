@@ -170,6 +170,7 @@ struct ReceiptHome: View {
             .disabled(workspace.saving)
         }
         .tint(.primary)
+        .environment(\.receiptPaperAppearance, workspace.walletSettings.paperAppearance)
     }
     private var title: String {
         switch workspace.flow {

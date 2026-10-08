@@ -320,6 +320,60 @@ import UIKit
         let end = card.coordinate(withNormalizedOffset: CGVector(dx: left ? 0.15 : 0.85, dy: 0.18))
         start.press(forDuration: 0.05, thenDragTo: end)
     }
+    private func paperBrightness(_ app: XCUIApplication, at point: CGPoint) throws -> Double {
+        let image = try XCTUnwrap(app.screenshot().image.cgImage)
+        let scale = CGFloat(image.width) / app.frame.width
+        let patch = try XCTUnwrap(image.cropping(to: CGRect(x: point.x * scale, y: point.y * scale, width: 3, height: 3)))
+        var pixels = [UInt8](repeating: 0, count: 36)
+        let drawn = pixels.withUnsafeMutableBytes { bytes -> Bool in
+            guard let context = CGContext(data: bytes.baseAddress, width: 3, height: 3, bitsPerComponent: 8, bytesPerRow: 12,
+                space: CGColorSpace(name: CGColorSpace.sRGB)!, bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue | CGBitmapInfo.byteOrder32Big.rawValue) else { return false }
+            context.draw(patch, in: CGRect(x: 0, y: 0, width: 3, height: 3)); return true
+        }
+        XCTAssertTrue(drawn)
+        return stride(from: 0, to: 36, by: 4).reduce(0.0) { $0 + Double(pixels[$1]) + Double(pixels[$1 + 1]) + Double(pixels[$1 + 2]) } / 27
+    }
+    func testReceiptAppearanceChangesPaperOnlyAndPersistsAcrossRelaunch() throws {
+        let app = XCUIApplication(); app.launchArguments = ["--t05-synthetic-preview", "one"]; app.launch()
+        let paper = app.buttons["receipt-0"]
+        XCTAssertTrue(paper.waitForExistence(timeout: 40))
+        func previewPoint() -> CGPoint { CGPoint(x: paper.frame.midX, y: paper.frame.minY + 17) }
+        let heading = app.staticTexts["walletHeading"]
+        let leatherPoint = CGPoint(x: heading.frame.maxX + 20, y: heading.frame.midY)
+        let leatherBrightness = try paperBrightness(app, at: leatherPoint)
+        XCTAssertLessThan(try paperBrightness(app, at: previewPoint()), 90, "Default paper follows Dark Mode")
+        func choose(_ title: String) {
+            app.buttons["walletSettings"].tap()
+            let picker = app.buttons["paperAppearanceSetting"]
+            XCTAssertTrue(picker.waitForExistence(timeout: 10)); picker.tap(); app.buttons[title].tap()
+            let done = app.buttons["Done"]
+            let saved = XCTNSPredicateExpectation(predicate: NSPredicate(format: "enabled == true"), object: done)
+            XCTAssertEqual(XCTWaiter.wait(for: [saved], timeout: 10), .completed)
+            capture(app, "Receipt-appearance-" + title)
+            done.tap()
+            XCTAssertTrue(paper.waitForExistence(timeout: 10))
+        }
+        choose("Always white")
+        XCTAssertGreaterThan(try paperBrightness(app, at: previewPoint()), 245)
+        XCTAssertEqual(try paperBrightness(app, at: leatherPoint), leatherBrightness, accuracy: 3, "Paper choice must preserve the dark wallet")
+        capture(app, "Dark-wallet-white-paper")
+        paper.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.18)).tap()
+        XCTAssertTrue(app.buttons["edit"].waitForExistence(timeout: 15))
+        let merchant = app.staticTexts["SYNTHETIC CORNER"]
+        XCTAssertTrue(merchant.waitForExistence(timeout: 10))
+        XCTAssertGreaterThan(try paperBrightness(app, at: CGPoint(x: merchant.frame.midX, y: merchant.frame.minY - 12)), 245, "Expanded paper keeps the white surface")
+        capture(app, "Dark-detail-white-paper")
+        app.buttons["back"].tap(); XCTAssertTrue(paper.waitForExistence(timeout: 10))
+        app.terminate(); app.launchArguments = ["--t05-synthetic-preview", "resume"]; app.launch()
+        XCTAssertTrue(paper.waitForExistence(timeout: 30))
+        XCTAssertGreaterThan(try paperBrightness(app, at: previewPoint()), 245, "White paper survives process restart")
+        choose("Match appearance")
+        XCTAssertLessThan(try paperBrightness(app, at: previewPoint()), 90)
+        app.terminate(); app.launch()
+        XCTAssertTrue(paper.waitForExistence(timeout: 30))
+        XCTAssertLessThan(try paperBrightness(app, at: previewPoint()), 90, "Matching appearance also persists")
+        app.terminate()
+    }
     func testChronologicalStackExpandsAndRestoresEachPaper() {
         let app = launch()
         let oldest = app.buttons["receipt-0"], middle = app.buttons["receipt-1"], newest = app.buttons["receipt-2"]
@@ -426,7 +480,7 @@ import UIKit
         XCTAssertTrue(accessible.buttons["original"].waitForExistence(timeout: 15)); accessible.buttons["back"].tap()
         XCTAssertTrue(first.waitForExistence(timeout: 15)); accessible.terminate()
     }
-    func testShortStacksRemainTuckedIntoPocket() {
+    func testShortStacksRemainTuckedIntoPocket() throws {
         for (mode, count) in [("one", 1), ("two", 2), ("wallet", 3)] {
             let app = launch(mode)
             let paper = app.buttons["receipt-\(count - 1)"]
@@ -436,6 +490,10 @@ import UIKit
             XCTAssertGreaterThan(paper.frame.maxY, heading.frame.minY, "Paper must visibly remain inside the wallet, even with only one receipt")
             XCTAssertLessThan(paper.frame.maxY, saved.frame.maxY, "Only a small part of the paper should be tucked into the pocket")
             XCTAssertLessThan(paper.frame.minY, heading.frame.minY)
+            XCTAssertGreaterThan(try paperBrightness(app, at: CGPoint(x: paper.frame.midX, y: heading.frame.minY - 32)), 245,
+                                 "Inserted paper must cover the back panel at the wallet mouth")
+            XCTAssertLessThan(try paperBrightness(app, at: CGPoint(x: paper.frame.midX, y: heading.frame.midY)), 225,
+                              "Leather front must cover the inserted paper")
             capture(app, "Tucked-wallet-\(count)")
             let originalY = paper.frame.minY
             paper.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.18)).tap()

@@ -1,0 +1,10 @@
+{
+  "summary": {
+    "result": "Passed",
+    "totalTestCount": 50,
+    "passedTests": 49,
+    "failedTests": 0,
+    "skippedTests": 1
+  },
+  "scope": "Final domain/settings/storage code, including legacy settings migration, both appearance round trips and encrypted persistence. Run before the subsequent UI-only back-panel layering refinement."
+}

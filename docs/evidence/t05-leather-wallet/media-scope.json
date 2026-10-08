@@ -1,0 +1,19 @@
+{
+  "fictionalOnly": true,
+  "finalWalletScreens": [
+    "native-wallet",
+    "native-one-wallet",
+    "native-two-wallet",
+    "native-long-wallet",
+    "native-dark-wallet",
+    "native-dark-white-paper"
+  ],
+  "finalRenderTestAttachments": [
+    "settings-always-white",
+    "settings-match-appearance",
+    "native-scrolled-detail"
+  ],
+  "paperMotion": "Final app sources after rear-shadow cleanup. Return frames extracted from this final clip.",
+  "pocketSpringBaseline": "pocket-scroll-baseline.mp4 and bounce frames were captured in the full native run before the rear-shadow-only cleanup; gesture and layer geometry were unchanged.",
+  "otherScreens": "Captured with the layered wallet before the cosmetic rear-shadow cleanup; expanded/source/review/empty rendering is unchanged."
+}
