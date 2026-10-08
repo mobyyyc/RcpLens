@@ -4,6 +4,8 @@ struct ReceiptReviewView: View {
     @Bindable var workspace: ReceiptWorkspace
     var editing: FocusState<String?>.Binding
     @Environment(\.dynamicTypeSize) private var typeSize
+    @State private var selectingDate = false
+    @State private var pendingDate = Date()
 
     private func field(_ key: WritableKeyPath<ReceiptReviewDraft, String>) -> Binding<String> {
         Binding(get: { workspace.draft[keyPath: key] }, set: { value in workspace.updateDraft { $0[keyPath: key] = value } })
@@ -25,7 +27,17 @@ struct ReceiptReviewView: View {
             }
             Section {
                 LabeledContent("Merchant") { TextField("Required", text: field(\.merchant), axis: typeSize > .large ? .vertical : .horizontal).multilineTextAlignment(.trailing).focused(editing, equals: "merchant").accessibilityIdentifier("merchantField") }
-                LabeledContent("Date") { TextField("YYYY-MM-DD", text: field(\.date)).multilineTextAlignment(.trailing).focused(editing, equals: "date").keyboardType(.numbersAndPunctuation).accessibilityIdentifier("dateField") }
+                Button {
+                    editing.wrappedValue = nil
+                    pendingDate = ReceiptDateSelection.date(workspace.draft.date) ?? Date()
+                    selectingDate = true
+                } label: {
+                    LabeledContent("Date") {
+                        if let date = ReceiptDateSelection.date(workspace.draft.date) {
+                            Text(date.formatted(date: .abbreviated, time: .omitted))
+                        } else { Label("Choose date", systemImage: "calendar") }
+                    }
+                }.foregroundStyle(.primary).accessibilityIdentifier("dateField")
                 Picker("Currency", selection: field(\.currency)) {
                     Text("Choose currency").tag("")
                     ForEach(ExactInput.currencies.keys.sorted(), id: \.self) { Text($0).tag($0) }
@@ -77,7 +89,7 @@ struct ReceiptReviewView: View {
                 if let error = workspace.errorMessage { Label(error, systemImage: "exclamationmark.triangle").accessibilityIdentifier("saveError") }
                 if workspace.saving { ProgressView("Saving locally") }
                 if !workspace.draft.canSaveDraft {
-                    Text("Fix malformed date, quantity or amount entries before saving a draft. Missing fields can remain blank.").font(.footnote)
+                    Text("Choose a valid purchase date and check typed quantities or amounts before saving a draft. Missing fields can remain blank.").font(.footnote)
                 }
                 Text("Saved only on this device. The wallet is excluded from ordinary backup; no export or restore is available yet. Uninstalling or losing the device can lose your receipts.")
                     .font(.footnote).foregroundStyle(.primary)
@@ -86,6 +98,32 @@ struct ReceiptReviewView: View {
         }.listSectionSpacing(20).scrollDismissesKeyboard(.interactively).clipped()
         Color.clear.frame(height: typeSize.isAccessibilitySize ? 104 : 72).accessibilityHidden(true)
         }.accessibilityIdentifier("reviewScreen")
+        .sheet(isPresented: $selectingDate) {
+            NavigationStack {
+                ScrollView {
+                    DatePicker("Purchase date", selection: $pendingDate, displayedComponents: .date)
+                        .datePickerStyle(.graphical)
+                        .environment(\.calendar, ReceiptDateSelection.calendar())
+                        .accessibilityIdentifier("receiptDatePicker")
+                    if !workspace.draft.date.isEmpty {
+                        Button("Clear date", role: .destructive) {
+                            workspace.updateDraft { $0.date = "" }; selectingDate = false
+                        }.accessibilityIdentifier("clearReceiptDate")
+                    }
+                }.padding().navigationTitle("Purchase date").navigationBarTitleDisplayMode(.inline)
+                    .toolbar {
+                        ToolbarItem(placement: .cancellationAction) {
+                            Button("Cancel") { selectingDate = false }.accessibilityIdentifier("cancelReceiptDate")
+                        }
+                        ToolbarItem(placement: .confirmationAction) {
+                            Button("Done") {
+                                let date = ReceiptDateSelection.text(pendingDate)
+                                workspace.updateDraft { $0.date = date }; selectingDate = false
+                            }.accessibilityIdentifier("confirmReceiptDate")
+                        }
+                    }
+            }.presentationDetents([.medium, .large])
+        }
     }
     private var reconciliation: some View {
         VStack(alignment: .leading, spacing: 10) {
@@ -96,6 +134,22 @@ struct ReceiptReviewView: View {
             if let note = workspace.draft.reconciliation.subtotalNote { Text(note).font(.footnote).foregroundStyle(.primary) }
             ForEach(workspace.draft.reconciliation.issues, id: \.self) { Text($0).font(.subheadline) }
         }.padding(.vertical, 8).accessibilityElement(children: .combine)
+    }
+}
+
+/// The picker handles local calendar days; persisted receipt dates remain civil Gregorian dates.
+enum ReceiptDateSelection {
+    static func calendar(timeZone: TimeZone = .current) -> Calendar {
+        var calendar = Calendar(identifier: .gregorian); calendar.timeZone = timeZone
+        return calendar
+    }
+    static func date(_ text: String, timeZone: TimeZone = .current) -> Date? {
+        guard let value = ExactInput.date(text) else { return nil }
+        return calendar(timeZone: timeZone).date(from: DateComponents(year: value.year, month: value.month, day: value.day, hour: 12))
+    }
+    static func text(_ date: Date, timeZone: TimeZone = .current) -> String {
+        let components = calendar(timeZone: timeZone).dateComponents([.year, .month, .day], from: date)
+        return String(format: "%04d-%02d-%02d", components.year!, components.month!, components.day!)
     }
 }
 

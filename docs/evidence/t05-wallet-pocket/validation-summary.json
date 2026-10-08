@@ -1,0 +1,77 @@
+{
+  "date": "2026-10-08",
+  "milestone": "T05 bottom wallet, paper pull gestures, native date review and retained return layers; T06 awaits approval",
+  "fictionalEvidenceOnly": true,
+  "nativeTests": {
+    "result": "Passed",
+    "totalTestCount": 10,
+    "passedTests": 10,
+    "failedTests": 0,
+    "skippedTests": 0
+  },
+  "unitTests": {
+    "result": "Passed",
+    "totalTestCount": 49,
+    "passedTests": 48,
+    "failedTests": 0,
+    "skippedTests": 1
+  },
+  "targetedFlowTests": {
+    "result": "Passed",
+    "totalTestCount": 3,
+    "passedTests": 3,
+    "failedTests": 0,
+    "skippedTests": 0
+  },
+  "finalBounceTests": {
+    "result": "Passed",
+    "totalTestCount": 2,
+    "passedTests": 2,
+    "failedTests": 0,
+    "skippedTests": 0
+  },
+  "accessibility": {
+    "passedTests": 5,
+    "failedTests": 0,
+    "structureAuditTypes": [
+      "elementDetection",
+      "hitRegion",
+      "sufficientElementDescription"
+    ],
+    "contrastFindingsBySyntheticScenario": {
+      "wallet": 3,
+      "detail": 2,
+      "review": 3,
+      "source": 1,
+      "library": 0
+    },
+    "acceptedContrastExceptions": 9,
+    "unresolvedContrastFindings": 0,
+    "contrastAuditStatus": "FindingsWithNarrowDocumentedExceptions",
+    "certified": false
+  },
+  "testScope": "Ten native checks passed. Then an invisible-pocket hit-testing guard was added and three affected flows passed with an explicit expanded-scroll assertion. The end bounce was subsequently changed to measure actual stack geometry rather than estimated lazy contentSize; the two affected expansion/return and 30-paper scroll/end-bounce checks passed again. The 48 passing unit checks and one physical-device skip precede only these UI-only guards/geometry changes.",
+  "visualReview": [
+    "bottom pocket",
+    "alternating paper tilts and layer shadows",
+    "top and bottom fades",
+    "joint end-of-stack spring",
+    "retained paper depth throughout return",
+    "native calendar selector",
+    "light/dark/empty/long/large text states"
+  ],
+  "sourceManifest": "source-hashes.json",
+  "releaseVerification": "release-verification.json",
+  "releaseInstalledAndNormallyLaunched": true,
+  "simulator": {
+    "model": "iPhone 18 Pro",
+    "iOS": "27.0",
+    "id": "50661E83-1F58-466B-99F0-9DC517D8EC82"
+  },
+  "limits": [
+    "Hardware camera, device protection and VoiceOver remain for the iPhone phase",
+    "Nine narrow contrast exceptions do not certify native material/device contrast",
+    "No new OCR accuracy score",
+    "User design review and T06 approval remain pending"
+  ]
+}

@@ -73,7 +73,7 @@ struct ReceiptReviewDraft: Codable, Equatable, Sendable {
         var issues: [String] = []
         let f = fields
         if f.merchant == nil { issues.append("Merchant is missing.") }
-        if f.purchaseDate == nil { issues.append("Enter the printed date as YYYY-MM-DD.") }
+        if f.purchaseDate == nil { issues.append("Choose the printed purchase date.") }
         if f.currency == nil { issues.append("Choose the currency printed on the receipt, or verify it with the store.") }
         if f.items.isEmpty { issues.append("Add the missing purchases.") }
         if lines.contains(where: { $0.name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty }) { issues.append("Each line needs a description.") }

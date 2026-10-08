@@ -38,3 +38,8 @@ The user rejected the initial T05 empty-wallet presentation. The revision retain
 ## Wallet interaction follow-up · 2026-10-08
 
 The user requested the wallet at the top, oldest-to-newest vertical paper order, newest-first layering behind the wallet, paper previews with bottom fades for long content, and expansion within the same scene with surrounding papers leaving from their respective edges. Return restores the stack. Archive and star are now explicitly in scope: archive moves receipts into Archive; star preserves chronology. Swipes reveal configured actions for a tap; deletion always confirms. Left defaults to Archive and right to Star, with Archive/Star/Delete/None in Settings. See [wallet design](WALLET_DESIGN.md).
+
+
+### Wallet pocket refinement · 2026-10-08
+
+The user superseded the top wallet crown: keep the pocket at the bottom while the chronological papers slide out on an upward swipe and slide back in on a downward swipe. Fade both viewport edges, add small paper tilts and preserve per-paper shadows. End-of-stack pulling rubber-bands the pocket and papers together. Return from detail retains the selected paper's original layer throughout. Purchase date review uses the native iOS calendar selector, with explicit confirmation and support for unknown dates.

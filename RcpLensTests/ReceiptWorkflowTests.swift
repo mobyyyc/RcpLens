@@ -46,6 +46,17 @@ final class ReceiptWorkflowTests: XCTestCase, @unchecked Sendable {
         let signed = ReceiptParser.parse(lines("COSTCO\nAPPLE 11.00\nCOUPON 1.00-\nTOTAL 10.00"))
         XCTAssertEqual(signed.lines.map(\.amount), [1100, -100])
     }
+    func testDatePickerBridgePreservesCivilDayAcrossDSTAndTimeZones() throws {
+        for zone in ["America/Toronto", "Pacific/Kiritimati", "Pacific/Pago_Pago"] {
+            let timeZone = try XCTUnwrap(TimeZone(identifier: zone))
+            for text in ["2024-02-29", "2026-03-08", "2026-11-01", "2026-12-31"] {
+                let date = try XCTUnwrap(ReceiptDateSelection.date(text, timeZone: timeZone))
+                XCTAssertEqual(ReceiptDateSelection.text(date, timeZone: timeZone), text)
+            }
+            XCTAssertNil(ReceiptDateSelection.date("", timeZone: timeZone))
+            XCTAssertNil(ReceiptDateSelection.date("2026-02-29", timeZone: timeZone))
+        }
+    }
     func testGeometryGroupingOrderingAndSourceIdentity() throws {
         func obs(_ text: String, x: Double, y: Double) throws -> ReceiptOCRLine {
             .init(id: UUID(), text: text, engineConfidence: 0.9,

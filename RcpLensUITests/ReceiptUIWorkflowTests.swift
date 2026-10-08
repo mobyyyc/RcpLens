@@ -316,6 +316,7 @@ import UIKit
         XCTAssertTrue(newest.waitForExistence(timeout: 30))
         XCTAssertTrue(oldest.label.contains("2026-10-05")); XCTAssertTrue(newest.label.contains("2026-10-07"))
         XCTAssertLessThan(oldest.frame.minY, middle.frame.minY); XCTAssertLessThan(middle.frame.minY, newest.frame.minY)
+        XCTAssertGreaterThan(app.staticTexts["walletHeading"].frame.minY, newest.frame.minY, "Wallet pocket belongs beneath the papers")
         capture(app, "Wallet-stack-light")
         for index in [1, 0, 2] {
             let card = app.buttons["receipt-\(index)"]
@@ -327,7 +328,9 @@ import UIKit
             if index == 1 {
                 capture(app, "Expanded-long-paper")
                 XCTAssertTrue(app.staticTexts["TEST APPLES"].exists)
+                let itemY = app.staticTexts["TEST APPLES"].frame.minY
                 app.swipeUp(); XCTAssertTrue(app.staticTexts["TEST TEA"].waitForExistence(timeout: 5))
+                XCTAssertLessThan(app.staticTexts["TEST APPLES"].frame.minY, itemY, "Expanded paper must scroll before returning to its retained preview position")
             }
             app.buttons["back"].tap()
             XCTAssertTrue(card.waitForExistence(timeout: 15)); XCTAssertEqual(card.frame.minY, originalY, accuracy: 2)
@@ -387,14 +390,21 @@ import UIKit
     func testManyReceiptsAndAccessibleMotionFallback() {
         let app = launch("many")
         XCTAssertTrue(app.buttons["latestReceipt"].waitForExistence(timeout: 40))
-        let firstY = app.buttons["receipt-0"].frame.minY
-        app.swipeUp()
-        XCTAssertLessThan(app.buttons["receipt-0"].frame.minY, firstY, "Vertical drag must scroll over receipt papers")
-        app.swipeDown()
+        let pocketY = app.staticTexts["walletHeading"].frame.minY
+        let previous = app.buttons["receipt-1"]
+        let firstY = previous.frame.minY
+        let start = app.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.35))
+        start.press(forDuration: 0.05, thenDragTo: app.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.29)))
+        XCTAssertLessThan(previous.frame.minY, firstY, "Swipe up must pull papers from the fixed pocket")
+        XCTAssertEqual(app.staticTexts["walletHeading"].frame.minY, pocketY, accuracy: 1, "Pocket stays fixed while papers scroll")
         app.buttons["latestReceipt"].tap()
         let latest = app.buttons["receipt-29"]
         XCTAssertTrue(latest.waitForExistence(timeout: 15)); XCTAssertTrue(latest.isHittable)
         capture(app, "Many-receipts-newest")
+        let endY = latest.frame.minY
+        app.swipeUp(velocity: .fast)
+        XCTAssertEqual(app.staticTexts["walletHeading"].frame.minY, pocketY, accuracy: 1, "Pocket springs back after the final paper")
+        XCTAssertEqual(latest.frame.minY, endY, accuracy: 1, "End pull must return to the last receipt without changing its position")
         latest.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.18)).tap()
         XCTAssertTrue(app.buttons["original"].waitForExistence(timeout: 15)); app.buttons["back"].tap()
         XCTAssertTrue(latest.waitForExistence(timeout: 15)); XCTAssertTrue(latest.isHittable)
@@ -404,5 +414,29 @@ import UIKit
         XCTAssertTrue(first.waitForExistence(timeout: 30)); first.tap()
         XCTAssertTrue(accessible.buttons["original"].waitForExistence(timeout: 15)); accessible.buttons["back"].tap()
         XCTAssertTrue(first.waitForExistence(timeout: 15)); accessible.terminate()
+    }
+    func testNativeDatePickerCancelClearAndSave() {
+        let app = XCUIApplication()
+        app.launchArguments = ["--t05-synthetic-preview", "review", "--t05-light"]
+        app.launch()
+        let field = app.buttons["dateField"]
+        XCTAssertTrue(field.waitForExistence(timeout: 40))
+        let original = field.label
+        field.tap()
+        XCTAssertTrue(app.buttons["confirmReceiptDate"].waitForExistence(timeout: 10))
+        XCTAssertTrue(app.descendants(matching: .any)["receiptDatePicker"].exists)
+        capture(app, "Native-date-picker")
+        app.buttons["cancelReceiptDate"].tap(); XCTAssertEqual(field.label, original)
+        field.tap(); app.buttons["clearReceiptDate"].tap()
+        XCTAssertTrue(field.label.contains("Choose date"))
+        field.tap(); app.buttons["cancelReceiptDate"].tap()
+        XCTAssertTrue(field.label.contains("Choose date"), "Opening the selector must not invent today's date")
+        field.tap(); app.buttons["confirmReceiptDate"].tap()
+        let chosen = field.label
+        XCTAssertFalse(chosen.contains("Choose date"))
+        app.buttons["saveDraft"].tap()
+        XCTAssertTrue(app.buttons["edit"].waitForExistence(timeout: 15)); app.buttons["edit"].tap()
+        XCTAssertTrue(field.waitForExistence(timeout: 10)); XCTAssertEqual(field.label, chosen)
+        app.terminate()
     }
 }

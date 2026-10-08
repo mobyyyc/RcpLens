@@ -70,6 +70,8 @@ The main chat coordinates these task chats. The user approves one task at a time
 
 - Wallet interaction follow-up (2026-10-08): the user requested a complete chronological paper stack, in-place expansion/return, long-preview fades, per-layer shadows and configurable reveal-then-tap swipes. Archive/star semantics were confirmed. Prior empty-wallet artwork restored. [Wallet design and verification](docs/WALLET_DESIGN.md). Verified with 47 unit passes, 11 native UI passes and one hardware-only skip; fictional screenshot/motion evidence and eight narrowly documented contrast exceptions are recorded. Design review remains pending. The subsequent visual refinement corrects shadow clipping, synchronized growth/return, swipe control expansion and the light crown; latest evidence is linked in the design report. T06 is not dispatched by this follow-up.
 
+- Bottom pocket/date follow-up (2026-10-08): fixed bottom wallet, independently scrolling tilted papers, soft top/bottom fades and a measured joint end bounce. Original depth persists throughout return. Native calendar review preserves unknown dates unless explicitly confirmed. Verified with 48 unit passes/one hardware skip, ten native passes and targeted final flow/bounce reruns. [Current evidence and exact scope](docs/evidence/t05-wallet-pocket/validation-summary.json). Release installed; design review and T06 approval remain pending.
+
 ## T06 — 06 · Exact item-level bill splitting
 
 - Status: queued
