@@ -147,13 +147,15 @@ private struct ReceiptLineEditor: View {
 struct ReceiptPaper: View {
     let fields: ReceiptFields
     var input: ReceiptReviewDraft? = nil
-    var paperSpace: Namespace.ID? = nil
-    var paperID: UUID? = nil
+    var showsSurface = true
     @Environment(\.dynamicTypeSize) private var typeSize
     private func money(_ value: ReceiptMoney?, raw: String? = nil) -> String {
         value.map { ExactInput.format($0.minorUnits, scale: $0.currency.minorUnitScale) } ?? raw?.nilIfEmpty ?? "Missing"
     }
     var body: some View {
+        content.background { if showsSurface { ReceiptPaperBackground() } }
+    }
+    private var content: some View {
         VStack(alignment: .leading, spacing: 18) {
             Text(fields.merchant ?? "Merchant missing").font(.title2.weight(.semibold))
             Text("\(ExactInput.dateText(fields.purchaseDate).nilIfEmpty ?? "Date missing") · \(fields.currency?.code ?? "Currency missing")").font(.subheadline).foregroundStyle(.primary)
@@ -177,8 +179,6 @@ struct ReceiptPaper: View {
             Divider()
             amountRow("Total", fields.total, raw: input?.total).font(.title3.weight(.semibold))
         }.padding(24).frame(maxWidth: .infinity, alignment: .leading)
-            .background { ReceiptPaperBackground() }
-            .receiptPaperGeometry(id: paperID, space: paperSpace)
     }
     private func amountRow(_ name: String, _ value: ReceiptMoney?, raw: String? = nil) -> some View {
         LabeledContent(name) { Text(money(value, raw: raw)).monospacedDigit().foregroundStyle(.primary) }.foregroundStyle(.primary).accessibilityElement(children: .combine)

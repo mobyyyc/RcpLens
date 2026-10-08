@@ -5,7 +5,11 @@ import UIKit
 struct ReceiptWalletScene: View {
     @Bindable var workspace: ReceiptWorkspace
     var requestDelete: (ReceiptRecord) -> Void
-    @Namespace private var paperSpace
+    @State private var presented: ReceiptRecord?
+    @State private var expanded = false
+    @State private var paperFrames: [UUID: CGRect] = [:]
+    @State private var origin = CGRect.zero
+    @State private var readingOffset: CGFloat = 0
     @Environment(\.dynamicTypeSize) private var typeSize
     @Environment(\.accessibilityReduceMotion) private var systemMotion
     @State private var revealedID: UUID?
@@ -37,13 +41,14 @@ struct ReceiptWalletScene: View {
                                     if let last = records.last { withAnimation(motion) { proxy.scrollTo(last.id, anchor: .bottom) } }
                                 }
                                 .padding(.bottom, -20)
-                                .offset(y: selectedID == nil || reduceMotion ? 0 : -geometry.size.height)
-                                .opacity(selectedID != nil && reduceMotion ? 0 : 1)
+                                .offset(y: !expanded || reduceMotion ? 0 : -geometry.size.height)
+                                .opacity(expanded && reduceMotion ? 0 : 1)
                                 .zIndex(Double(records.count + 2))
                                 LazyVStack(spacing: typeSize.isAccessibilitySize ? 14 : -108) {
                                     ForEach(Array(records.enumerated()), id: \.element.id) { index, record in
                                         card(record, index: index, height: geometry.size.height)
-                                            .id(record.id).zIndex(Double(index + 1))
+                                            .id(record.id).zIndex(revealedID == record.id ? Double(records.count + 1) : Double(index + 1))
+                                            .onGeometryChange(for: CGRect.self) { $0.frame(in: .named("walletScene")) } action: { paperFrames[record.id] = $0 }
                                     }
                                 }.padding(.horizontal, 10)
                             }
@@ -55,54 +60,117 @@ struct ReceiptWalletScene: View {
                             #endif
                         }.padding(.horizontal, 20).padding(.top, 10).padding(.bottom, 90)
                     }
-                    .scrollDisabled(selectedID != nil)
-                    .accessibilityHidden(selectedID != nil)
+                    .scrollDisabled(presented != nil)
+                    .accessibilityHidden(presented != nil)
                 }
-                if let record = workspace.selected, selectedID != nil {
-                    ScrollView {
-                        VStack(alignment: .leading, spacing: 18) {
-                            HStack {
-                                Label(ReceiptCompletion.isComplete(record) ? "Reviewed" : "Needs review", systemImage: ReceiptCompletion.isComplete(record) ? "checkmark.circle" : "exclamationmark.circle")
-                                Spacer()
-                                if record.isStarred { Image(systemName: "star.fill").accessibilityLabel("Starred") }
-                            }.font(.footnote.weight(.medium)).padding(.horizontal, 4)
-                            ReceiptPaper(fields: record.current.fields, input: record.current.reviewInput.flatMap { try? JSONDecoder().decode(ReceiptReviewDraft.self, from: $0) }, paperSpace: reduceMotion ? nil : paperSpace, paperID: record.id)
-                            if workspace.image == nil && workspace.errorMessage == nil { ProgressView("Loading original").font(.footnote) }
-                            if let error = workspace.errorMessage { Text(error).font(.subheadline) }
-                            if record.current.fields.currency == nil { Text("Currency needs confirmation. Edit to check the saved amounts.").font(.footnote) }
-                            Label("Saved on this device", systemImage: "lock").font(.footnote)
-                            #if DEBUG
-                            WorkflowDetailTestControls(workspace: workspace)
-                            #endif
-                        }.padding(.horizontal, 30).padding(.top, 10).padding(.bottom, 90)
-                    }
-                    .accessibilityIdentifier("detailScreen")
-                    .transition(.opacity.animation(.easeOut(duration: 0.12)))
-                    .zIndex(Double(records.count + 3))
+                if let presented {
+                    liftedPaper(workspace.selected ?? presented, geometry: geometry)
+                        .zIndex(Double(records.count + 3))
                 }
             }
             .clipped()
-            .animation(motion, value: selectedID)
+            .coordinateSpace(name: "walletScene")
             .animation(motion, value: records.map(\.id))
-            .onChange(of: selectedID) { _, _ in revealedID = nil }
+            .onChange(of: selectedID, initial: true) { _, next in
+                revealedID = nil
+                if next != nil, let record = workspace.selected {
+                    presented = record
+                    readingOffset = 0
+                    origin = paperFrames[record.id] ?? CGRect(x: 30, y: 52, width: geometry.size.width - 60, height: 244)
+                    // Mount the same opaque paper at its original rectangle before moving it.
+                    expanded = false
+                } else if presented != nil {
+                    withAnimation(motion, completionCriteria: .removed) { expanded = false } completion: {
+                        if selectedID == nil { presented = nil }
+                    }
+                }
+            }
+            .task(id: presented?.id) {
+                guard presented != nil, selectedID != nil else { return }
+                try? await Task.sleep(for: .milliseconds(24))
+                guard !Task.isCancelled, selectedID != nil else { return }
+                withAnimation(motion) { expanded = true }
+            }
         }
     }
     private func card(_ record: ReceiptRecord, index: Int, height: CGFloat) -> some View {
-        let focus = selectedID == record.id
-        let selectedIndex = records.firstIndex { $0.id == selectedID }
-        let departure: CGFloat = selectedIndex.map { index < $0 ? -height - 350 : height + 350 } ?? (selectedID == nil ? 0 : height + 350)
-        return ReceiptSwipePaper(record: record, settings: workspace.walletSettings, revealedID: $revealedID, hidden: focus,
-                                 paperSpace: reduceMotion ? nil : paperSpace, identifier: "receipt-\(index)") {
+        let focus = presented?.id == record.id
+        let selectedIndex = records.firstIndex { $0.id == presented?.id }
+        let departure: CGFloat = selectedIndex.map { index < $0 ? -height - 350 : height + 350 } ?? (presented == nil ? 0 : height + 350)
+        return ReceiptSwipePaper(record: record, settings: workspace.walletSettings, revealedID: $revealedID, identifier: "receipt-\(index)") {
             if revealedID != nil { withAnimation(motion) { revealedID = nil } }
             else { workspace.open(record) }
         } perform: { action in
             withAnimation(motion) { revealedID = nil }
             if action == .delete { requestDelete(record) } else { workspace.organize(record, action: action) }
         }
-        .offset(y: selectedID == nil || focus || reduceMotion ? 0 : departure)
-        .opacity(focus || (selectedID != nil && reduceMotion) ? 0 : 1)
-        .animation(.easeOut(duration: 0.1), value: focus)
-        .allowsHitTesting(selectedID == nil)
+        .offset(y: !expanded || focus || reduceMotion ? 0 : departure)
+        .opacity(focus || (expanded && reduceMotion) ? 0 : 1)
+        .allowsHitTesting(presented == nil)
+    }
+    private func liftedPaper(_ record: ReceiptRecord, geometry: GeometryProxy) -> some View {
+        ScrollView {
+            WalletLiftedPaper(record: record, expanded: expanded, origin: origin,
+                              width: geometry.size.width - 60, viewportHeight: geometry.size.height,
+                              returnOffset: readingOffset,
+                              reduceMotion: reduceMotion, error: workspace.errorMessage,
+                              loading: workspace.image == nil && workspace.errorMessage == nil)
+        }
+        .scrollDisabled(!expanded)
+        .onScrollGeometryChange(for: CGFloat.self) { $0.contentOffset.y + $0.contentInsets.top } action: { _, offset in
+            if expanded { readingOffset = offset }
+        }
+        .accessibilityIdentifier("detailScreen")
+        .accessibilityHidden(selectedID == nil)
+    }
+
+}
+
+/// A single paper silhouette changes its rectangle; its torn bottom travels with that rectangle.
+private struct WalletLiftedPaper: View {
+    let record: ReceiptRecord
+    let expanded: Bool
+    let origin: CGRect
+    let width: CGFloat
+    let viewportHeight: CGFloat
+    let returnOffset: CGFloat
+    let reduceMotion: Bool
+    let error: String?
+    let loading: Bool
+    @State private var fullHeight: CGFloat = 244
+    @Environment(\.dynamicTypeSize) private var typeSize
+    private var reading: Bool { expanded || reduceMotion }
+    private var paperWidth: CGFloat { reading ? width : origin.width }
+    private var paperHeight: CGFloat { reading ? fullHeight : origin.height }
+    var body: some View {
+        ZStack(alignment: .topLeading) {
+            HStack {
+                Label(ReceiptCompletion.isComplete(record) ? "Reviewed" : "Needs review", systemImage: ReceiptCompletion.isComplete(record) ? "checkmark.circle" : "exclamationmark.circle")
+                Spacer()
+                if record.isStarred { Image(systemName: "star.fill").accessibilityLabel("Starred") }
+            }.font(.footnote.weight(.medium)).padding(.horizontal, 34).padding(.top, 10)
+                .opacity(expanded ? 1 : 0)
+            ZStack(alignment: .topLeading) {
+                ReceiptPaper(fields: record.current.fields, input: record.current.reviewInput.flatMap { try? JSONDecoder().decode(ReceiptReviewDraft.self, from: $0) }, showsSurface: false)
+                    .frame(width: paperWidth).fixedSize(horizontal: false, vertical: true)
+                    .onGeometryChange(for: CGFloat.self) { $0.size.height } action: { fullHeight = $0 }
+                    .opacity(expanded ? 1 : 0).accessibilityHidden(!expanded)
+                ReceiptPreviewPaper(record: record)
+                    .frame(width: paperWidth).opacity(expanded ? 0 : 1).accessibilityHidden(true)
+            }
+            .frame(width: paperWidth, height: paperHeight, alignment: .topLeading)
+            .clipShape(ReceiptPaperEdge())
+            .background { ReceiptPaperBackground(fade: !expanded && record.current.fields.items.count > 3 && !typeSize.isAccessibilitySize ? 1 : 0) }
+            .offset(x: reading ? 30 : origin.minX, y: reading ? 52 : origin.minY + returnOffset)
+            VStack(alignment: .leading, spacing: 18) {
+                if loading { ProgressView("Loading original").font(.footnote) }
+                if let error { Text(error).font(.subheadline) }
+                if record.current.fields.currency == nil { Text("Currency needs confirmation. Edit to check the saved amounts.").font(.footnote) }
+                Label("Saved on this device", systemImage: "lock").font(.footnote)
+            }.padding(.horizontal, 30).offset(y: fullHeight + 74).opacity(expanded ? 1 : 0)
+        }
+        .frame(maxWidth: .infinity, alignment: .topLeading)
+        .frame(height: max(viewportHeight, fullHeight + 180), alignment: .topLeading)
     }
 }
 
@@ -123,12 +191,12 @@ private struct WalletCrown: View {
                     .buttonStyle(.glass).accessibilityLabel("Jump to newest receipt").accessibilityIdentifier("latestReceipt")
             }
         }
-        .foregroundStyle(.white).padding(22).frame(maxWidth: .infinity, alignment: .leading)
+        .foregroundStyle(scheme == .dark ? Color.white : Color.primary).padding(22).frame(maxWidth: .infinity, alignment: .leading)
         .background {
-            RoundedRectangle(cornerRadius: 25).fill(LinearGradient(colors: [Color(white: scheme == .dark ? 0.24 : 0.27), Color(white: 0.12)], startPoint: .topLeading, endPoint: .bottomTrailing))
+            RoundedRectangle(cornerRadius: 25).fill(LinearGradient(colors: scheme == .dark ? [Color(white: 0.24), Color(white: 0.12)] : [Color(white: 0.96), Color(white: 0.86)], startPoint: .topLeading, endPoint: .bottomTrailing))
         }
-        .overlay { RoundedRectangle(cornerRadius: 25).stroke(.white.opacity(0.16), lineWidth: 0.5) }
-        .overlay(alignment: .bottom) { Capsule().fill(.white.opacity(0.16)).frame(height: 1).padding(.horizontal, 22).padding(.bottom, 13) }
+        .overlay { RoundedRectangle(cornerRadius: 25).stroke(.primary.opacity(0.12), lineWidth: 0.5) }
+        .overlay(alignment: .bottom) { Capsule().fill(.primary.opacity(0.12)).frame(height: 1).padding(.horizontal, 22).padding(.bottom, 13) }
         .shadow(color: .black.opacity(0.22), radius: 14, y: 8)
     }
 }
@@ -152,14 +220,20 @@ struct ReceiptPaperEdge: Shape {
 }
 
 struct ReceiptPaperBackground: View {
+    var fade: CGFloat = 0
     @Environment(\.colorScheme) private var scheme
     @Environment(\.colorSchemeContrast) private var systemContrast
     private var contrast: ColorSchemeContrast { ReceiptAccessibility.contrast(systemContrast) }
     var body: some View {
         ReceiptPaperEdge().fill(Color(uiColor: .secondarySystemGroupedBackground))
             .overlay { ReceiptPaperEdge().stroke(.primary.opacity(contrast == .increased ? 0.6 : 0.12), lineWidth: 0.5) }
-            .shadow(color: .black.opacity(scheme == .dark ? 0.42 : 0.15), radius: 12, y: 7)
-            .shadow(color: .black.opacity(0.09), radius: 2, y: 1)
+            .mask {
+                LinearGradient(stops: [.init(color: .black, location: 0), .init(color: .black, location: 0.78),
+                                       .init(color: .black.opacity(1 - fade), location: 1)], startPoint: .top, endPoint: .bottom)
+            }
+            .compositingGroup()
+            .shadow(color: .black.opacity(scheme == .dark ? 0.45 : 0.16), radius: 12, y: 6)
+            .shadow(color: .black.opacity(scheme == .dark ? 0.3 : 0.12), radius: 2, y: 2)
     }
 }
 
@@ -167,8 +241,6 @@ private struct ReceiptSwipePaper: View {
     let record: ReceiptRecord
     let settings: ReceiptWalletSettings
     @Binding var revealedID: UUID?
-    let hidden: Bool
-    var paperSpace: Namespace.ID?
     let identifier: String
     var open: () -> Void
     var perform: (ReceiptWalletAction) -> Void
@@ -181,11 +253,20 @@ private struct ReceiptSwipePaper: View {
     var body: some View {
         ZStack(alignment: offset < 0 ? .topTrailing : .topLeading) {
             if revealedID == record.id, action != .none {
+                let distance = abs(offset)
+                let progress = min(1, distance / 108)
                 Button { perform(action) } label: {
-                    VStack(spacing: 8) { Image(systemName: action.symbol).font(.title3); Text(action.title(for: record)).font(.caption.weight(.semibold)) }
-                        .frame(width: 88).frame(minHeight: typeSize.isAccessibilitySize ? 100 : 80)
-                }.buttonStyle(.glass).tint(action == .delete ? .red : .primary)
+                    VStack(spacing: 7) { Image(systemName: action.symbol).font(.title3); Text(action.title(for: record)).font(.caption.weight(.semibold)) }
+                        .frame(width: 84, height: typeSize.isAccessibilitySize ? 100 : 78)
+                        .scaleEffect(0.65 + 0.35 * progress)
+                        .opacity(progress)
+                        .frame(width: max(0, distance - 12), height: 44 + 38 * progress)
+                        .clipped()
+                        .glassEffect(action == .delete ? .regular.tint(.red).interactive() : .regular.interactive(), in: .rect(cornerRadius: 18))
+                }.buttonStyle(.plain)
+                    .accessibilityLabel(action.title(for: record))
                     .accessibilityIdentifier("swipeAction-\(identifier)")
+                    .allowsHitTesting(!horizontal && distance >= 56)
                     .padding(.top, 24)
             }
             ReceiptPreviewPaper(record: record)
@@ -194,14 +275,12 @@ private struct ReceiptSwipePaper: View {
                 .accessibilityElement(children: .ignore)
                 .accessibilityAddTraits(.isButton)
                 .accessibilityAction { open() }
-                .background { ReceiptPaperBackground() }
                 .mask {
                     if record.current.fields.items.count > 3 && !typeSize.isAccessibilitySize {
                         LinearGradient(stops: [.init(color: .black, location: 0), .init(color: .black, location: 0.78), .init(color: .clear, location: 1)], startPoint: .top, endPoint: .bottom)
                     } else { Color.black }
                 }
-                .receiptPaperGeometry(id: record.id, space: hidden ? nil : paperSpace)
-                .offset(x: revealedID == record.id || horizontal ? offset : 0)
+                .background { ReceiptPaperBackground(fade: record.current.fields.items.count > 3 && !typeSize.isAccessibilitySize ? 1 : 0) }
                 .accessibilityLabel(summary)
                 .accessibilityHint(revealedID == record.id ? "Closes the swipe action" : "Expands receipt. Swipe left or right for actions.")
                 .accessibilityIdentifier(identifier)
@@ -210,10 +289,10 @@ private struct ReceiptSwipePaper: View {
                     if !ended {
                         guard configured != .none else { return }
                         horizontal = true; revealedID = record.id
-                        offset = max(-100, min(100, translation))
+                        offset = max(-180, min(180, translation))
                     } else {
                         withAnimation(animation) {
-                            if abs(translation) > 42 && configured != .none { offset = offset < 0 ? -100 : 100; revealedID = record.id }
+                            if abs(translation) > 42 && configured != .none { offset = translation < 0 ? -108 : 108; revealedID = record.id }
                             else { offset = 0; revealedID = nil }
                         }
                         horizontal = false
@@ -227,6 +306,7 @@ private struct ReceiptSwipePaper: View {
                         .accessibilityAction(named: Text(record.isArchived ? "Unarchive" : "Archive")) { perform(.archive) }
                         .accessibilityAction(named: Text("Delete")) { perform(.delete) }
                 }
+                .offset(x: revealedID == record.id || horizontal ? offset : 0)
         }
         .onChange(of: revealedID) { _, next in if next != record.id { withAnimation(animation) { offset = 0 } } }
     }
@@ -384,13 +464,5 @@ private struct EmptyWalletArtwork: View {
                 .frame(width: 218, height: 87)
                 .shadow(color: .black.opacity(scheme == .dark ? 0.35 : 0.1), radius: 18, x: 0, y: 10)
         }.accessibilityHidden(true)
-    }
-}
-
-
-extension View {
-    @ViewBuilder func receiptPaperGeometry(id: UUID?, space: Namespace.ID?) -> some View {
-        if let id, let space { matchedGeometryEffect(id: id, in: space, anchor: .top) }
-        else { self }
     }
 }

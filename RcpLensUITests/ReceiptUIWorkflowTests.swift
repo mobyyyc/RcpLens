@@ -193,12 +193,13 @@ import UIKit
                               (mode == "review" && ["saveDraft", "original"].contains(element.identifier) || mode == "source" && element.identifier == "sourceDone" || mode == "detail" && element.identifier == "original" || mode == "wallet" && element.identifier == "allReceipts"),
                               let measured, measured.foreground == "#000000", measured.ratio >= 7 {
                         accepted = true; classification = "measured-native-glass-label-sdk-finding"
-                    } else if mode == "wallet", element.elementType == .staticText,
-                              element.identifier == "walletHeading", element.label == "Wallet",
-                              let measured, measured.background == "#FFFFFF", measured.foreground == "#353535", measured.ratio >= 7 {
-                        // The gradient distributes background pixels; the white glyph is the dominant colour.
-                        // This exact fictional crop measures the white/dark pair in reversed histogram order.
-                        accepted = true; classification = "measured-white-wallet-heading-sdk-finding"
+                    } else if mode == "wallet", element.elementType == .button, element.isEnabled,
+                              ["receipt-0": "SYNTHETIC STORE, 2026-10-05, CAD 12.34, Reviewed",
+                               "receipt-1": "SYNTHETIC MARKET, 2026-10-06, CAD 98.72, Reviewed"][element.identifier] == element.label,
+                              let measured, measured.foreground == "#000000", measured.background == "#FFFFFF", measured.ratio >= 7 {
+                        // These virtual summary buttons include overlapped paper and its cast shadow.
+                        // Only these two fictional crops, with measured black/white glyphs, qualify.
+                        accepted = true; classification = "measured-black-wallet-summary-sdk-finding"
                     } else if mode == "review", element.identifier == "finishSave", !element.isEnabled {
                         accepted = true; classification = "intentionally-disabled-native-finish"
                     } else if mode == "library", element.elementType == .staticText, element.label == "SYNTHETIC CORNER",
@@ -340,12 +341,17 @@ import UIKit
         swipeHeader(oldest, left: false)
         let star = app.buttons["swipeAction-receipt-0"]
         XCTAssertTrue(star.waitForExistence(timeout: 5)); XCTAssertEqual(star.label, "Star")
+        XCTAssertTrue(star.isHittable)
+        XCTAssertGreaterThanOrEqual(star.frame.width, 44)
+        XCTAssertLessThan(star.frame.maxX, oldest.frame.minX, "Glass action must fit entirely beside the shifted paper")
         XCTAssertFalse(oldest.label.contains("Starred"), "Swiping must not execute the action")
         capture(app, "Revealed-star")
         star.tap(); XCTAssertTrue(oldest.label.contains("Starred"))
         swipeHeader(oldest, left: true)
         let archive = app.buttons["swipeAction-receipt-0"]
         XCTAssertTrue(archive.waitForExistence(timeout: 5)); XCTAssertEqual(archive.label, "Archive")
+        XCTAssertTrue(archive.isHittable)
+        XCTAssertGreaterThan(archive.frame.minX, oldest.frame.maxX, "Left swipe must expose the entire action")
         archive.tap(); XCTAssertTrue(app.staticTexts["2 saved"].waitForExistence(timeout: 15))
         app.terminate(); app.launchArguments = ["--t05-synthetic-preview", "resume", "--t05-light"]; app.launch()
         XCTAssertTrue(app.staticTexts["2 saved"].waitForExistence(timeout: 30))

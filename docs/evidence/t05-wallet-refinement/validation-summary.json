@@ -1,0 +1,62 @@
+{
+  "date": "2026-10-08",
+  "milestone": "T05 Wallet visual refinement; T06 awaits approval",
+  "fictionalEvidenceOnly": true,
+  "walletInteraction": {
+    "passed": 4,
+    "failed": 0,
+    "resultBundle": "/tmp/RcpLens-Wallet-Refinement-Final.xcresult",
+    "newAssertions": "Glass action is hittable, at least 44pt wide and entirely beside the shifted paper"
+  },
+  "accessibility": {
+    "result": "Passed",
+    "totalTestCount": 5,
+    "passedTests": 5,
+    "failedTests": 0,
+    "skippedTests": 0,
+    "kind": "accessibility",
+    "structureAuditTypes": [
+      "elementDetection",
+      "hitRegion",
+      "sufficientElementDescription"
+    ],
+    "contrastFindingsBySyntheticScenario": {
+      "wallet": 3,
+      "detail": 2,
+      "review": 3,
+      "source": 1,
+      "library": 0
+    },
+    "contrastAuditStatus": "FindingsWithNarrowDocumentedExceptions",
+    "contrastScope": "Diagnostics only, never certified by the green structural/interaction test result.",
+    "acceptedContrastExceptions": 9,
+    "unresolvedContrastFindings": 0
+  },
+  "visualReview": [
+    "unclipped torn-edge preview shadow",
+    "light wallet crown",
+    "dark wallet",
+    "exposed glass Star action",
+    "long preview gradient",
+    "retained empty placeholder",
+    "full receipt paper",
+    "opening/return video frames",
+    "scrolled detail return in interaction test"
+  ],
+  "baselineTests": "The preceding milestone passed 47 unit checks and 11 native checks, with one hardware skip. Those historical results are retained; the current refinement reran nine native checks. Receipt models, persistence, recognition and import logic are unchanged.",
+  "sourceManifest": "source-hashes.json",
+  "releaseVerification": "release-verification.json",
+  "releaseInstalledAndNormallyLaunched": true,
+  "simulator": {
+    "model": "iPhone 18 Pro",
+    "iOS": "27.0",
+    "id": "50661E83-1F58-466B-99F0-9DC517D8EC82"
+  },
+  "testScope": "Interaction run precedes only a test-side contrast exception refinement. The final accessibility run includes the updated exact fictional-summary classifications; no product changes followed the interaction run.",
+  "limits": [
+    "Hardware camera, device protection and VoiceOver remain for the iPhone phase",
+    "Nine narrow contrast exceptions do not certify native material/device contrast",
+    "No new OCR accuracy score",
+    "User design approval remains pending"
+  ]
+}
