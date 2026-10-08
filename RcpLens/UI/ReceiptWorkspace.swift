@@ -17,6 +17,7 @@ final class ReceiptWorkspace {
     var draft = ReceiptReviewDraft()
     var image: ReceiptImage?
     var extraction: ReceiptExtraction?
+    var splitVisible = false
     var sourceVisible = false
     var sourceLineIDs: [UUID] = []
     var errorMessage: String?
@@ -80,7 +81,7 @@ final class ReceiptWorkspace {
         let previous = shutdown
         shutdown = Task { await previous?.value; try? await closing?.close() }
         receipts = []; selected = nil; image = nil; extraction = nil
-        draft = ReceiptReviewDraft(); sourceVisible = false; sourceLineIDs = []
+        draft = ReceiptReviewDraft(); sourceVisible = false; splitVisible = false; sourceLineIDs = []
         errorMessage = nil; notice = nil; saving = false; flow = .wallet; availability = .closed
         merchantFilter = "All stores"; monthFilter = "All months"; library = false
         collection = "All receipts"; walletSettings = ReceiptWalletSettings()
@@ -326,6 +327,28 @@ final class ReceiptWorkspace {
         if failNextListRefresh { failNextListRefresh = false; throw ReceiptStoreError.injectedFailure }
         #endif
         return try await store.receipts()
+    }
+
+    func saveSplit(_ plan: ReceiptSplitPlan, finalize: Bool) {
+        guard let store, let selected, active, !saving else { return }
+        let session = sessionID, lease = permit
+        saving = true; errorMessage = nil
+        task = Task { [weak self] in
+            do {
+                let saved = try await store.saveSplit(id: selected.id, expectedRevision: selected.current.id,
+                    expectedPlan: selected.splitPlan?.id, plan: plan, finalize: finalize, permit: lease)
+                try lease.check()
+                guard let self, self.isCurrent(session), self.selected?.id == selected.id else { return }
+                self.selected = saved
+                if let index = self.receipts.firstIndex(where: { $0.id == saved.id }) { self.receipts[index] = saved }
+                self.saving = false; self.notice = finalize ? "Split finalized." : "Split choices saved."
+            } catch is CancellationError { }
+            catch {
+                guard let self, self.isCurrent(session) else { return }
+                self.saving = false
+                self.errorMessage = (error as? SplitError)?.errorDescription ?? Self.storageMessage(error)
+            }
+        }
     }
 
     func backToWallet() { cancelImport(showNotice: false) }

@@ -305,9 +305,19 @@ struct ReceiptWalletScene: View {
             .allowsHitTesting(presented == nil)
     }
     private func pocketBacking(in geometry: GeometryProxy) -> some View {
-        // A separate, non-interactive layer conceals paper below the pocket without covering controls.
-        Color(uiColor: .systemGroupedBackground)
-            .frame(width: geometry.size.width, height: 32 + geometry.safeAreaInsets.bottom)
+        // Feather the occlusion behind the leather face so the paper's soft shadows enter
+        // the pocket without a rectangular cutoff. The lower backing remains fully opaque.
+        let feather: CGFloat = 32
+        return Color(uiColor: .systemGroupedBackground)
+            .frame(width: geometry.size.width, height: 32 + geometry.safeAreaInsets.bottom + feather)
+            .mask {
+                VStack(spacing: 0) {
+                    LinearGradient(colors: [.clear, .black], startPoint: .top, endPoint: .bottom)
+                        .frame(height: feather)
+                    Color.black
+                }
+            }
+            .offset(y: -feather)
             .allowsHitTesting(false).accessibilityHidden(true)
     }
     private func walletBack(in geometry: GeometryProxy) -> some View {

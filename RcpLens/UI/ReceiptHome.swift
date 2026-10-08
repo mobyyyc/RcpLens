@@ -81,6 +81,8 @@ struct ReceiptHome: View {
                     }
                     if workspace.flow == .detail {
                         ToolbarItemGroup(placement: .bottomBar) {
+                            Button("Split", systemImage: "person.2") { workspace.splitVisible = true }
+                                .accessibilityIdentifier("splitOpen").disabled(workspace.saving || workspace.selected == nil || workspace.image == nil)
                             Spacer()
                             Button { workspace.edit() } label: {
                                 HStack(spacing: 8) { Image(systemName: "pencil"); Text("Edit receipt") }
@@ -164,6 +166,7 @@ struct ReceiptHome: View {
                 Button("Delete receipt and original", role: .destructive) { if let deleteTarget { workspace.deleteReceipt(deleteTarget) }; deleteTarget = nil }
                 Button("Cancel", role: .cancel) { deleteTarget = nil }
             } message: { Text("This removes all revisions and the original from this app. Copies in Photos or Files remain there.") }
+            .sheet(isPresented: $workspace.splitVisible) { ReceiptSplitView(workspace: workspace) }
             .sheet(isPresented: $workspace.sourceVisible) { ReceiptSourceView(workspace: workspace) }
             .sheet(isPresented: $walletInformation) { WalletInformationView() }
             .sheet(isPresented: $settings) { ReceiptWalletSettingsView(workspace: workspace) }

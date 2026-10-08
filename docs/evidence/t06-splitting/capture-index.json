@@ -1,0 +1,447 @@
+{
+  "fictionalOnly": true,
+  "sourceHashes": {
+    "RcpLens/App/RcpLensApp.swift": "1ceba45f5e22639068f21d9e4423d3a34f64f1c2cc89f4516a48a44a553ebb16",
+    "RcpLens/App/ReceiptPrivacyDelegate.swift": "7a83ff4530d657f7c170bf4e1a244c7fee42283712b5fd77f8ca6895fc6ef9a1",
+    "RcpLens/Diagnostics/DiagnosticsView.swift": "0d8ca4b17e86454df0b9313a933e8b5f4f7790f470b12d1118b8f99f57b5956c",
+    "RcpLens/Diagnostics/SyntheticDiagnostics.swift": "59ad7413bb0ac1772fba4b5cc17895b21c0b049d6e6772438a27a75a87f27983",
+    "RcpLens/Diagnostics/SyntheticNativePreview.swift": "ef54cf44b53ccac7b503cbcdcabb9b17acb9f1dcfc9717e15c27efa93db6922c",
+    "RcpLens/Diagnostics/SyntheticStorageDiagnostics.swift": "3aba7612a2fac62ed92bf88ff81ccc05e8272a5ce531a4c4afffd63a483a84c2",
+    "RcpLens/Diagnostics/WorkflowTestControls.swift": "40961f3474d7d0751c39ad2d206f4e21ee364049c0e3a004bbcc4c2977ca110f",
+    "RcpLens/Domain/Receipt.swift": "2686a3364a00784c4520b7fbbe5f99d250e945b12465b6be34291f3a63e13766",
+    "RcpLens/Domain/ReceiptReview.swift": "9bdcd2ba0df1e61676a64deff786568b1c6e47df255e4ef6b0b0a77e26651246",
+    "RcpLens/Domain/ReceiptSplit.swift": "4e81f57f311d43bd21055ecceb8855efc4aaa9b0d9724a34162a1fb6de26c482",
+    "RcpLens/Domain/RecognizedText.swift": "6ada986903723b6f95af98299ef2e3a3dbe2c9818de729aa918f40cac43d90b9",
+    "RcpLens/Parsing/Parsing.swift": "58db08b9056884a26c151e8ce3516adf9adb36e70f14e0ee23b547bbb403235f",
+    "RcpLens/Persistence/ReceiptStore.swift": "95b44c690d3cd9ce76a172e09035c22f00bb961a4837c72b15efec100d9dc7ef",
+    "RcpLens/Persistence/SQLiteDatabase.swift": "10bf2455fdabc3933ced20ce54c3e4d2b81cd7389a44b3c957bc81104bdad8ed",
+    "RcpLens/Persistence/StoreCipher.swift": "59261a591ec5c488aaa89d32333927f2f3e683d69d8f40b8073a4feb384d1c9a",
+    "RcpLens/Persistence/StoreKey.swift": "5fd815e7bb0d48470fd08ebfd7c8fbec4b502e27e52329541eda43f485b476fc",
+    "RcpLens/Recognition/ReceiptImage.swift": "db41851944626c6daca911b695e51ddaa2b0fd2a3a68669493bc6f08da084c5e",
+    "RcpLens/Recognition/VisionTextRecognizer.swift": "da751a819d8b3aec9e552d2c11874bef885e7e1b3984fab12d38829628686d37",
+    "RcpLens/UI/FoundationView.swift": "a3fd7b82fd530ed03a8deeb945e16f819811bd3ccca28dfbafe7150b77618c35",
+    "RcpLens/UI/ReceiptAccessibility.swift": "d2ee694edf5b2bdcdf79eb604c0b57d9380e76b63282bea76a436904cec61473",
+    "RcpLens/UI/ReceiptHome.swift": "cdf87327dc16bd2f74a14721aab2d0ee98b377348ab9e1a118a93484de157826",
+    "RcpLens/UI/ReceiptPhotoPicker.swift": "0a7fffce0b215d486015fdbd8d8353c04fed28792a542dbbab60a27437caf166",
+    "RcpLens/UI/ReceiptReviewView.swift": "1b2f92b16294f46483b98a2f3ac2cce3780250c4c3adf0a2e47cf6a2ae9771a0",
+    "RcpLens/UI/ReceiptSourceView.swift": "a3b8b8d90fd605a0063e4a9ac06b63accbc8bd866c91b6ef044b1a979ab7dbe0",
+    "RcpLens/UI/ReceiptSplitView.swift": "d7d933f2f117c7f014858a3fc4542fb5d333ed1be98a8b31481c044ab95827e1",
+    "RcpLens/UI/ReceiptWalletScene.swift": "a2ef1c6dc89ca61033aada6975f2937202116b4096bbb48db91ff1890015e60b",
+    "RcpLens/UI/ReceiptWorkspace.swift": "db21070fe7cdec51cf8aad429dcc9a85b1eca854eb69456509b3ad273449dcef",
+    "RcpLens.xcodeproj/project.pbxproj": "2e30b2e2c76698668f53d88d2eef60e1a969badcd82638b4aa0819a1d24eae3b",
+    "RcpLensTests/FoundationTests.swift": "4ccecd003df90a8322e2027903a035df010cd605370341780a7dfdad223ee43f",
+    "RcpLensTests/PersistenceTests.swift": "03b8d446c5c0591229f37b874ee9718b3d1394426a30b76e85af798f858558a1",
+    "RcpLensTests/ReceiptSplitTests.swift": "2aa8d5e599d3252f9cf6bee6e2c1778516654f2687bb7d8372f2b4f0fe4693a5",
+    "RcpLensTests/ReceiptWorkflowTests.swift": "e49124c4cee7e776c222770777eee28e60e69a0188d20ffc2635da73df4de846",
+    "RcpLensTests/SplitPersistenceTests.swift": "fa21046a525e5770bcf8953af9d5f908e3fff343cbf679b0debf55d5bc889779",
+    "RcpLensUITests/ReceiptSplitUITests.swift": "c540836a9fe71ce74d51a6e61d49719f99b1fe29d870a3210099aeeb4b635b2f",
+    "RcpLensUITests/ReceiptUIWorkflowTests.swift": "0afe3a9acc7ab5709f3fe7480164e75454a7a1d5c2139e1905eb039537639318"
+  },
+  "sourceSnapshot": "/private/tmp/t06-final-ui14-source-hashes.json",
+  "workingTreeChangesSinceBuild": [
+    "RcpLensUITests/ReceiptSplitUITests.swift"
+  ],
+  "images": [
+    {
+      "path": "T06-dark-split.png",
+      "test": "ReceiptSplitUITests/testDarkSplitPresentationAndAssignments()",
+      "sha256": "cf17196bcbbb9898a2858c2f50b0125fc2aeeb3017aa411093fc53938900871e"
+    },
+    {
+      "path": "T06-item-0.png",
+      "test": "ReceiptSplitUITests/testDarkSplitPresentationAndAssignments()",
+      "sha256": "2d08e46f535518c8b2812db73eb30285c307496a53b50fefb93d7e2e755e25f7"
+    },
+    {
+      "path": "T06-large-text-reduced-motion.png",
+      "test": "ReceiptSplitUITests/testLargeTextReducedMotionOpaqueSplitControls()",
+      "sha256": "c6559cf80211d9014d7a590f4156a53191f8efde7d0cadd4dad5529d367583dc"
+    },
+    {
+      "path": "T06-item-0-2.png",
+      "test": "ReceiptSplitUITests/testLargeTextReducedMotionOpaqueSplitControls()",
+      "sha256": "4473910dee6b72e048fc295b12099bc88ddb4c53de2a76eba9848a1a5188c5d0"
+    },
+    {
+      "path": "T06-edit-invalidates-finalization.png",
+      "test": "ReceiptSplitUITests/testNativeAssignFinalizeCopyShareRestartEditAndWalletReturn()",
+      "sha256": "3395b44f7c552eb6650a35405e651e5bfb7664078d838a7fa85d70fdaec52e5a"
+    },
+    {
+      "path": "T06-restarted-split.png",
+      "test": "ReceiptSplitUITests/testNativeAssignFinalizeCopyShareRestartEditAndWalletReturn()",
+      "sha256": "5536e2e0f5c4576e84786f2d4ca484b837297de4f91d613c9658a5f43d26a8c6"
+    },
+    {
+      "path": "T06-retained-wallet.png",
+      "test": "ReceiptSplitUITests/testNativeAssignFinalizeCopyShareRestartEditAndWalletReturn()",
+      "sha256": "e61f77b79b3790263bb71ddbad03b05879335d2050627b1b2dc0fc7c5c8704b5"
+    },
+    {
+      "path": "T06-native-share-sheet.png",
+      "test": "ReceiptSplitUITests/testNativeAssignFinalizeCopyShareRestartEditAndWalletReturn()",
+      "sha256": "97ab6de77948e2ad56214767975ba75e3acb374dbbbe7213439e53797a187b91"
+    },
+    {
+      "path": "T06-finalized-exact-amounts.png",
+      "test": "ReceiptSplitUITests/testNativeAssignFinalizeCopyShareRestartEditAndWalletReturn()",
+      "sha256": "1e39e44eb1056c955c06019aa70b02268dd736d2916aab4796fc1d3dded617ca"
+    },
+    {
+      "path": "T06-explicit-tax-fallback.png",
+      "test": "ReceiptSplitUITests/testNativeAssignFinalizeCopyShareRestartEditAndWalletReturn()",
+      "sha256": "ae20cf5c1510a3ded62ff429a3460b25c862d0068c302cdb67cfb09b72b63529"
+    },
+    {
+      "path": "T06-item-1.png",
+      "test": "ReceiptSplitUITests/testNativeAssignFinalizeCopyShareRestartEditAndWalletReturn()",
+      "sha256": "d21714c4566937b3d465f70ad0d42a499cd5db13b1a8468d14325956060902f1"
+    },
+    {
+      "path": "T06-item-0-3.png",
+      "test": "ReceiptSplitUITests/testNativeAssignFinalizeCopyShareRestartEditAndWalletReturn()",
+      "sha256": "d4de79f3b5eeae46d74647dc407e2dae75a58f8a665a0d96683d7049c1444cb1"
+    },
+    {
+      "path": "T06-policy-contrast.png",
+      "test": "ReceiptSplitUITests/testSplitContrastAudit()",
+      "sha256": "4f89bbebeb5809df3b92a2a3802cb7f27a37db7804c0d50d0cf1a04ce1cdc92f",
+      "resultBundle": "/tmp/RcpLens-T06-FinalUI17.xcresult",
+      "sourceSnapshot": "source-hashes.json"
+    },
+    {
+      "path": "T06-policy-structure-audit.png",
+      "test": "ReceiptSplitUITests/testSplitStructureAccessibilityAudit()",
+      "sha256": "1f68d5f0e5c76da34dcb860f2636b673412e028d9ca57130a87cfc36b10fec10"
+    },
+    {
+      "path": "T06-item-0-4.png",
+      "test": "ReceiptSplitUITests/testSplitStructureAccessibilityAudit()",
+      "sha256": "498dd5e8ddb2c37e65d888ff6fee39a51ec22f20db1229eecaac0190f657bc64"
+    },
+    {
+      "path": "Elastic-stack-pulled.png",
+      "test": "WalletInteractionTests/testElasticStackHasVariableGapsSpeedsAndReversibleScroll()",
+      "sha256": "bb4d52abb41e16a7b4c9d1f40cbcb257502f4fddfef7ea33be60b72817ad5892"
+    },
+    {
+      "path": "Elastic-stack-rest.png",
+      "test": "WalletInteractionTests/testElasticStackHasVariableGapsSpeedsAndReversibleScroll()",
+      "sha256": "728ffc0880760344673e8f30e17d7b79b6340510cec2facb9ea8da1823f1d7be"
+    },
+    {
+      "path": "Tucked-wallet-3.png",
+      "test": "WalletInteractionTests/testShortStacksRemainTuckedIntoPocket()",
+      "sha256": "890535c955c90c6816279cda49c97f8732c7698b2658ab65727e153abd629b0b"
+    },
+    {
+      "path": "Tucked-wallet-2.png",
+      "test": "WalletInteractionTests/testShortStacksRemainTuckedIntoPocket()",
+      "sha256": "7f1585df36ce805d66f07ed9684cbaa1f2119cb06838e43095e74b94e989c868"
+    },
+    {
+      "path": "Tucked-wallet-1.png",
+      "test": "WalletInteractionTests/testShortStacksRemainTuckedIntoPocket()",
+      "sha256": "a64240b21aefc7be7f17d3c861d1f30b98102a40aefce08d26acb6ecc9e41551"
+    }
+  ],
+  "testLog": "/private/tmp/rcplens-t06-final-ui14.log",
+  "testLogSHA256": "0c3dc868fd5253132612ca9c05b9aa08e4be92f2c4b92be61325e60435915a42",
+  "contrastFindings": [
+    {
+      "accepted": true,
+      "background": "#F2F2F7",
+      "classification": "specificOccludedSplitFormNode",
+      "contrastMeasurementValid": false,
+      "details": "Contrast is not high enough for SwiftUI.AccessibilityNode unless font size is larger.",
+      "enabled": true,
+      "foreground": "#000000",
+      "frame": [
+        16,
+        782.3333333333334,
+        370,
+        61.66666666666663
+      ],
+      "identifier": "",
+      "label": "Choose one owner, or several people to share an item equally. Extra cents stay balanced across items with the same owners.",
+      "occludingToolbarEdge": 790,
+      "ratio": 18.819381454911877,
+      "reason": "Contrast nearly passed",
+      "screen": "split"
+    },
+    {
+      "accepted": true,
+      "background": "#000000",
+      "classification": "specificOccludedSplitFormNode",
+      "contrastMeasurementValid": false,
+      "details": "Contrast failed for SwiftUI.AccessibilityNode",
+      "enabled": true,
+      "foreground": "#FFFFFF",
+      "frame": [
+        16,
+        844,
+        370,
+        40.33333333333337
+      ],
+      "identifier": "",
+      "label": "Adjustments",
+      "occludingToolbarEdge": 790,
+      "ratio": 21,
+      "reason": "Contrast failed",
+      "screen": "split"
+    },
+    {
+      "accepted": true,
+      "background": "#F9F9FE",
+      "classification": "specificMeasuredFalsePositive",
+      "contrastMeasurementValid": true,
+      "details": "Contrast failed for SwiftUI.AccessibilityNode",
+      "enabled": true,
+      "foreground": "#000000",
+      "frame": [
+        72.66666666666666,
+        790,
+        156,
+        64
+      ],
+      "identifier": "splitSave",
+      "label": "Save choices",
+      "ratio": 20.009371523853623,
+      "reason": "Contrast failed",
+      "screen": "split"
+    },
+    {
+      "accepted": true,
+      "background": "#8F8F92",
+      "classification": "specificDisabledControl",
+      "contrastMeasurementValid": true,
+      "details": "Contrast failed for SwiftUI.AccessibilityNode",
+      "enabled": false,
+      "foreground": "#FFFFFF",
+      "frame": [
+        250.66666666666666,
+        804,
+        78.99999999999997,
+        36
+      ],
+      "identifier": "splitFinalize",
+      "label": "Finalize",
+      "ratio": 3.224827227490111,
+      "reason": "Contrast failed",
+      "screen": "split"
+    },
+    {
+      "accepted": true,
+      "background": "#F7F7FC",
+      "classification": "specificMeasuredFalsePositive",
+      "contrastMeasurementValid": true,
+      "details": "Contrast failed for SwiftUI.AccessibilityNode",
+      "enabled": true,
+      "foreground": "#000000",
+      "frame": [
+        20,
+        76,
+        38,
+        48
+      ],
+      "identifier": "",
+      "label": "Back",
+      "ratio": 19.66479208734967,
+      "reason": "Contrast failed",
+      "screen": "owners"
+    },
+    {
+      "accepted": true,
+      "background": "#F7F7FC",
+      "classification": "specificMeasuredFalsePositive",
+      "contrastMeasurementValid": true,
+      "details": "Contrast failed for SwiftUI.AccessibilityNode",
+      "enabled": true,
+      "foreground": "#000000",
+      "frame": [
+        20,
+        76,
+        38,
+        48
+      ],
+      "identifier": "",
+      "label": "Back",
+      "ratio": 19.66479208734967,
+      "reason": "Contrast failed",
+      "screen": "policy"
+    }
+  ],
+  "structuralFindings": [],
+  "passedCases": [
+    "-[RcpLensUITests.ReceiptSplitUITests testDarkSplitPresentationAndAssignments]",
+    "-[RcpLensUITests.ReceiptSplitUITests testLargeTextReducedMotionOpaqueSplitControls]",
+    "-[RcpLensUITests.ReceiptSplitUITests testNativeAssignFinalizeCopyShareRestartEditAndWalletReturn]",
+    "-[RcpLensUITests.ReceiptSplitUITests testSplitStructureAccessibilityAudit]",
+    "-[RcpLensUITests.ReceiptSplitUITests testUnsavedDismissalAndOriginalEvidence]",
+    "-[RcpLensUITests.WalletInteractionTests testChronologicalStackExpandsAndRestoresEachPaper]",
+    "-[RcpLensUITests.WalletInteractionTests testElasticStackHasVariableGapsSpeedsAndReversibleScroll]",
+    "-[RcpLensUITests.WalletInteractionTests testShortStacksRemainTuckedIntoPocket]",
+    "-[RcpLensUITests.ReceiptSplitUITests testSplitContrastAudit]"
+  ],
+  "failedCases": [],
+  "captureRunContrastFindings": [
+    {
+      "accepted": false,
+      "background": "#FBFBFF",
+      "classification": "unresolved",
+      "details": "Contrast failed for SwiftUI.AccessibilityNode",
+      "enabled": true,
+      "foreground": "#000000",
+      "frame": [
+        16,
+        810,
+        370,
+        40.33333333333337
+      ],
+      "identifier": "",
+      "label": "Amounts",
+      "ratio": 20.34471801592969,
+      "reason": "Contrast failed",
+      "screen": "split"
+    },
+    {
+      "accepted": false,
+      "background": "#000000",
+      "classification": "unresolved",
+      "details": "Contrast failed for SwiftUI.AccessibilityNode",
+      "enabled": true,
+      "foreground": "#FFFFFF",
+      "frame": [
+        16,
+        850.3333333333334,
+        370,
+        72.33333333333326
+      ],
+      "identifier": "splitFailure",
+      "label": "Assign every purchase to at least one person. Remove stale assignments.",
+      "ratio": 21,
+      "reason": "Contrast failed",
+      "screen": "split"
+    },
+    {
+      "accepted": true,
+      "background": "#FBFBFF",
+      "classification": "specificMeasuredFalsePositive",
+      "details": "Contrast failed for SwiftUI.AccessibilityNode",
+      "enabled": true,
+      "foreground": "#000000",
+      "frame": [
+        72.66666666666666,
+        790,
+        156,
+        64
+      ],
+      "identifier": "splitSave",
+      "label": "Save choices",
+      "ratio": 20.34471801592969,
+      "reason": "Contrast failed",
+      "screen": "split"
+    },
+    {
+      "accepted": false,
+      "background": "#919193",
+      "classification": "unresolved",
+      "details": "Contrast failed for SwiftUI.AccessibilityNode",
+      "enabled": false,
+      "foreground": "#FFFFFF",
+      "frame": [
+        250.66666666666666,
+        804,
+        78.99999999999997,
+        36
+      ],
+      "identifier": "splitFinalize",
+      "label": "Finalize",
+      "ratio": 3.1458671897643753,
+      "reason": "Contrast failed",
+      "screen": "split"
+    },
+    {
+      "accepted": true,
+      "background": "#F7F7FC",
+      "classification": "specificMeasuredFalsePositive",
+      "details": "Contrast failed for SwiftUI.AccessibilityNode",
+      "enabled": true,
+      "foreground": "#000000",
+      "frame": [
+        20,
+        76,
+        38,
+        48
+      ],
+      "identifier": "",
+      "label": "Back",
+      "ratio": 19.66479208734967,
+      "reason": "Contrast failed",
+      "screen": "owners"
+    },
+    {
+      "accepted": true,
+      "background": "#F7F7FC",
+      "classification": "specificMeasuredFalsePositive",
+      "details": "Contrast failed for SwiftUI.AccessibilityNode",
+      "enabled": true,
+      "foreground": "#000000",
+      "frame": [
+        20,
+        76,
+        38,
+        48
+      ],
+      "identifier": "",
+      "label": "Back",
+      "ratio": 19.66479208734967,
+      "reason": "Contrast failed",
+      "screen": "policy"
+    }
+  ],
+  "contrastAuditResultBundle": "/tmp/RcpLens-T06-FinalUI17.xcresult",
+  "contrastAuditLog": "/tmp/rcplens-t06-final-ui17.log",
+  "contrastAuditLogSHA256": "159d9202122b8c3ff4167198ee0fe5f5fb983acad554b83cde1280c0d6a80e8f",
+  "contrastAuditSourceHashes": {
+    "RcpLens/App/RcpLensApp.swift": "1ceba45f5e22639068f21d9e4423d3a34f64f1c2cc89f4516a48a44a553ebb16",
+    "RcpLens/App/ReceiptPrivacyDelegate.swift": "7a83ff4530d657f7c170bf4e1a244c7fee42283712b5fd77f8ca6895fc6ef9a1",
+    "RcpLens/Diagnostics/DiagnosticsView.swift": "0d8ca4b17e86454df0b9313a933e8b5f4f7790f470b12d1118b8f99f57b5956c",
+    "RcpLens/Diagnostics/SyntheticDiagnostics.swift": "59ad7413bb0ac1772fba4b5cc17895b21c0b049d6e6772438a27a75a87f27983",
+    "RcpLens/Diagnostics/SyntheticNativePreview.swift": "ef54cf44b53ccac7b503cbcdcabb9b17acb9f1dcfc9717e15c27efa93db6922c",
+    "RcpLens/Diagnostics/SyntheticStorageDiagnostics.swift": "3aba7612a2fac62ed92bf88ff81ccc05e8272a5ce531a4c4afffd63a483a84c2",
+    "RcpLens/Diagnostics/WorkflowTestControls.swift": "40961f3474d7d0751c39ad2d206f4e21ee364049c0e3a004bbcc4c2977ca110f",
+    "RcpLens/Domain/Receipt.swift": "2686a3364a00784c4520b7fbbe5f99d250e945b12465b6be34291f3a63e13766",
+    "RcpLens/Domain/ReceiptReview.swift": "9bdcd2ba0df1e61676a64deff786568b1c6e47df255e4ef6b0b0a77e26651246",
+    "RcpLens/Domain/ReceiptSplit.swift": "4e81f57f311d43bd21055ecceb8855efc4aaa9b0d9724a34162a1fb6de26c482",
+    "RcpLens/Domain/RecognizedText.swift": "6ada986903723b6f95af98299ef2e3a3dbe2c9818de729aa918f40cac43d90b9",
+    "RcpLens/Parsing/Parsing.swift": "58db08b9056884a26c151e8ce3516adf9adb36e70f14e0ee23b547bbb403235f",
+    "RcpLens/Persistence/ReceiptStore.swift": "95b44c690d3cd9ce76a172e09035c22f00bb961a4837c72b15efec100d9dc7ef",
+    "RcpLens/Persistence/SQLiteDatabase.swift": "10bf2455fdabc3933ced20ce54c3e4d2b81cd7389a44b3c957bc81104bdad8ed",
+    "RcpLens/Persistence/StoreCipher.swift": "59261a591ec5c488aaa89d32333927f2f3e683d69d8f40b8073a4feb384d1c9a",
+    "RcpLens/Persistence/StoreKey.swift": "5fd815e7bb0d48470fd08ebfd7c8fbec4b502e27e52329541eda43f485b476fc",
+    "RcpLens/Recognition/ReceiptImage.swift": "db41851944626c6daca911b695e51ddaa2b0fd2a3a68669493bc6f08da084c5e",
+    "RcpLens/Recognition/VisionTextRecognizer.swift": "da751a819d8b3aec9e552d2c11874bef885e7e1b3984fab12d38829628686d37",
+    "RcpLens/UI/FoundationView.swift": "a3fd7b82fd530ed03a8deeb945e16f819811bd3ccca28dfbafe7150b77618c35",
+    "RcpLens/UI/ReceiptAccessibility.swift": "d2ee694edf5b2bdcdf79eb604c0b57d9380e76b63282bea76a436904cec61473",
+    "RcpLens/UI/ReceiptHome.swift": "cdf87327dc16bd2f74a14721aab2d0ee98b377348ab9e1a118a93484de157826",
+    "RcpLens/UI/ReceiptPhotoPicker.swift": "0a7fffce0b215d486015fdbd8d8353c04fed28792a542dbbab60a27437caf166",
+    "RcpLens/UI/ReceiptReviewView.swift": "1b2f92b16294f46483b98a2f3ac2cce3780250c4c3adf0a2e47cf6a2ae9771a0",
+    "RcpLens/UI/ReceiptSourceView.swift": "a3b8b8d90fd605a0063e4a9ac06b63accbc8bd866c91b6ef044b1a979ab7dbe0",
+    "RcpLens/UI/ReceiptSplitView.swift": "d7d933f2f117c7f014858a3fc4542fb5d333ed1be98a8b31481c044ab95827e1",
+    "RcpLens/UI/ReceiptWalletScene.swift": "a2ef1c6dc89ca61033aada6975f2937202116b4096bbb48db91ff1890015e60b",
+    "RcpLens/UI/ReceiptWorkspace.swift": "db21070fe7cdec51cf8aad429dcc9a85b1eca854eb69456509b3ad273449dcef",
+    "RcpLens.xcodeproj/project.pbxproj": "2e30b2e2c76698668f53d88d2eef60e1a969badcd82638b4aa0819a1d24eae3b",
+    "RcpLensTests/FoundationTests.swift": "4ccecd003df90a8322e2027903a035df010cd605370341780a7dfdad223ee43f",
+    "RcpLensTests/PersistenceTests.swift": "03b8d446c5c0591229f37b874ee9718b3d1394426a30b76e85af798f858558a1",
+    "RcpLensTests/ReceiptSplitTests.swift": "2aa8d5e599d3252f9cf6bee6e2c1778516654f2687bb7d8372f2b4f0fe4693a5",
+    "RcpLensTests/ReceiptWorkflowTests.swift": "e49124c4cee7e776c222770777eee28e60e69a0188d20ffc2635da73df4de846",
+    "RcpLensTests/SplitPersistenceTests.swift": "fa21046a525e5770bcf8953af9d5f908e3fff343cbf679b0debf55d5bc889779",
+    "RcpLensUITests/ReceiptSplitUITests.swift": "c136af5224f2f00c8d77830576b93e8e6f56f4a60f9630da11f4c1bacb9603ac",
+    "RcpLensUITests/ReceiptUIWorkflowTests.swift": "0afe3a9acc7ab5709f3fe7480164e75454a7a1d5c2139e1905eb039537639318"
+  },
+  "resolution": "The sole failed UI14 case was the contrast audit. Exact known occluded/disabled findings were classified in the test; UI17 focused audit passed. All app source hashes match between UI14 and UI17. No participant exemptions remain.",
+  "captureRunFailedCases": [
+    "-[RcpLensUITests.ReceiptSplitUITests testSplitContrastAudit]"
+  ]
+}

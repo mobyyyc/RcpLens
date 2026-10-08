@@ -13,6 +13,24 @@ import CryptoKit
     }
     static var readyURL: URL { FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask)[0].appendingPathComponent("t05-synthetic-preview.json") }
     static func fixture(index: Int) -> (Data, ReceiptReviewDraft) {
+        if mode == "split" {
+            var d = ReceiptReviewDraft()
+            d.merchant = "FICTIONAL SPLIT STORE"; d.date = "2026-10-08"; d.currency = "CAD"
+            d.lines = [
+                .init(id: UUID(), kind: "purchase", name: "FICTIONAL APPLES", quantity: "", amount: "10.01", sourceLineIDs: [], taxMarker: "H?"),
+                .init(id: UUID(), kind: "purchase", name: "FICTIONAL TEA", quantity: "", amount: "4.99", sourceLineIDs: []),
+                .init(id: UUID(), kind: "tax", name: "FICTIONAL TAX", quantity: "", amount: "0.63", sourceLineIDs: [])]
+            d.subtotal = "15.00"; d.total = "15.63"; d.sourceOpened = true; d.sourceChecked = true
+            let content = [d.merchant, d.date + " CAD", "FICTIONAL APPLES H? 10.01", "FICTIONAL TEA 4.99", "FICTIONAL TAX 0.63", "SUBTOTAL 15.00", "TOTAL 15.63", "FICTIONAL TEST — NOT A PURCHASE"]
+            let format = UIGraphicsImageRendererFormat(); format.scale = 1; format.opaque = true
+            let bytes = UIGraphicsImageRenderer(size: CGSize(width: 800, height: 800), format: format).pngData { _ in
+                UIColor.white.setFill(); UIRectFill(CGRect(x: 0, y: 0, width: 800, height: 800))
+                for (index, line) in content.enumerated() {
+                    (line as NSString).draw(at: CGPoint(x: 35, y: 35 + index * 75), withAttributes: [.font: UIFont.monospacedSystemFont(ofSize: 28, weight: .regular), .foregroundColor: UIColor.black])
+                }
+            }
+            return (bytes, d)
+        }
         let merchant = ["SYNTHETIC CORNER", "SYNTHETIC MARKET", "SYNTHETIC STORE"][index % 3]
         let date = String(format: "2026-10-%02d", 7 - index % 3)
         let names = (index % 3 == 1 || mode == "long-wallet") ? ["TEST APPLES", "TEST BREAD", "TEST MILK", "TEST RICE", "TEST EGGS", "TEST COFFEE", "TEST PEARS", "TEST TEA"] : ["TEST ITEM"]
@@ -79,10 +97,10 @@ import CryptoKit
             try? await Task.sleep(for: .milliseconds(25))
         }
         guard !Task.isCancelled else { return }
-        if mode != "resume" { await workspace.seedSyntheticPreview(count: mode == "library" ? 500 : mode == "many" ? 30 : mode == "one" ? 1 : mode == "two" ? 2 : (mode == "empty" ? 0 : 3)) }
+        if mode != "resume" { await workspace.seedSyntheticPreview(count: mode == "library" ? 500 : mode == "many" ? 30 : (mode == "one" || mode == "split") ? 1 : mode == "two" ? 2 : (mode == "empty" ? 0 : 3)) }
         if mode == "elastic" { _ = await workspace.addFictionalDemoReceipts() }
         guard !Task.isCancelled else { return }
-        if let receipt = mode == "long" ? workspace.orderedReceipts.dropFirst().first : workspace.orderedReceipts.first, ["detail", "review", "source", "long"].contains(mode) {
+        if let receipt = mode == "long" ? workspace.orderedReceipts.dropFirst().first : workspace.orderedReceipts.first, ["detail", "review", "source", "long", "split"].contains(mode) {
             workspace.open(receipt)
             for _ in 0..<100 {
                 if workspace.flow == .detail && workspace.image != nil { break }

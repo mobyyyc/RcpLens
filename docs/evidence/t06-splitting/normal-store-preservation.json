@@ -1,0 +1,10 @@
+{
+  "normalReceiptCountBefore": 12,
+  "normalReceiptCountAfter": 12,
+  "encryptedReceiptPayloadsUnchanged": true,
+  "comparison": "SHA256 of concatenated encrypted payloads ordered by receipt ID; no contents decrypted or captured",
+  "releaseInstalled": true,
+  "normalReleaseLaunch": true,
+  "includesMainChatWalletShadowFeather": true,
+  "sourceSnapshot": "source-hashes.json"
+}

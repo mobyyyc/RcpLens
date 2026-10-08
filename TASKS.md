@@ -80,7 +80,7 @@ The main chat coordinates these task chats. The user approves one task at a time
 
 ## T06 — 06 · Exact item-level bill splitting
 
-- Status: queued
+- Status: implemented and verified; main-chat signed commit/push and user acceptance pending (2026-10-08)
 - Goal: Assign purchases to local people and share cent-exact results.
 - Why: Splitting provides immediate value for scanning a receipt.
 - Dependencies: T05
@@ -88,7 +88,8 @@ The main chat coordinates these task chats. The user approves one task at a time
 - Acceptance criteria: Every finalized split exactly matches the receipt total, assignments and fallback policies are visible, invalid inputs cannot silently finalize, and shared summaries contain the chosen amounts/items without requiring participant accounts.
 - Tests: Odd cents, three people, shared and individual items, taxable/non-taxable lines, discounts/coupons, deposits/tips, negative adjustments, zero-value bases, repeated deterministic output, overflow/bounds and sum invariants.
 - Risk/notes: No model-generated arithmetic, settlement/payment integration or collaborative accounts. Clipboard/share is explicit user action; no participant data in telemetry.
-- Chat: 01a117d0-d507-7bf0-a9cc-c6f6724d16a0 (local; queued)
+- Verification evidence: 73 unit passes and one hardware-only skip; 40/40 independent allocator oracle; 19 unique native cases across explicitly scoped runs, including all six split cases and three final wallet-shadow cases. Final strict structural checks pass with zero waivers; six precise contrast findings are individually classified. Release signature/Debug exclusion and unchanged twelve normal encrypted receipts verified. [Split contract](docs/SPLITTING.md), [actual evidence](docs/evidence/t06-splitting/validation-summary.json). Planned commit: `feat: add exact receipt splits and soften wallet shadows`.
+- Chat: 01a117d0-d507-7bf0-a9cc-c6f6724d16a0 (local; implementation and verification complete, handoff ready)
 
 ## T07 — 07 · Purchase history and local search
 

@@ -1,0 +1,60 @@
+{
+  "date": "2026-10-08",
+  "reviewer": "main chat",
+  "sourceHashesIndependentlyVerified": 35,
+  "unchangedUnitRelevantFilesVerified": 14,
+  "exportedImageHashesVerified": 20,
+  "actualBundlesInspected": {
+    "unit": {
+      "path": "/tmp/RcpLens-T06-FinalUnits.xcresult",
+      "passed": 73,
+      "skipped": 1,
+      "failed": 0
+    },
+    "nativeBaseline": {
+      "path": "/tmp/RcpLens-T06-FinalUI12.xcresult",
+      "passed": 19,
+      "failed": 0,
+      "scope": "Before final UI-only toolbar/pocket refinements"
+    },
+    "finalAffected": {
+      "path": "/tmp/RcpLens-T06-FinalUI14.xcresult",
+      "passed": 8,
+      "failed": 1,
+      "failure": "Contrast audit, superseded by focused passing audit"
+    },
+    "focusedFinalAudit": {
+      "path": "/tmp/RcpLens-T06-FinalUI17.xcresult",
+      "passed": 1,
+      "failed": 0
+    }
+  },
+  "nativeCoverageScope": "19 distinct cases across scoped runs; 9 affected cases verified with final app sources. Contrast test arrangement/classification changed after UI14; app hashes unchanged.",
+  "independentAllocatorOracle": {
+    "cases": 40,
+    "passed": 40,
+    "functionMatchesFinalSource": true
+  },
+  "reviewedFinalScreens": [
+    "Elastic-stack-rest.png",
+    "Elastic-stack-pulled.png",
+    "Tucked-wallet-1.png",
+    "T06-finalized-exact-amounts.png"
+  ],
+  "renderedFindings": "Smooth side-shadow occlusion at the pocket; paper/front/back layering preserved; Done is single line; Save choices has one Glass surface; Finalize retains prominent surface.",
+  "release": {
+    "installedReleaseMatchesVerifiedBuild": true,
+    "codesignVerifyDeepStrict": true,
+    "binarySHA256": "dd792821d967829f842698e79efe60f69b1127953475a62bb019a6d2fd75f9a7",
+    "fourSpecificDebugMarkersAbsent": true,
+    "debugMarkersChecked": [
+      "--t05-synthetic-preview",
+      "--t05-large-text",
+      "--add-demo-receipts",
+      "FICTIONAL SPLIT STORE"
+    ]
+  },
+  "privacy": "Only isolated fictional receipts captured; normal encrypted receipt contents were not opened/exported in this review.",
+  "limits": "Actual native invalid-frame warnings remain documented; physical protection/VoiceOver/camera unverified.",
+  "gitStatusAtReview": "Ready for signed commit and push; T07 unapproved."
+}

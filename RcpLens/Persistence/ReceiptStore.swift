@@ -295,7 +295,7 @@ actor ReceiptStore {
             let next = ReceiptRecord(id: old.id, createdAt: old.createdAt, updatedAt: now,
                 original: old.original, asset: old.asset,
                 revisions: old.revisions + [ReceiptRevision(id: UUID(), createdAt: now, fields: fields, review: review, reviewInput: reviewInput)],
-                organization: old.organization)
+                organization: old.organization, splitPlan: old.splitPlan?.rebased(to: fields))
             try database.run("UPDATE receipts SET payload = ?, updated_at = ? WHERE id = ?",
                              [.blob(try encode(next)), .integer(try Self.milliseconds(now)), .text(id.uuidString)])
             #if DEBUG
@@ -318,6 +318,33 @@ actor ReceiptStore {
             var organization = record.organization ?? ReceiptOrganization()
             if action == .archive { organization.archived.toggle() } else { organization.starred.toggle() }
             record.organization = organization
+            try database.run("UPDATE receipts SET payload = ? WHERE id = ?", [.blob(try encode(record)), .text(id.uuidString)])
+            #if DEBUG
+            try fault?(.beforeCommit)
+            #endif
+            try permit?.check()
+            return record
+        }
+    }
+
+    /// Split choices live in the same authenticated payload as the receipt; no plaintext participant table.
+    /// Compare both purchase revision and split token so two editors cannot silently overwrite each other.
+    @discardableResult
+    func saveSplit(id: UUID, expectedRevision: UUID, expectedPlan: UUID?, plan: ReceiptSplitPlan,
+                   finalize: Bool, permit: ReceiptOperationPermit? = nil) throws -> ReceiptRecord {
+        try permit?.check()
+        try plan.validateStructure()
+        return try database.transaction(permit: permit) {
+            guard var record = try load(id) else { throw ReceiptStoreError.notFound }
+            guard record.current.id == expectedRevision, record.splitPlan?.id == expectedPlan else { throw ReceiptStoreError.editConflict }
+            try Self.verifyAsset(record, db: database, cipher: cipher)
+            var next = plan
+            next.id = UUID(); next.finalizedRevision = nil
+            if finalize {
+                _ = try ReceiptSplitEngine.compute(record, plan: next)
+                next.finalizedRevision = record.current.id
+            }
+            record.splitPlan = next
             try database.run("UPDATE receipts SET payload = ? WHERE id = ?", [.blob(try encode(record)), .text(id.uuidString)])
             #if DEBUG
             try fault?(.beforeCommit)

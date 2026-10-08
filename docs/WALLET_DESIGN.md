@@ -38,8 +38,14 @@ The projection’s unit checks cover monotonic order, gap bounds, inverse mappin
 
 The requested demo data comprises ten clearly marked fictional No Frills, Costco and T&T receipts, dated across ten days and varying in item count and coupons. An explicit Debug simulator operation appends them through the normal encrypted store with source images and review fields. It skips matching source-image hashes, preserves current settings and never purges the normal store. The seed switch and sample generator are excluded from Release; the stored samples remain available after ordinary relaunch or installing Release. Ten were actually added to the normal Simulator wallet, and a second launch added zero while retaining all twelve records. The final verified Release is installed and normally launched.
 
-Twelve existing narrow contrast exceptions remain documented, with strict structural checks and no broadened exception rules. Device accessibility, camera and physical file protection remain later iPhone checks. Recognition accuracy is not re-scored. User design review and T06 approval remain pending.
+Twelve existing narrow contrast exceptions remain documented, with strict structural checks and no broadened exception rules. Device accessibility, camera and physical file protection remain later iPhone checks. Recognition accuracy is not re-scored. The user accepted T05 and approved T06 on 2026-10-08.
 
 Review the [stretched reading zone and compressed pocket](evidence/t05-elastic-stack/elastic-stack-rest.png), [stack after a short upward swipe](evidence/t05-elastic-stack/elastic-stack-pulled.png), and [one receipt still tucked into the wallet](evidence/t05-elastic-stack/native-one-wallet.png).
 
 Review the [final stretch/reverse/detail-return animation](evidence/t05-elastic-stack/elastic-scroll-motion.mp4), [dark paper](evidence/t05-elastic-stack/elastic-stack-dark.png) and [white paper in Dark Mode](evidence/t05-elastic-stack/elastic-stack-white-dark.png).
+
+## Pocket shadow refinement
+
+The opaque backing beneath the pocket previously cut receipt shadows at a horizontal plane, visible beside the leather front. Its upper edge now fades from transparent to opaque across 32 points behind the front panel. This lets the paper and its shadows disappear into the pocket together; the lower backing remains solid. The rear panel, receipt and leather front retain their depth order, and the same feathered backing moves with the wallet during expansion, return and the joint end spring. The backing remains non-interactive.
+
+The earlier elastic-stack verification above is historical. The combined T06 update records the affected short-stack layering, open/return and elastic-scroll reruns and final source fingerprints in [current verification](evidence/t06-splitting/validation-summary.json).

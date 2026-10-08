@@ -227,12 +227,15 @@ struct ReceiptRecord: Codable, Equatable, Sendable, Identifiable {
     let revisions: [ReceiptRevision]
     /// Optional for compatibility with encrypted documents written before wallet actions existed.
     var organization: ReceiptOrganization? = nil
+    /// Versioned optional data inside the authenticated encrypted document; legacy records decode nil.
+    var splitPlan: ReceiptSplitPlan? = nil
     var isArchived: Bool { organization?.archived ?? false }
     var isStarred: Bool { organization?.starred ?? false }
     var current: ReceiptRevision { revisions.last! }
 
     func validate() throws {
         try original.validate()
+        try splitPlan?.validateStructure()
         guard !revisions.isEmpty, Set(revisions.map(\.id)).count == revisions.count else {
             throw ReceiptValidationError.duplicateIdentifier
         }

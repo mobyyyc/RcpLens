@@ -1,0 +1,7 @@
+{
+  "sourceFile": "RcpLens/Domain/ReceiptSplit.swift",
+  "allocationFunctionSHA256": "fb889b230dac90beddbee57cf835609e611dee83bf2b90025fb039893f9fe2b7",
+  "independentFractionOracleCases": 40,
+  "passed": 40,
+  "scope": "Actual allocation function extracted unchanged from app source and executed with Mac Swift; comparison data generated independently using Python Fraction. Not a UI/store or whole-engine test."
+}

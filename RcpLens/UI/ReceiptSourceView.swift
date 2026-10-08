@@ -4,6 +4,7 @@ import UIKit
 struct ReceiptSourceView: View {
     @Bindable var workspace: ReceiptWorkspace
     @State private var mode = 0
+    @Environment(\.dismiss) private var dismiss
     @Environment(\.accessibilityReduceMotion) private var systemReduceMotion
     private var reduceMotion: Bool { ReceiptAccessibility.reduceMotion(systemReduceMotion) }
     var body: some View {
@@ -35,7 +36,7 @@ struct ReceiptSourceView: View {
                     }
                 }
             }.navigationTitle("Original evidence").navigationBarTitleDisplayMode(.inline)
-                .toolbar { ToolbarItem(placement: .confirmationAction) { Button("Done") { workspace.sourceVisible = false }.accessibilityIdentifier("sourceDone") } }
+                .toolbar { ToolbarItem(placement: .confirmationAction) { Button("Done") { workspace.sourceVisible = false; dismiss() }.accessibilityIdentifier("sourceDone") } }
         }.tint(.primary).accessibilityIdentifier("sourceScreen")
     }
 }
