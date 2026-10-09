@@ -10,6 +10,8 @@ Sliplet was previously named RcpLens. The existing bundle ID, Keychain services 
 
 Open `Sliplet.xcodeproj` in Xcode 27, select the shared **Sliplet** scheme and an iPhone simulator running iOS 27, then Run. Xcode 27 displays simulated devices in **Device Hub**.
 
+On your iPhone, choose **Import receipt → Take a photo** for a guided camera preview, then **Retake** or **Use photo**. Simulator has no camera.
+
 Choose **Import → Photo library** to select a receipt image already added to Simulator Photos. With the simulator running, add a Finder image through Terminal (replace the example path):
 
 ```sh
@@ -44,7 +46,7 @@ xcodebuild -project Sliplet.xcodeproj -scheme Sliplet -configuration Debug \
   CODE_SIGNING_ALLOWED=YES CODE_SIGN_IDENTITY=- test
 ```
 
-Replace the simulator ID when using another Mac. The current deployment target is iOS 27.0. To run on a physical iPhone, select your Personal Team in the app target’s Signing & Capabilities, connect and trust the phone, enable Developer Mode, select it as the run destination and use Run (Command-R). Keep personal signing settings local; the committed project does not select a team. Direct camera capture and full device validation remain upcoming. No external dependencies, account or cloud provider is required.
+Replace the simulator ID when using another Mac. The current deployment target is iOS 27.0. To run on a physical iPhone, select your Personal Team in the app target’s Signing & Capabilities, connect and trust the phone, enable Developer Mode, select it as the run destination and use Run (Command-R). Keep personal signing settings local; the committed project does not select a team. Guided rear-camera capture is implemented; physical camera validation is the next step. See [camera flow and iPhone test steps](docs/CAMERA.md). No external dependencies, account or cloud provider is required.
 
 Use local ad-hoc signing for Simulator Keychain access; no Apple account is required for these simulator checks. Xcode 27 displays simulated devices in Device Hub. Exact environment and foundation commands: [docs/FOUNDATION.md](docs/FOUNDATION.md). Current storage tests, fresh-process checks, protection limitations and integration API: [docs/STORAGE.md](docs/STORAGE.md).
 

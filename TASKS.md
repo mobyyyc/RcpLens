@@ -110,3 +110,12 @@ The main chat coordinates these task chats. The user approves one task at a time
 - Search detail follow-up (2026-10-08): direct history reader replaces wallet-lift entry from search; paper fades upward 12 points and match context shares scrolling instead of a fixed occluding inset. Five affected native cases passed with final sources, including long-paper/header scroll, large text/source/provenance, edit/archive/delete/restart and home-wallet return. Verified Release installed; twelve encrypted receipts/originals/preferences unchanged. [Exact scope](docs/evidence/t07-search-detail/validation-summary.json). Physical-camera phase remains unapproved.
 
 - Phone-layout follow-up (2026-10-08): removed review's clipped blank spacer, raised native glass controls, restored contrasting on-switch tracks, fixed the long-reader viewport/footer/action inset and return coordinates, and added slower bidirectional wallet follow-through. Eleven unique native cases passed across scoped iPhone 15 Pro Simulator runs; six final-source cases cover the completed reader fix. Optimized Simulator and compilation-only physical iOS SDK builds passed, and normal encrypted wallet data is unchanged. Local Personal Team configuration is preserved. [Exact results and screenshots](docs/evidence/t07-phone-layout/README.md). User phone reload/review pending; planned commit: `fix: correct receipt insets and soften wallet motion`.
+
+## T08 — Guided receipt camera
+
+- Status: implemented and verified in Simulator; physical camera review pending.
+- Dependencies: T05 receipt import/review/storage and T07 demo refinement.
+- Scope: Camera import choice, native rear-camera capture, modern guide and glass controls, explicit Retake/Use photo, local recognition handoff, cancellation and permission/unavailable/error paths. Preserve original images and existing storage/signing identity.
+- Acceptance: capture leads to existing editable review only after Use photo; unaccepted photos never save; Simulator has a clear alternative; normal buttons share the app's sizing/style.
+- Validation: six unique UI checks passed, with the three affected capture/layout cases rerun after final refinements; Simulator and unsigned physical SDK Release builds passed. [Evidence](docs/evidence/t08-camera/README.md). Actual camera permission, orientation, focus and sharpness are physical-iPhone checks.
+- Next task: user review and guided physical camera test, awaiting approval. [Camera test steps](docs/CAMERA.md).

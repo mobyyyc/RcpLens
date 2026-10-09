@@ -6,6 +6,8 @@ struct ReceiptHome: View {
     @Bindable var workspace: ReceiptWorkspace
     @State private var importChoices = false
     @State private var photos = false
+    @State private var camera = false
+    @State private var cameraResult: ReceiptCameraResult?
     @State private var files = false
     @State private var discard = false
     @State private var delete = false
@@ -126,9 +128,21 @@ struct ReceiptHome: View {
                 }
             }
             .confirmationDialog("Import a receipt", isPresented: $importChoices, titleVisibility: .visible) {
+                Button("Take a photo") { camera = true }
                 Button("Photo library") { photos = true }
                 Button("Files") { files = true }
             } message: { Text("Choose a receipt image. Recognition stays on this device.") }
+            .fullScreenCover(isPresented: $camera, onDismiss: {
+                let result = cameraResult; cameraResult = nil
+                guard session == workspace.sessionID, workspace.active else { return }
+                switch result {
+                case .photo(let bytes): workspace.startImport { bytes }
+                case .existingImage: importChoices = true
+                default: break
+                }
+            }) {
+                ReceiptCameraView { result in cameraResult = result; camera = false }
+            }
             .sheet(isPresented: $photos) {
                 ReceiptPhotoPicker { loader in
                     photos = false
