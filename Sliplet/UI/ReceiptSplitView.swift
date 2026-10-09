@@ -138,20 +138,24 @@ struct ReceiptSplitView: View {
             .toolbar {
                 if path.isEmpty {
                 ToolbarItem(placement: .topBarLeading) {
-                    Button { if pristine { dismiss() } else { discard = true } } label: { Text("Done").foregroundStyle(Color(uiColor: .label)).lineLimit(1).fixedSize(horizontal: true, vertical: false).frame(minWidth: 44, minHeight: 48).padding(.horizontal, 4) }.buttonStyle(.plain).controlSize(.large).disabled(workspace.saving).accessibilityIdentifier("splitDone")
+                    Button { if pristine { dismiss() } else { discard = true } } label: { Text("Done") }.disabled(workspace.saving).accessibilityIdentifier("splitDone")
                 }
                 ToolbarItem(placement: .topBarTrailing) {
-                    Button { source = true } label: { Text("Original").foregroundStyle(Color(uiColor: .label)).fixedSize(horizontal: true, vertical: false).frame(minHeight: 48).padding(.horizontal, 4) }.buttonStyle(.plain).controlSize(.large).disabled(workspace.image == nil || workspace.saving).accessibilityIdentifier("splitOriginal")
-                }
-                ToolbarItem(placement: .bottomBar) {
-                    Button { workspace.saveSplit(plan, finalize: false) } label: { Text("Save choices").foregroundStyle(Color(uiColor: .label)).frame(minHeight: 34).padding(.horizontal, 8) }.buttonStyle(ReceiptSplitSecondaryStyle()).controlSize(.large)
-                        .disabled(workspace.saving || (try? plan.validateStructure()) == nil).accessibilityIdentifier("splitSave")
-                }.sharedBackgroundVisibility(.hidden)
-                ToolbarItem(placement: .bottomBar) {
-                    Button { workspace.saveSplit(plan, finalize: true) } label: { Text("Finalize").frame(minHeight: 44) }.buttonStyle(ReceiptProminentStyle()).controlSize(.large)
-                        .disabled(workspace.saving || result == nil || summary != nil).accessibilityIdentifier("splitFinalize")
+                    Button { source = true } label: { Text("Original") }.disabled(workspace.image == nil || workspace.saving).accessibilityIdentifier("splitOriginal")
                 }
                 ToolbarItemGroup(placement: .keyboard) { Spacer(); Button("Dismiss keyboard") { UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil) } }
+                }
+            }
+            .safeAreaBar(edge: .bottom, spacing: 0) {
+                if path.isEmpty {
+                    HStack(spacing: 16) {
+                        Button("Save choices") { workspace.saveSplit(plan, finalize: false) }
+                            .buttonStyle(ReceiptSecondaryStyle())
+                            .disabled(workspace.saving || (try? plan.validateStructure()) == nil).accessibilityIdentifier("splitSave")
+                        Button("Finalize") { workspace.saveSplit(plan, finalize: true) }
+                            .buttonStyle(ReceiptProminentStyle())
+                            .disabled(workspace.saving || result == nil || summary != nil).accessibilityIdentifier("splitFinalize")
+                    }.modifier(ReceiptActionBarLayout())
                 }
             }
             .sheet(isPresented: $source) { ReceiptSourceView(workspace: workspace) }
@@ -256,16 +260,6 @@ struct ReceiptSplitView: View {
     }
 }
 
-private struct ReceiptSplitSecondaryStyle: PrimitiveButtonStyle {
-    @Environment(\.accessibilityReduceTransparency) private var opaque
-    @Environment(\.colorSchemeContrast) private var contrast
-    func makeBody(configuration: Configuration) -> some View {
-        if ReceiptAccessibility.reduceTransparency(opaque) || ReceiptAccessibility.contrast(contrast) == .increased {
-            Button(configuration).buttonStyle(.bordered)
-        } else { Button(configuration).buttonStyle(.glass) }
-    }
-}
-
 /// Standard full-row selection button: a native 44pt action with an explicit selected state.
 private struct SplitSelectionRow: View {
     let title: String
@@ -293,7 +287,7 @@ private struct SplitEditorBack: ViewModifier {
                             Image(systemName: "chevron.left").accessibilityHidden(true)
                             Text("Back")
                         }.foregroundStyle(Color(uiColor: .label)).frame(minHeight: 48).padding(.horizontal, 8).contentShape(Rectangle())
-                    }.buttonStyle(.plain).controlSize(.large)
+                    }.buttonStyle(.plain).controlSize(.regular)
                         .accessibilityLabel("Back to split").accessibilityIdentifier("splitEditorBack")
                 }
             }

@@ -26,7 +26,7 @@ struct ReceiptHome: View {
                     case .failed(let message):
                         ContentUnavailableView {
                             Label("Wallet unavailable", systemImage: "lock.trianglebadge.exclamationmark")
-                        } description: { Text(message) } actions: { Button("Try again", action: workspace.retryOpen).buttonStyle(.bordered) }
+                        } description: { Text(message) } actions: { Button("Try again", action: workspace.retryOpen).buttonStyle(ReceiptSecondaryStyle()) }
                     case .ready: flow
                     }
                 }
@@ -166,7 +166,7 @@ struct ReceiptHome: View {
             HStack {
                 Spacer()
                 Button { importChoices = true } label: {
-                    Label("Import receipt", systemImage: "plus").padding(.horizontal, 12).frame(minHeight: 28)
+                    Label("Import receipt", systemImage: "plus")
                 }.buttonStyle(ReceiptProminentStyle()).accessibilityIdentifier("import")
                 Spacer()
             }
@@ -181,24 +181,24 @@ struct ReceiptHome: View {
             } else {
                 HStack(spacing: 12) {
                     Button { workspace.splitVisible = true } label: {
-                        Image(systemName: "person.2").frame(width: 24, height: 28)
+                        Image(systemName: "person.2")
                     }.buttonStyle(ReceiptSecondaryStyle()).buttonBorderShape(.circle)
                         .accessibilityLabel("Split").accessibilityIdentifier("splitOpen")
                         .disabled(workspace.saving || workspace.selected == nil || workspace.image == nil)
                     Spacer(minLength: 0)
                     editAction.fixedSize(horizontal: true, vertical: false)
                     Spacer(minLength: 0)
-                    Color.clear.frame(width: 56, height: 28).accessibilityHidden(true)
+                    Color.clear.frame(width: 44, height: 1).accessibilityHidden(true)
                 }
             }
         case .review:
             HStack(spacing: 16) {
                 Button { editing = nil; workspace.save(asDraft: true) } label: {
-                    Text("Save draft").padding(.horizontal, 8).frame(minHeight: 44)
+                    Text("Save draft")
                 }.buttonStyle(ReceiptSecondaryStyle())
                     .disabled(!workspace.draft.canSaveDraft || workspace.saving).accessibilityIdentifier("saveDraft")
                 Button { editing = nil; workspace.save(asDraft: false) } label: {
-                    Text("Finish").padding(.horizontal, 8).frame(minHeight: 44)
+                    Text("Finish")
                 }.buttonStyle(ReceiptProminentStyle())
                     .disabled(!workspace.draft.canFinalize || workspace.saving).accessibilityIdentifier("finishSave")
             }.frame(maxWidth: .infinity)
@@ -207,7 +207,7 @@ struct ReceiptHome: View {
     }
     private var editAction: some View {
         Button { workspace.edit() } label: {
-            Label("Edit receipt", systemImage: "pencil").padding(.horizontal, 12).frame(minHeight: 28)
+            Label("Edit receipt", systemImage: "pencil")
         }.buttonStyle(ReceiptProminentStyle()).accessibilityIdentifier("edit")
             .disabled(workspace.saving || workspace.image == nil)
     }
@@ -232,7 +232,7 @@ struct ReceiptHome: View {
                 Text("You can leave this screen or cancel. Returning from the background discards unsaved work.")
                     .font(.footnote).foregroundStyle(.primary).multilineTextAlignment(.center)
                 Button("Cancel import", role: .cancel) { workspace.cancelImport() }
-                    .buttonStyle(.bordered).frame(minHeight: 44).accessibilityIdentifier("cancelImport")
+                    .buttonStyle(ReceiptSecondaryStyle()).frame(minHeight: 44).accessibilityIdentifier("cancelImport")
             }.padding(28).accessibilityElement(children: .contain).accessibilityIdentifier("processing")
         case .failed:
             ScrollView {
@@ -240,13 +240,13 @@ struct ReceiptHome: View {
                     Label("Reading needs attention", systemImage: "exclamationmark.triangle").font(.title2)
                     Text(workspace.errorMessage ?? "Choose another image or try again.")
                     if workspace.image != nil {
-                        Button("View original", systemImage: "doc.viewfinder") { workspace.showSource() }.buttonStyle(.bordered)
-                        Button("Retry reading", systemImage: "arrow.clockwise", action: workspace.readImage).buttonStyle(.bordered)
+                        Button("View original", systemImage: "doc.viewfinder") { workspace.showSource() }.buttonStyle(ReceiptSecondaryStyle())
+                        Button("Retry reading", systemImage: "arrow.clockwise", action: workspace.readImage).buttonStyle(ReceiptSecondaryStyle())
                         Button("Enter manually", systemImage: "pencil", action: workspace.manualReview).buttonStyle(ReceiptProminentStyle())
                             .accessibilityIdentifier("manual")
                     }
-                    Button("Choose another image", systemImage: "photo") { workspace.cancelImport(showNotice: false); importChoices = true }.buttonStyle(.bordered)
-                    Button("Return to wallet", action: workspace.backToWallet).buttonStyle(.bordered)
+                    Button("Choose another image", systemImage: "photo") { workspace.cancelImport(showNotice: false); importChoices = true }.buttonStyle(ReceiptSecondaryStyle())
+                    Button("Return to wallet", action: workspace.backToWallet).buttonStyle(ReceiptSecondaryStyle())
                 }.padding(24)
             }
         }

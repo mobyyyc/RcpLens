@@ -24,7 +24,7 @@ struct ReceiptSourceView: View {
                     HStack {
                         Button("Zoom in", systemImage: "plus.magnifyingglass") { NotificationCenter.default.post(name: .receiptZoomIn, object: nil) }
                         Button("Zoom out", systemImage: "minus.magnifyingglass") { NotificationCenter.default.post(name: .receiptZoomOut, object: nil) }
-                    }.buttonStyle(.bordered).frame(minHeight: 44).padding(.bottom)
+                    }.buttonStyle(ReceiptSecondaryStyle()).padding(.bottom)
                 } else {
                     List {
                         Section { Text("Text read from the original may contain errors or omissions. Check against the image.").font(.footnote) }

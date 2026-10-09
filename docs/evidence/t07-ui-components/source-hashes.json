@@ -1,0 +1,13 @@
+{
+  "Sliplet/UI/ReceiptWorkspace.swift": "e5ca7632f5275547d7425076ad10220e6a115c2ba8c28f707fbd3d6a8b74ade3",
+  "Sliplet/UI/ReceiptSplitView.swift": "be6807e2629d084d2f5d22ea211ca5e2dba881e633d84a1fb7e833b53c4294a6",
+  "Sliplet/UI/ReceiptWalletScene.swift": "1e0d0f295ed1bab47e23bb3cdb66a65234600bd761c8c13fd959d7da0ce3ad66",
+  "Sliplet/UI/ReceiptSourceView.swift": "f65a1709e5d4f0d444fb01241deb6f7cbb4bbb76338a897ddf630dc5c88d847d",
+  "Sliplet/UI/ReceiptSearchViews.swift": "67cbad1de71d3473f2654d61d1f21a63ccfd92c8aa02dedfddc18469c721862e",
+  "Sliplet/UI/ReceiptHome.swift": "8e50a538947d55e05fba81583edd0a2503e95aaa2fcf5a5cde0588bc265c9cf8",
+  "Sliplet/UI/ReceiptPhotoPicker.swift": "0a7fffce0b215d486015fdbd8d8353c04fed28792a542dbbab60a27437caf166",
+  "Sliplet/UI/ReceiptAccessibility.swift": "dfe249274b08af75e012523b2ae71acf244b4e18f4182d2c536c238555b89e6e",
+  "Sliplet/UI/FoundationView.swift": "65f799ca9a4e69fa6bf39d478780279fd037f36e9446f2575f3fc8a72ffb1b17",
+  "Sliplet/UI/ReceiptReviewView.swift": "cd23c2616854fbbf8fc37b508b524f33c08b16ee5ab4738b37a1d7f91c12979b",
+  "SlipletUITests/ReceiptUIWorkflowTests.swift": "8957cb92767620c9c92371b6cc4aba9ebd7848d49e17a17b3df8a4e397c063e5"
+}

@@ -423,7 +423,7 @@ private struct WalletReadingScene: View {
             // The reader uses native insets. Expanding its viewport by the safe-area
             // bar height would put its scroll end below the physical screen.
             .scrollClipDisabled().scrollEdgeEffectStyle(.soft, for: .vertical)
-            .contentMargins(.bottom, geometry.safeAreaInsets.bottom + 40, for: .scrollContent)
+            .contentMargins(.bottom, 12, for: .scrollContent)
             .scrollDisabled(!expanded)
             .onScrollGeometryChange(for: CGSize.self) {
                 CGSize(width: $0.contentOffset.y + $0.contentInsets.top, height: $0.contentInsets.top)
@@ -478,7 +478,7 @@ private struct WalletLiftedPaper: View {
             }
             .frame(width: paperWidth, height: paperHeight, alignment: .topLeading)
             .clipShape(ReceiptPaperEdge())
-            .background { ReceiptPaperBackground(fade: !expanded && record.current.fields.items.count > 3 && !typeSize.isAccessibilitySize ? 1 : 0) }
+            .background { ReceiptPaperBackground() }
             .receiptPaperStyle()
             .rotationEffect(.degrees(reading ? 0 : tilt))
             .offset(x: reading ? 30 : origin.minX, y: reading ? readingPaperTop : origin.minY + returnOffset)
@@ -493,7 +493,7 @@ private struct WalletLiftedPaper: View {
                 .offset(y: fullHeight + readingPaperTop + 22).opacity(expanded ? 1 : 0)
         }
         .frame(maxWidth: .infinity, alignment: .topLeading)
-        .frame(height: max(viewportHeight, fullHeight + readingPaperTop + 22 + footerHeight + 40), alignment: .topLeading)
+        .frame(height: expanded ? fullHeight + readingPaperTop + 22 + footerHeight : viewportHeight, alignment: .topLeading)
     }
 }
 
@@ -511,8 +511,8 @@ private struct WalletCrown: View {
             }
             Spacer(minLength: 6)
             if count > 3 {
-                Button(action: jumpToLatest) { Image(systemName: "arrow.down").frame(width: 44, height: 44) }
-                    .buttonStyle(.glass).accessibilityLabel("Jump to newest receipt").accessibilityIdentifier("latestReceipt")
+                Button(action: jumpToLatest) { Image(systemName: "arrow.down") }
+                    .buttonStyle(ReceiptSecondaryStyle()).accessibilityLabel("Jump to newest receipt").accessibilityIdentifier("latestReceipt")
             } else {
                 Image(systemName: "wallet.bifold").font(.title2.weight(.light)).opacity(0.75).accessibilityHidden(true)
             }
@@ -588,6 +588,8 @@ private struct LeatherWalletSurface: View {
                 .padding(.horizontal, 4).padding(.bottom, 4)
         }
         .compositingGroup()
+        // Contact shadow belongs to the leather mouth, so exposed paper never fades away.
+        .shadow(color: .black.opacity(dark ? 0.4 : 0.24), radius: 7, y: -5)
         .shadow(color: .black.opacity(dark ? 0.4 : 0.2), radius: 14, y: 8)
         .shadow(color: .black.opacity(0.18), radius: 2, y: 2)
         .allowsHitTesting(false).accessibilityHidden(true)
@@ -624,7 +626,7 @@ extension View {
     func receiptPaperStyle() -> some View { modifier(ReceiptPaperStyle()) }
 }
 
-/// A modest torn edge and opaque reading surface; long previews fade toward their bottom.
+/// Opaque receipt paper with a modest torn edge; long item text fades inside the preview.
 struct ReceiptPaperEdge: Shape {
     func path(in rect: CGRect) -> Path {
         var p = Path()
@@ -643,17 +645,12 @@ struct ReceiptPaperEdge: Shape {
 }
 
 struct ReceiptPaperBackground: View {
-    var fade: CGFloat = 0
     @Environment(\.colorScheme) private var scheme
     @Environment(\.colorSchemeContrast) private var systemContrast
     private var contrast: ColorSchemeContrast { ReceiptAccessibility.contrast(systemContrast) }
     var body: some View {
         ReceiptPaperEdge().fill(Color(uiColor: .secondarySystemGroupedBackground))
             .overlay { ReceiptPaperEdge().stroke(.primary.opacity(contrast == .increased ? 0.6 : 0.12), lineWidth: 0.5) }
-            .mask {
-                LinearGradient(stops: [.init(color: .black, location: 0), .init(color: .black, location: 0.78),
-                                       .init(color: .black.opacity(1 - fade), location: 1)], startPoint: .top, endPoint: .bottom)
-            }
             .compositingGroup()
             .shadow(color: .black.opacity(scheme == .dark ? 0.45 : 0.16), radius: 12, y: 6)
             .shadow(color: .black.opacity(scheme == .dark ? 0.3 : 0.12), radius: 2, y: 2)
@@ -736,16 +733,10 @@ private struct ReceiptSwipePaper: View {
 
 private struct ReceiptPreviewSurface: View {
     let record: ReceiptRecord
-    @Environment(\.dynamicTypeSize) private var typeSize
-    private var fades: Bool { record.current.fields.items.count > 3 && !typeSize.isAccessibilitySize }
     var body: some View {
+        // Only the item text fades. The receipt paper and its torn edge stay opaque.
         ReceiptPreviewPaper(record: record)
-            .mask {
-                if fades {
-                    LinearGradient(stops: [.init(color: .black, location: 0), .init(color: .black, location: 0.78), .init(color: .clear, location: 1)], startPoint: .top, endPoint: .bottom)
-                } else { Color.black }
-            }
-            .background { ReceiptPaperBackground(fade: fades ? 1 : 0) }
+            .background { ReceiptPaperBackground() }
             .receiptPaperStyle()
     }
 }

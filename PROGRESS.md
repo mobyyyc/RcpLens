@@ -130,3 +130,7 @@ Renamed the app display name, Xcode project, shared scheme, Swift module, source
 
 Validation: renamed hosted test suite passed (84 tests, one skipped, zero failures). Simulator Release build passed; its Info.plist reports Sliplet for display name, bundle name and executable while retaining the installed app bundle identifier. Installing and launching the renamed Release preserved all 12 encrypted receipts, 12 original assets and wallet preferences.
 Physical iPhone SDK Release compilation also passed with signing disabled.
+
+## 2026-10-08 — Native control and wallet paper refinement
+
+Removed receipt silhouette alpha fades; kept long-preview item text fading on opaque paper. Added the contact shadow to the leather front. Shared regular native prominent/secondary styles now serve home, reader, review, source/retry actions and split. Split uses the same native safe-area action bar; custom label padding and large-size overrides were removed. Reader scroll height now follows the actual content/footer, with only a 12-point finishing margin; the native bar reserves its own height. Seven UI cases and both Simulator/physical SDK Release compilations passed. Fictional visual evidence: [UI component verification](docs/evidence/t07-ui-components/README.md).

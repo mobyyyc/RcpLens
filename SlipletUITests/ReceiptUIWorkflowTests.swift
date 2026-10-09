@@ -279,6 +279,7 @@ import Vision
             app.launch()
             let button = app.buttons["import"]
             XCTAssertTrue(button.waitForExistence(timeout: 30))
+            XCTAssertLessThanOrEqual(button.frame.height, 50, "Import uses a compact native control height")
             let measured = try XCTUnwrap(pixelContrast(button.screenshot()))
             XCTAssertEqual(measured.foreground, mode == "dark" ? "#000000" : "#FFFFFF")
             XCTAssertGreaterThanOrEqual(measured.ratio, 7)
@@ -603,7 +604,9 @@ import Vision
         let app = XCUIApplication(); app.launchArguments = ["--t05-synthetic-preview", "review"]
         app.launch(); XCTAssertTrue(app.buttons["saveDraft"].waitForExistence(timeout: 30))
         let save = app.buttons["saveDraft"]
-        XCTAssertGreaterThanOrEqual(app.frame.maxY - save.frame.maxY, 50, "Actions clear the home indicator comfortably")
+        XCTAssertLessThanOrEqual(save.frame.height, 50, "Draft and finish use the standard native control size")
+        XCTAssertEqual(save.frame.height, app.buttons["finishSave"].frame.height, accuracy: 2)
+        XCTAssertGreaterThanOrEqual(app.frame.maxY - save.frame.maxY, 40, "Actions clear the home indicator comfortably")
         app.buttons["original"].tap()
         XCTAssertTrue(app.buttons["sourceDone"].waitForExistence(timeout: 10)); app.buttons["sourceDone"].tap()
         let check = app.switches["sourceCheck"]
@@ -638,13 +641,13 @@ import Vision
         XCTAssertLessThan(footer.frame.maxY, save.frame.minY - 12, "The final review information clears the floating actions")
         capture(app, "Phone-layout-dark-review-bottom")
         save.tap(); XCTAssertTrue(app.buttons["edit"].waitForExistence(timeout: 10))
-        XCTAssertGreaterThanOrEqual(app.frame.maxY - app.buttons["edit"].frame.maxY, 50)
-        XCTAssertGreaterThanOrEqual(app.frame.maxY - app.buttons["splitOpen"].frame.maxY, 50)
+        XCTAssertGreaterThanOrEqual(app.frame.maxY - app.buttons["edit"].frame.maxY, 40)
+        XCTAssertGreaterThanOrEqual(app.frame.maxY - app.buttons["splitOpen"].frame.maxY, 40)
         app.terminate()
     }
     func testLongWalletReceiptFooterClearsRaisedActions() {
         let app = launch("long-wallet")
-        XCTAssertGreaterThanOrEqual(app.frame.maxY - app.buttons["import"].frame.maxY, 50)
+        XCTAssertGreaterThanOrEqual(app.frame.maxY - app.buttons["import"].frame.maxY, 40)
         let paper = app.buttons["receipt-1"]
         XCTAssertTrue(paper.waitForExistence(timeout: 20)); paper.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.07)).tap()
         XCTAssertTrue(app.buttons["edit"].waitForExistence(timeout: 10))
@@ -657,6 +660,8 @@ import Vision
         let tree = XCTAttachment(string: app.debugDescription); tree.name = "Phone-layout-long-wallet-tree"; tree.lifetime = .keepAlways; add(tree)
         XCTAssertTrue(footer.isHittable)
         XCTAssertLessThan(footer.frame.maxY, app.buttons["edit"].frame.minY - 12, "The paper bottom and footer can be read above the actions")
+        app.swipeUp(); app.swipeUp()
+        XCTAssertLessThan(app.buttons["edit"].frame.minY - footer.frame.maxY, 80, "The scroll end must not add a second action-bar-sized blank area")
         capture(app, "Phone-layout-long-wallet-bottom")
         app.buttons["back"].tap(); XCTAssertTrue(paper.waitForExistence(timeout: 10)); app.terminate()
     }

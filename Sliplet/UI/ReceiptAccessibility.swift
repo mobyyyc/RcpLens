@@ -27,8 +27,8 @@ struct ReceiptProminentStyle: PrimitiveButtonStyle {
     @Environment(\.colorSchemeContrast) private var systemContrast
     func makeBody(configuration: Configuration) -> some View {
         if ReceiptAccessibility.reduceTransparency(systemOpaque) || ReceiptAccessibility.contrast(systemContrast) == .increased {
-            Button(configuration).buttonStyle(.borderedProminent).foregroundStyle(Color(uiColor: .systemBackground))
-        } else { Button(configuration).buttonStyle(.glassProminent).foregroundStyle(Color(uiColor: .systemBackground)) }
+            Button(configuration).buttonStyle(.borderedProminent).foregroundStyle(Color(uiColor: .systemBackground)).controlSize(.regular)
+        } else { Button(configuration).buttonStyle(.glassProminent).foregroundStyle(Color(uiColor: .systemBackground)).controlSize(.regular) }
     }
 }
 
@@ -36,8 +36,8 @@ struct ReceiptProminentStyle: PrimitiveButtonStyle {
 /// bar reserves their height and supplies the system scroll edge effect, without a solid panel.
 struct ReceiptActionBarLayout: ViewModifier {
     func body(content: Content) -> some View {
-        content.font(.body.weight(.semibold)).controlSize(.large)
-            .padding(.horizontal, 20).padding(.top, 8).padding(.bottom, 20)
+        content.font(.body).controlSize(.regular)
+            .padding(.horizontal, 20).padding(.top, 8).padding(.bottom, 12)
             .frame(maxWidth: .infinity)
     }
 }
@@ -47,7 +47,7 @@ struct ReceiptSecondaryStyle: PrimitiveButtonStyle {
     @Environment(\.colorSchemeContrast) private var contrast
     func makeBody(configuration: Configuration) -> some View {
         if ReceiptAccessibility.reduceTransparency(opaque) || ReceiptAccessibility.contrast(contrast) == .increased {
-            Button(configuration).buttonStyle(.bordered)
-        } else { Button(configuration).buttonStyle(.glass) }
+            Button(configuration).buttonStyle(.bordered).controlSize(.regular)
+        } else { Button(configuration).buttonStyle(.glass).controlSize(.regular) }
     }
 }
