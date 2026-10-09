@@ -1,6 +1,6 @@
 # User workflow
 
-Use the original planning chat as the main point of contact. The seven task chats hold focused execution context; the user does not need to choose among them or copy messages between them.
+Use the original planning chat as the main point of contact. Seven Phase 1 task chats were archived on 2026-10-09; their implementation evidence remains in the repository. Five Phase 2 chats are prepared in the “Sliplet · Phase 2” sidebar section, with Main first. The user does not need to choose among them or copy messages between them.
 
 ## Starting
 
@@ -11,7 +11,7 @@ Approval applies to the named next task, including its implementation, verificat
 ## Coordination after authorization
 
 1. Check actual environment readiness and current project/task state.
-2. Select the next task with satisfied dependencies. Default order: T01, T02, T03, T04, T05, T06, T07.
+2. Select the next task with satisfied dependencies. Current order: P2-01 recognition audit, P2-02 capture/layout, P2-03 retailer parsing, P2-04 faster corrections, then P2-05 personal release readiness. Each begins only after its dependencies are accepted and its own approval is given.
 3. Start that task in its existing chat with current constraints and handoff context.
 4. Follow progress using compact task-status waits while the main chat is actively working. Bring material preferences and missing inputs back to the user here.
 5. Inspect the changes and acceptance evidence; completion in a chat is not sufficient proof of acceptance. Resolve relevant failures before dependent implementation.
@@ -41,3 +41,7 @@ Give design preferences, receipt-folder locations, corrections and demo feedback
 - Extraction evaluation and any private real-receipt dataset required.
 - Imported-image demo walkthrough.
 - Split/search demo before physical iPhone camera work.
+
+## Phase 2 preparation
+
+The user requested the old-task cleanup and five corresponding Phase 2 chats on 2026-10-09. These chats have only read the roadmap/workflow and acknowledged their pending status; this request does not start the recognition audit. Detailed scopes, acceptance criteria and chat identities are in TASKS.md. The actual repository is /Users/moby/Desktop/cs/Sliplet, even if the saved desktop project still displays its former RcpLens name/path. Always use the actual path for repository work.

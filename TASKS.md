@@ -1,6 +1,6 @@
-# Near-term task registry
+# Task registry
 
-The main chat coordinates these task chats. The user approves one task at a time in the main chat; the main chat verifies, commits/pushes and reports the result before requesting approval for the next task. Dependencies must be verified from actual files/results, not assumed from a chat title.
+The main chat coordinates these task chats. Phase 1 task chats T01–T07 were archived on 2026-10-09 after their implementation handoffs; their records and evidence below remain available. Phase 2 chats are prepared, not authorized to begin implementation. The user approves one task at a time in the main chat; the main chat verifies, commits/pushes and reports the result before requesting approval for the next task. Dependencies must be verified from actual files/results, not assumed from a chat title.
 
 ## T01 — 01 · Xcode and SwiftUI foundation
 
@@ -13,7 +13,7 @@ The main chat coordinates these task chats. The user approves one task at a time
 - Tests: Simulator build and launch, synthetic Vision/Foundation Models smoke checks, test-target execution. Do not log receipt content.
 - Risk/notes: iOS 27.0 runtime installation verified (build 24A434). Xcode exists at /Applications/Xcode.app, version 27.0; xcode-select still points to /Library/Developer/CommandLineTools, so use DEVELOPER_DIR or explicit tool paths. Host availability and actual simulator generation are verified available; simulator evidence is recorded below. Mac: M5 Pro, 24 GB, macOS 27.0.1. Do not install software, update macOS or change Apple Intelligence settings without the user's explicit instruction.
 - Acceptance evidence: Debug/Release simulator builds and launch passed on iPhone 18 Pro, iOS 27.0 (24A434); local Foundation Models available and generated 39 characters; synthetic Vision PNG matched expected text; 3 XCTest tests passed, 0 failures/skips. Commands, limitations and evidence: [docs/FOUNDATION.md](docs/FOUNDATION.md).
-- Chat: 01a117d0-a07f-7ec2-8b4a-4d20ec8fcc67 (local; implementation complete)
+- Chat: 01a117d0-a07f-7ec2-8b4a-4d20ec8fcc67 (local; implementation complete); archived 2026-10-09
 
 ## T02 — 02 · Wallet interface concepts
 
@@ -26,7 +26,7 @@ The main chat coordinates these task chats. The user approves one task at a time
 - Tests: Visual review at small/large screen and text sizes, reduced-motion interaction review, 5/50/500-receipt navigation walkthrough.
 - Acceptance evidence: Two interactive browser concepts, Pocket and Paper lift, share a consistent simplified receipt layout. 124 focused browser checks passed across collection sizes, search/filter/source access, edit/reconciliation, recovery, keyboard/tap/pull and reduced motion; final screenshots visually reviewed. Native Dynamic Type/VoiceOver and device performance remain T05/T07 checks. [Design preview and handoff](docs/design/README.md). User selected Paper lift, with restrained layer shadows and native Liquid Glass navigation/buttons required for T05.
 - Risk/notes: Use synthetic receipt content. User approved a minimalist native iOS 27 direction with subtle depth and one simplified, consistent digital receipt format across stores. The two concepts explore interaction within that direction. Original evidence remains separately accessible. No logo or multiple-wallet decision is approved yet. Initial retailer scope is No Frills, Costco and T&T.
-- Chat: 01a117d0-a6c8-7d91-bc1c-86b6ad3e6a14 (local; design artifacts complete)
+- Chat: 01a117d0-a6c8-7d91-bc1c-86b6ad3e6a14 (local; design artifacts complete); archived 2026-10-09
 
 ## T03 — 03 · Apple receipt extraction evaluation
 
@@ -39,7 +39,7 @@ The main chat coordinates these task chats. The user approves one task at a time
 - Tests: Golden-corpus regression, malformed/model-unavailable output, repeatability and supported-language checks, context limits on long receipts.
 - Acceptance evidence: Five independently human-verified receipts (2 Costco, 2 No Frills, 1 T&T), matched to original-image hashes, plus six fictional image fixtures. Main chat independently passed all 14 regression tests, verified final source hashes and reproduced the published human-scored aggregate. Mac local-model runtime and synthetic browser checks passed. Vision plus deterministic parsing recovered 57/66 exact purchase amounts; model paths recovered 33/66 and 26/66 after source validation. Report and decision: [docs/OCR_EVALUATION.md](docs/OCR_EVALUATION.md), [ADR 002](docs/adr/002-receipt-recognition.md).
 - Risk/notes: Select Vision plus deterministic parsing for the manual-review demo. No approach fully reconciled any of the five real receipts without correction; the selected route matched only 2/5 totals. Mandatory correction, visible missing fields and deterministic reconciliation remain T05 requirements. Five receipts do not establish broad retailer accuracy. Correction counts are proxies; actual human correction time and adjudicated invented-content counts remain unmeasured. Image/OCRTool model evaluation ran on the Mac; Apple documents OCRTool as unavailable in Simulator. Raw receipts, OCR, proposals and checked references stay private and ignored. No production app changes in this task.
-- Chat: 01a117d0-ae9f-7dc3-bcd2-bd84dda035b2 (local; evaluation complete)
+- Chat: 01a117d0-ae9f-7dc3-bcd2-bd84dda035b2 (local; evaluation complete); archived 2026-10-09
 
 ## T04 — 04 · Receipt schema and local storage
 
@@ -52,7 +52,7 @@ The main chat coordinates these task chats. The user approves one task at a time
 - Tests: CRUD/restart, atomic write failure or recovery, migration preserving data, missing-key handling if encryption selected, deletion/asset cleanup and protection verification.
 - Acceptance evidence: Exact Swift money/quantity/date/evidence models; append-only corrections; system SQLite with CryptoKit AES-256-GCM receipt and image payloads; real non-sync Keychain key; transactional CRUD and v1→v2 migration. Main-chat review checked source hashes, actual xcresult (27 passed, 0 failed, 1 hardware-protection skip), signed simulator entitlements and Release signature. Separate-process synthetic evidence verified original/image/revision survival, hot-journal rollback and zero receipts/assets after deletion. [Storage verification and T05 handoff](docs/STORAGE.md), [ADR 003](docs/adr/003-local-receipt-storage.md).
 - Risk/notes: Payloads are encrypted, but SQLite structure, UUIDs and update metadata remain visible. Simulator cannot demonstrate physical lock/file-protection enforcement; verify on the later phone phase. Receipt store is excluded from ordinary backup; no export/restore yet. T05 must open only when protected data is available, close/release the actor and drop decrypted buffers on background/protected-data loss, expose missing/wrong-key failures without reset and explain local data-loss behavior. No cloud/accounts/E2EE; extraction/design artifacts unchanged.
-- Chat: 01a117d0-b64b-7c00-baeb-66673db8436a (local; implementation complete)
+- Chat: 01a117d0-b64b-7c00-baeb-66673db8436a (local; implementation complete); archived 2026-10-09
 
 ## T05 — 05 · Import, review and save receipts
 
@@ -65,7 +65,7 @@ The main chat coordinates these task chats. The user approves one task at a time
 - Tests: Simulator end-to-end import/edit/save/restart/delete; cancellation and failure cases; correction usability with private No Frills/Costco/T&T images; accessibility and reduced-motion checks.
 - Risk/notes: T01–T04 dependencies accepted. User approved Save draft for incomplete/unreconciled receipts; drafts remain Needs review, and finishing requires explicit source review and exact reconciliation. Field edits invalidate prior confirmation. Paper lift selected: retain layer shadows and use native Liquid Glass navigation/buttons with accessible alternatives; browser previews approximate the design only. T03 selected Vision plus deterministic parsing with mandatory correction and reconciliation; model paths remain evaluation-only. Follow T04's storage lifecycle, provenance, key-failure and backup handoff in docs/STORAGE.md. Do not claim a finalized test version from synthetic examples alone.
 - Acceptance evidence: Native system photo selection and keyboard editing; Paper lift/shadows/native Glass; source zoom/linked geometry; exact reconciliation and draft/finish gates; encrypted save/restart/revision/delete and lifecycle revocation. Main chat independently checked actual xcresults (43 unit passes, 1 hardware skip; 2 synthetic workflow passes before the final cosmetic button fix; 3 final accessibility/interaction passes), matching final accessibility source hashes, Release build/signature/Debug-control exclusion, and five private reference-assisted round-trip reports (2 finished, 3 drafts; original bytes/parser preserved). Reviewed synthetic native screens and 14 individually measured/classified simulator contrast exceptions; no full-device accessibility certification. [Demo report and limits](docs/IMPORT_DEMO.md).
-- Chat: 01a117d0-be03-7d12-8ea8-55d5349c89b7 (local; implementation complete)
+- Chat: 01a117d0-be03-7d12-8ea8-55d5349c89b7 (local; implementation complete); archived 2026-10-09
 - User-requested design follow-up (2026-10-08): main chat redesigned the native wallet/review/detail navigation after screenshot feedback. One labeled import control, compact layered artwork, explicit All receipts navigation, a single Original control, clearer review hierarchy and accessible deletion. Seven new native checks and a fresh Release build passed. [Design audit and current screenshots](docs/UI_REDESIGN.md). T06 still awaits approval.
 
 - Wallet interaction follow-up (2026-10-08): the user requested a complete chronological paper stack, in-place expansion/return, long-preview fades, per-layer shadows and configurable reveal-then-tap swipes. Archive/star semantics were confirmed. Prior empty-wallet artwork restored. [Wallet design and verification](docs/WALLET_DESIGN.md). Verified with 47 unit passes, 11 native UI passes and one hardware-only skip; fictional screenshot/motion evidence and eight narrowly documented contrast exceptions are recorded. Design review remains pending. The subsequent visual refinement corrects shadow clipping, synchronized growth/return, swipe control expansion and the light crown; latest evidence is linked in the design report. T06 is not dispatched by this follow-up.
@@ -89,7 +89,7 @@ The main chat coordinates these task chats. The user approves one task at a time
 - Tests: Odd cents, three people, shared and individual items, taxable/non-taxable lines, discounts/coupons, deposits/tips, negative adjustments, zero-value bases, repeated deterministic output, overflow/bounds and sum invariants.
 - Risk/notes: No model-generated arithmetic, settlement/payment integration or collaborative accounts. Clipboard/share is explicit user action; no participant data in telemetry.
 - Verification evidence: 73 unit passes and one hardware-only skip; 40/40 independent allocator oracle; 19 unique native cases across explicitly scoped runs, including all six split cases and three final wallet-shadow cases. Final strict structural checks pass with zero waivers; six precise contrast findings are individually classified. Release signature/Debug exclusion and unchanged twelve normal encrypted receipts verified. [Split contract](docs/SPLITTING.md), [actual evidence](docs/evidence/t06-splitting/validation-summary.json). Planned commit: `feat: add exact receipt splits and soften wallet shadows`.
-- Chat: 01a117d0-d507-7bf0-a9cc-c6f6724d16a0 (local; implementation and verification complete, handoff ready)
+- Chat: 01a117d0-d507-7bf0-a9cc-c6f6724d16a0 (local; implementation and verification complete, handoff ready); archived 2026-10-09
 
 - Wallet-transition follow-up (2026-10-08): tap-time projected positions and one visible sibling set replace mixed live/overlay departures. Papers above exit upward; lower papers and wallet exit downward; all fade and reverse together. Bounded completion and isolated detail scrolling reduce return work. Seven affected native cases, two geometry unit cases and a recorded repeat passed with final sources; 13/30-paper OCR/return checks and 50-millisecond motion review verify the result. Signed Release installed; all twelve encrypted normal receipts/originals/preferences unchanged. [Evidence](docs/evidence/t06-wallet-transition/README.md). T07 remains unapproved.
 
@@ -103,7 +103,7 @@ The main chat coordinates these task chats. The user approves one task at a time
 - Acceptance criteria: Saved purchases are findable by merchant/item; corrections are reflected; deleted records disappear; 500 synthetic receipts remain practical to browse/search; original evidence is reachable from results.
 - Tests: Search create/edit/delete consistency, merchant/raw/normalized/SKU coverage, supported multilingual examples, restart and a 500-receipt performance/usability sample.
 - Risk/notes: No semantic search, AI chat, cloud backend or mandatory multiple wallets. Camera testing is the next phase after the simulator demo, not part of this task.
-- Chat: 01a117d0-ee31-7363-9ee0-f0b9986d83f2 (local; implementation verified, handoff ready)
+- Chat: 01a117d0-ee31-7363-9ee0-f0b9986d83f2 (local; implementation verified, handoff ready); archived 2026-10-09
 
 - Verification evidence: 83 hosted unit passes, one hardware-only skip and seven native cases passed; final large-text spacing and retained-return follow-up are scoped in the manifest. The 500-fictional-receipt sample covers browsing, Unicode, filters and source access. Release signature/Debug-control exclusion verified; normal encrypted wallet unchanged. [Contract and complete demo review](docs/SEARCH.md), [exact results and source scope](docs/evidence/t07-search/validation-summary.json). Main-chat independent review and normal Release restoration passed; all twelve encrypted receipts/originals/preferences are unchanged. Planned milestone commit: `feat: add local purchase history and receipt search`.
 
@@ -133,3 +133,59 @@ Next task: guided physical iPhone test of Face ID/passcode and camera capture, a
 Previous task: app lock and receipt checkmarks (`ea03a41`). Current milestone: demo visual refinement. The wallet’s upward motion lifted the fixed-size pocket backing off the bottom safe area, exposing receipt paper below the controls. The backing now grows by the upward travel so its top follows the wallet while its bottom keeps covering the screen. Existing feathering, wallet motion and control positions remain intact.
 
 The old source reproduced the issue during partial scrolling. Two native cases passed after the fix: bottom pixel coverage through both scroll directions with a tappable import control, and repeated receipt detail/return layering and position checks. Both Simulator and unsigned physical SDK Release builds passed. [Before/after and validation](docs/evidence/t08-bottom-cover/README.md). Next task remains the guided physical iPhone camera and Face ID check, awaiting approval.
+
+## Phase 2 — Personal on-device accuracy release
+
+Created at the user's request on 2026-10-09. All five chats are idle after reading the planning documents. Creation is not approval to begin implementation. Run P2-01 through P2-05 sequentially, accepting dependencies and requesting the next approval in Main. Later scopes can be refined using the audit, without starting them early.
+
+Common constraints: entirely on-device recognition and evaluation; personal testing on the China-market iPhone 15 Pro without an Apple Intelligence requirement; no cloud uploads or TestFlight. Preserve originals, installed data, stable app/storage identifiers and local Personal Team signing settings. Keep raw receipt images, OCR and labels out of Git. Main owns user questions, independent review and signed commits/push.
+
+## P2-01 · Recognition failure audit
+
+- Status: prepared; awaiting dependencies and explicit main-chat approval.
+- Dependencies: none; explicit approval to start is pending
+- Goal: Separate capture, text recognition, layout association and interpretation failures using reproducible checked references.
+- Scope: Start with the existing five references and available problematic phone photos. Specify a private corpus expansion toward 30 purchases, grouped by purchase and split into development/held-out sets. Measure per-store fields, exact item amounts, omissions/extras and latency/correction effort where actual phone measurements are available.
+- Acceptance: A private reproducible baseline, aggregate failure report with denominators and limitations, and a ranked experiment plan. Unmeasured phone metrics remain explicitly pending. No production recognition change in this audit.
+- Validation: Reproduce checked evaluation results, validate scoring and receipt-level set separation; synthetic scorer checks for missing/extra lines.
+- Chat: 01a11f0a-0bc6-7490-90fc-8b250e2c593f (local; idle, no implementation started)
+
+## P2-02 · Capture and document layout
+
+- Status: prepared; awaiting dependencies and explicit main-chat approval.
+- Dependencies: P2-01 accepted; separate approval
+- Goal: Improve capture and document structure only where measurements show a benefit.
+- Scope: Use the audit to choose image quality/crop/perspective experiments and compare accurate text OCR with Vision document recognition. Retain original photos/orientation and map processed coordinates back to original evidence. Preserve long and mixed-language receipts.
+- Acceptance: Before/after scoring on identical inputs, correct source highlights, a conservative fallback and latency results. Promote improvements only when correction burden improves without material retailer regressions.
+- Validation: Target identified failures, image orientation/source mapping, long-receipt retention, fallback and relevant actual-device checks.
+- Chat: 01a11f0a-a799-7613-a539-649aea09f8dc (local; idle, no implementation started)
+
+## P2-03 · Retailer parsing accuracy
+
+- Status: prepared; awaiting dependencies and explicit main-chat approval.
+- Dependencies: P2-01 and P2-02 accepted; separate approval
+- Goal: Improve interpretation of No Frills, Costco and T&T receipt layouts.
+- Scope: Implement evidence-driven item/amount pairing, wrapped lines, quantity/weight, discounts, taxes/deposits and total rules with a conservative generic fallback. Keep ambiguity visible. Money arithmetic stays deterministic.
+- Acceptance: Per-store development and held-out comparisons, omissions/extras and no unacceptable regressions. Never tune rules using held-out labels; matching totals alone do not establish correctness.
+- Validation: Real failure regressions and independent arithmetic checks; unseen purchase scoring without fixture-specific rules.
+- Chat: 01a11f0a-b32c-79e2-935a-f827fdb443f8 (local; idle, no implementation started)
+
+## P2-04 · Faster receipt corrections
+
+- Status: prepared; awaiting dependencies and explicit main-chat approval.
+- Dependencies: P2-03 accepted; separate approval
+- Goal: Reduce the time and edits needed to finish a receipt.
+- Scope: Design compact issue-first review, easier original-image comparison and focused edits/retries. Preserve paper/Liquid Glass styling, accessibility, stable wallet transitions, provenance, Save draft and explicit review/reconciliation before Finish.
+- Acceptance: Timed phone walkthroughs for normal, long and deliberately difficult receipts demonstrate less correction effort. Distinguish measured results from remaining user checks.
+- Validation: Meaningful correction/source/retry flows, draft restrictions, long-receipt clearance, accessibility and relevant transition checks.
+- Chat: 01a11f0a-ba3e-7900-8104-a84e50f4758e (local; idle, no implementation started)
+
+## P2-05 · Personal v0.2 release readiness
+
+- Status: prepared; awaiting dependencies and explicit main-chat approval.
+- Dependencies: P2-04 accepted; separate approval
+- Goal: Make the personal v0.2 build restorable and repeatably testable.
+- Scope: Add portable encrypted export/restore for receipts, originals, revisions and related data, independent of the device-bound storage key. Validate files transactionally in an isolated store; copying SQLite alone is insufficient. Prepare upgrade/offline/lifecycle and shopping-session checks.
+- Acceptance: Successful isolated restore with evidence/revision preservation, safe cancellation/error handling, upgrade data preservation and recorded phone release checks. Accuracy/correction targets must be measured or reported unmet; no TestFlight/cloud.
+- Validation: Export/restore integrity and failure cases, upgrade preservation, offline import/camera, Face ID/passcode, interruptions, long originals, search and exact split verification.
+- Chat: 01a11f0a-c1bc-7f10-a798-f1160a895919 (local; idle, no implementation started)

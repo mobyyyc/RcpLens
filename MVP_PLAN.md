@@ -39,7 +39,7 @@ The proposed next version focuses on recognition accuracy, correction effort, po
 
 ## Execution
 
-The original planning chat remains the user's main point of contact. Earlier tasks have dedicated historical chats; do not create additional chats without an explicit request. Approve one next task at a time here, verify its changes, commit/push the verified result, then report the preceding task, current milestone, actual commit message/hash and proposed next task before asking for approval. Default to one app implementation task at a time. The next-version roadmap remains a draft; its first proposed task is the recognition failure audit. Keep TASKS.md and PROGRESS.md current and avoid creating distant implementation tasks.
+The original planning chat remains the user's main point of contact. The seven Phase 1 chats are archived. The user requested five Phase 2 chats on 2026-10-09; P2-01 through P2-05 are prepared and await sequential task approvals. Do not create additional chats without an explicit request. Approve one next task at a time here, verify its changes, commit/push the verified result, then report the preceding task, current milestone, actual commit message/hash and proposed next task before asking for approval. Default to one app implementation task at a time. The next-version roadmap remains a draft; its first proposed task is the recognition failure audit. Keep TASKS.md and PROGRESS.md current and avoid creating distant implementation tasks.
 
 Detailed acceptance criteria and test requirements are in TASKS.md. Keep the registry concise; do not create distant-roadmap tasks.
 

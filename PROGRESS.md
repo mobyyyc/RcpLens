@@ -168,3 +168,9 @@ A draft [v0.2 roadmap](docs/NEXT_VERSION.md) proposes diagnosis, capture/layout 
 ### v0.2 preferences confirmed · 2026-10-09
 
 The user confirmed that recognition must remain entirely on-device for the next version and that the next build is for personal testing to improve everyday accuracy. Cloud evaluation and friend/TestFlight distribution are outside v0.2. These preference replies do not approve the proposed recognition audit; implementation remains pending explicit approval.
+
+## Phase 2 task preparation and archive · 2026-10-09
+
+At the user's request, archived the seven completed Phase 1 implementation chats (T01–T07) while preserving their project records and evidence. Created five corresponding Phase 2 chats: recognition failure audit, capture/document layout, retailer parsing, faster corrections and personal v0.2 release readiness. Each initial turn only read planning documents and confirmed that dependencies and separate main-chat approval are required; no evaluations or implementation started. Main and the five chats are grouped in “Sliplet · Phase 2” in execution order.
+
+TASKS.md now records scopes, dependencies, validation requirements and actual chat IDs. Updated the workflow and roadmap to reflect prepared chats and continued one-task-at-a-time approvals. Recognition stays entirely on-device and the build is for personal testing. Next task: P2-01 recognition failure audit, awaiting approval.

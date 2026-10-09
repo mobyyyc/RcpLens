@@ -28,7 +28,7 @@ Photograph a normal No Frills, Costco or T&T receipt, correct a small number of 
 | 4. Make corrections faster | Compact issue-first review, convenient original-image comparison and focused edits/retries for uncertain rows. Preserve normal review and Save draft. | Timed phone walkthroughs: fewer edits and faster review, including long receipts and one deliberately bad image. Fully reconciled does not automatically mean fully accurate. |
 | 5. Prepare the personal v0.2 build | Portable encrypted export/restore for receipts and originals, safe upgrades, offline/lifecycle checks and a repeatable release checklist. | Restore into an isolated test store, confirm original images and revisions, retain existing data across an upgrade, and complete repeated real shopping/import/review/search/split sessions on the iPhone. |
 
-The first implementation task proposed for approval is **Recognition failure audit and expanded baseline**. Subsequent task details should use its findings; do not dispatch all milestones at once.
+The first implementation task proposed for approval is **Recognition failure audit and expanded baseline**. The user requested five corresponding Phase 2 chats on 2026-10-09; they are prepared as P2-01 through P2-05 in TASKS.md, with implementation pending. Subsequent task details should use the audit findings; do not dispatch all milestones at once.
 
 ## Measurement and release gates
 
@@ -54,4 +54,4 @@ Then consider a small trusted-tester release and feedback workflow. Multiple wal
 
 ## Working rhythm
 
-Keep the user in this main chat. For each approved task, report the preceding task, current milestone, verification, actual commit message/hash and proposed next task, then ask for approval. Do not create new chats unless explicitly requested. This draft does not authorize another implementation task.
+Keep the user in this main chat. For each approved task, report the preceding task, current milestone, verification, actual commit message/hash and proposed next task, then ask for approval. The requested five Phase 2 chats now exist and wait for separate task approvals. Creating these chats does not authorize implementation. Do not create additional chats unless explicitly requested.
