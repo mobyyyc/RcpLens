@@ -223,6 +223,20 @@ final class ReceiptWorkspace {
         change(&draft)
         if draft != previous { draft.sourceChecked = false; draft.sourceOpened = false }
     }
+    /// Focused sheets edit a local copy; cancel never touches the receipt or its review confirmation.
+    func applyFocusedCorrection(_ input: ReceiptReviewDraft, check: ReceiptReviewGuidance, markChecked: Bool = true) {
+        guard active, flow == .review, !saving, image != nil, !privacyCovered, ReceiptFocusedCorrection.canApply(input, replacing: draft) else { return }
+        updateDraft { $0 = input }
+        draft.sourceOpened = true // The original was displayed in the focused comparison.
+        draft.sourceChecked = false // One check never confirms every field/purchase.
+        if !check.requiresCorrection && markChecked {
+            if draft.guidanceChecks == nil { draft.guidanceChecks = [:] }
+            let signature = check.signature(in: draft)
+            draft.guidanceChecks?[check.id] = signature
+        } else if !markChecked {
+            draft.guidanceChecks?[check.id] = nil
+        }
+    }
     func save(asDraft: Bool) {
         guard active, !saving, let store, let image, let extraction,
               asDraft ? draft.canSaveDraft : draft.canFinalize else { return }
@@ -415,6 +429,13 @@ final class ReceiptWorkspace {
             let settings = ReceiptWalletSettings(paperAppearance: ProcessInfo.processInfo.arguments.contains("--t05-white-paper") ? .alwaysWhite : .matchAppearance)
             try await store.saveWalletSettings(settings)
             walletSettings = settings
+            if SyntheticNativePreview.mode.hasPrefix("correction-") {
+                let (bytes, extraction, draft) = try SyntheticCorrectionPreview.fixture(SyntheticNativePreview.mode)
+                _ = try await store.create(extraction: extraction, originalImage: bytes, mediaType: "image/png", correction: draft.fields,
+                    review: .draft, reviewInput: JSONEncoder().encode(draft), permit: permit)
+                receipts = try await store.receipts()
+                return
+            }
             if ["search", "search-large"].contains(SyntheticNativePreview.mode) {
                 for index in 0..<count {
                     try Task.checkCancellation()

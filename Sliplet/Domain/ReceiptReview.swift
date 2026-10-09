@@ -26,6 +26,8 @@ struct ReceiptReviewDraft: Codable, Equatable, Sendable {
     var subtotalNotPrinted = false
     var sourceOpened = false
     var sourceChecked = false
+    /// Optional for backward-compatible decoding of installed drafts. Checks are scoped to current values.
+    var guidanceChecks: [String: String]? = nil
 
     init() {}
     init(parsed: ParsedReceipt) {

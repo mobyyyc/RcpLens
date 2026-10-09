@@ -1,0 +1,30 @@
+{
+  "compactGuidanceCountsSorted": [
+    4,
+    5,
+    5,
+    5,
+    7
+  ],
+  "partialCorrectionAndSaveGate": "passed",
+  "privateCaptureCount": 5,
+  "privateContentPrinted": false,
+  "provenanceAndAcknowledgmentRoundTrip": "passed",
+  "rawDiagnosticCountsSorted": [
+    13,
+    16,
+    18,
+    19,
+    21
+  ],
+  "signatureRepeatsPerCheck": 30,
+  "task": "P2-04",
+  "unpricedSourceIDsCovered": 72,
+  "compiledSourceSHA256": {
+    "Sliplet/Domain/Receipt.swift": "2686a3364a00784c4520b7fbbe5f99d250e945b12465b6be34291f3a63e13766",
+    "Sliplet/Domain/ReceiptSplit.swift": "4e81f57f311d43bd21055ecceb8855efc4aaa9b0d9724a34162a1fb6de26c482",
+    "Sliplet/Domain/ReceiptReview.swift": "a8d82159859512f5a44610881fdc7e80f8b72775799e713ae113a83e92fc9849",
+    "Sliplet/Domain/ReceiptReviewGuidance.swift": "cb1c3bba33f1ff4dc313df5cb58f30fb7bb64352973bc4b3b517777eb9ddfab3",
+    "Sliplet/Parsing/Parsing.swift": "6b9b5a7371777763863ecc633b8ed3a94ca26b68c04e804b01970c07c5c35325"
+  }
+}

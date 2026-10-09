@@ -1,0 +1,15 @@
+{
+  "unchangedPreexistingTrackedAppAndTestFiles": 42,
+  "changedPreexistingFiles": [
+    "Sliplet/Diagnostics/SyntheticNativePreview.swift",
+    "Sliplet/Domain/ReceiptReview.swift",
+    "Sliplet/UI/ReceiptReviewView.swift",
+    "Sliplet/UI/ReceiptSourceView.swift",
+    "Sliplet/UI/ReceiptWorkspace.swift"
+  ],
+  "localSigningDiffUnchanged": true,
+  "baseHead": "a1f0a797331d726188733115a5cbc14bc2a2dfda",
+  "checkedReferencesUnchanged": true,
+  "privateOriginalsUnchanged": 5,
+  "acceptedPriorPrivateEvidenceFilesUnchanged": 186
+}

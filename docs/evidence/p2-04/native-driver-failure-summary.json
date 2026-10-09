@@ -1,0 +1,67 @@
+{
+  "devicesAndConfigurations" : [
+    {
+      "device" : {
+        "architecture" : "arm64",
+        "deviceId" : "0E164E9C-330F-4F39-829F-61AC7C12991D",
+        "deviceName" : "Sliplet-P204-Disposable",
+        "modelName" : "iPhone 15 Pro",
+        "osBuildNumber" : "24A434",
+        "osVersion" : "27.0",
+        "platform" : "iOS Simulator"
+      },
+      "expectedFailures" : 0,
+      "failedTests" : 2,
+      "passedTests" : 0,
+      "skippedTests" : 0,
+      "testPlanConfiguration" : {
+        "configurationId" : "1",
+        "configurationName" : "Test Scheme Action"
+      }
+    }
+  ],
+  "environmentDescription" : "T05Workflow · Built with macOS 27.0.1",
+  "expectedFailures" : 0,
+  "failedTests" : 2,
+  "finishTime" : 1791587093.159,
+  "passedTests" : 0,
+  "result" : "Failed",
+  "runtimeWarnings" : [
+    {
+      "issueType" : "Runtime Warning",
+      "message" : "Invalid frame dimension (negative or non-finite)."
+    },
+    {
+      "issueType" : "Runtime Warning",
+      "message" : "Invalid frame dimension (negative or non-finite)."
+    }
+  ],
+  "skippedTests" : 0,
+  "startTime" : 1791587048.679,
+  "statistics" : [
+
+  ],
+  "testFailures" : [
+    {
+      "failureText" : "Failed to get matching snapshot: No matches found for Elements matching predicate '\"focusedLineName\" IN identifiers' from input {(\n    Window (Main),\n    Other,\n    Other,\n    Other,\n    Other,\n    Other,\n    Other,\n    Other,\n    Other,\n    Other,\n    Other,\n    Other,\n    Other,\n    NavigationBar, identifier: 'Review receipt',\n    Other,\n    Toolbar, identifier: 'Toolbar', label: 'Toolbar',\n    Other, identifier: 'focusedCorrectionScreen',\n    Button, identifier: 'back', label: 'Cancel',\n    StaticText, label: 'Review receipt',\n    Other,\n    Other,\n    Other,\n    NavigationBar, identifier: 'Check unassigned amounts',\n    Other,\n    Toolbar, identifier: 'Toolbar', label: 'Toolbar',\n    Other,\n    Other,\n    Other,\n    StaticText, label: 'Check unassigned amounts',\n    Other,\n    Other,\n    Other,\n    Button, identifier: 'original', label: 'Original',\n    Other,\n    Other,\n    Other,\n    Other,\n    CollectionView, identifier: 'reviewScreen',\n    Button, identifier: 'saveDraft', label: 'Save draft',\n    Button, identifier: 'finishSave', label: 'Finish', Disabled,\n    Button, identifier: 'cancelFocusedCorrection', label: 'Cancel',\n    Button, identifier: 'applyFocusedCorrection', label: 'Apply',\n    Other,\n    Other,\n    Other,\n    Other,\n    Cell,\n    Cell,\n    Cell,\n    Other,\n    Cell,\n    Other,\n    Cell,\n    Other,\n    Cell,\n    Cell,\n    Cell,\n    Other,\n    Cell,\n    Other,\n    Cell,\n    Other,\n    Cell,\n    Other, label: 'Vertical scroll bar, 3 pages', value: 0%,\n    CollectionView, identifier: 'focusedCorrectionForm',\n    Other,\n    Other,\n    Other,\n    Other,\n    Other,\n    Other,\n    Other,\n    Other,\n    Other,\n    Other,\n    Other,\n    Other,\n    Other,\n    Other,\n    Other,\n    Other,\n    Other,\n    Other,\n    Other,\n    Other,\n    Other,\n    Other,\n    Other,\n    Other,\n    Other,\n    Other,\n    Other,\n    Other,\n    Other,\n    Cell,\n    Other,\n    Cell,\n    Cell,\n    Cell,\n    Other,\n    Cell,\n    Other,\n    Cell,\n    Cell,\n    Cell,\n    Other,\n    Cell,\n    Other,\n    Other,\n    Cell,\n    Cell,\n    Other, label: 'Vertical scroll bar, 2 pages', value: 0%,\n    Other,\n    Other,\n    Other,\n    Other,\n    Other,\n    Other,\n    Other,\n    Other,\n    Other,\n    Other,\n    Other,\n    Other,\n    Other,\n    Other,\n    Other,\n    Other,\n    Other,\n    Other,\n    Other,\n    Other,\n    Other,\n    Other,\n    Other,\n    Other,\n    Other,\n    Other,\n    Other,\n    Other,\n    Other,\n    Other,\n    Other,\n    Other,\n    Other,\n    Other,\n    Other,\n    Other,\n    Other,\n    Other,\n    Other,\n    Other,\n    Other,\n    Other,\n    Other,\n    Other,\n    Other,\n    Other,\n    Other,\n    Other,\n    Other,\n    Other,\n    Other,\n    Other,\n    Other,\n    Other,\n    Other,\n    Other,\n    Other,\n    Other,\n    Other,\n    Other,\n    Other,\n    Other,\n    Other,\n    Other,\n    Other,\n    Other,\n    Other,\n    Other,\n    Other,\n    Other,\n    StaticText, label: 'Check first',\n    Button, identifier: 'reviewCheck-evidence-Check unassigned text-source', label: 'Check unassigned text, Some text has no linked amount. Check for a missing purchase or wrapped description; store headers need no purchase.',\n    Button, identifier: 'reviewCheck-evidence-Check unassigned amounts-source', label: 'Check unassigned amounts, Check the printed item and its full line amount. A unit price must not replace a missing line amount.',\n    Button, identifier: 'reviewCheck-difference', label: 'Check the difference, Compare every purchase and adjustment with the original. Matching totals alone never confirms accuracy.',\n    StaticText, label: 'These checks can miss errors. Matching totals alone do not establish accuracy.',\n    StaticText, label: 'Receipt',\n    TextField, identifier: 'merchantField', label: 'Merchant', placeholderValue: 'Required', value: FICTIONAL NO FRILL...,\n    StaticText, label: 'Merchant',\n    Button, identifier: 'dateField', label: 'Date, Oct 9, 2026',\n    Button, identifier: 'currencyField', label: 'Currency, CAD',\n    StaticText, label: 'Currency',\n    StaticText, label: 'Use printed line amounts. Leave unknown quantities blank.',\n    StaticText, label: 'Items',\n    Other,\n    Other,\n    Other,\n    Other,\n    Other,\n    Other,\n    Other,\n    Other,\n    Other,\n    Other,\n    Other,\n    StaticText, label: 'Check unassigned text',\n    Image, identifier: 'doc.text.magnifyingglass', label: 'Search Document',\n    StaticText, label: 'Some text has no linked amount. Check for a missing purchase or wrapped description; store headers need no purchase.',\n    Image, identifier: 'chevron.right', label: 'Forward',\n    StaticText, label: 'Check unassigned amounts',\n    Image, identifier: 'doc.text.magnifyingglass', label: 'Search Document',\n    StaticText, label: 'Check the printed item and its full line amount. A unit price must not replace a missing line amount.',\n    Image, identifier: 'chevron.right', label: 'Forward',\n    StaticText, label: 'Check the difference',\n    Image, identifier: 'doc.text.magnifyingglass', label: 'Search Document',\n    StaticText, label: 'Compare every purchase and adjustment with the original. Matching totals alone never confirms accuracy.',\n    Image, identifier: 'chevron.right', label: 'Forward',\n    StaticText, label: 'Date, Oct 9, 2026',\n    StaticText, label: 'Date',\n    StaticText, label: 'CAD',\n    StaticText, label: 'Check the printed item and its full line amount. A unit price must not replace a missing line amount.',\n    StaticText, label: 'Original comparison',\n    ScrollView, identifier: 'focusedSourceImage',\n    Button, identifier: 'focusedZoomIn', label: 'Zoom in',\n    Button, identifier: 'focusedZoomOut', label: 'Zoom out',\n    Button, identifier: 'focusedZoomReset', label: 'Reset zoom',\n    Button, identifier: 'expandFocusedOriginal', label: 'Expand original',\n    StaticText, label: 'Compare the photo; read text may contain errors.',\n    StaticText, label: 'Missing or wrapped line',\n    Button, identifier: 'focusedExistingLine', label: 'Existing line, Unnamed line',\n    StaticText, label: 'Existing line',\n    Button, identifier: 'focusedAddPurchase', label: 'Add purchase from this row',\n    Button, identifier: 'focusedLinkRow', label: 'Link this row to selected line',\n    StaticText, label: 'Focused line',\n    TextField, identifier: 'focusedLineAmount', label: 'Line amount', placeholderValue: 'Missing',\n    StaticText, label: 'Line amount',\n    Image, identifier: 'focusedSourceRaster', label: 'Original receipt image', value: Zoom 41 percent, i...,\n    Other, label: 'Vertical scroll bar, 2 pages', value: 73%,\n    Other, label: 'Horizontal scroll bar, 1 page', value: 0%,\n    StaticText, label: 'Unnamed line',\n    StaticText, label: 'Add purchase from this row',\n    Image, identifier: 'plus', label: 'Add',\n    Other,\n    Other\n)}",
+      "targetName" : "SlipletUITests",
+      "testIdentifier" : 1,
+      "testIdentifierString" : "ReceiptCorrectionUITests/testDifficultSourceRowsAddCancelInvalidApplyDraftReopen()",
+      "testIdentifierURL" : "test://com.apple.xcode/Sliplet/SlipletUITests/ReceiptCorrectionUITests/testDifficultSourceRowsAddCancelInvalidApplyDraftReopen",
+      "testName" : "testDifficultSourceRowsAddCancelInvalidApplyDraftReopen()"
+    },
+    {
+      "failureText" : "Failed to get matching snapshot: No matches found for Descendants matching type Switch from input {(\n    Application, pid: 70626, label: 'Sliplet'\n)}",
+      "targetName" : "SlipletUITests",
+      "testIdentifier" : 2,
+      "testIdentifierString" : "ReceiptCorrectionUITests/testFocusedLongDarkApplyOriginalReturnAndFinish()",
+      "testIdentifierURL" : "test://com.apple.xcode/Sliplet/SlipletUITests/ReceiptCorrectionUITests/testFocusedLongDarkApplyOriginalReturnAndFinish",
+      "testName" : "testFocusedLongDarkApplyOriginalReturnAndFinish()"
+    }
+  ],
+  "title" : "Test - T05Workflow",
+  "topInsights" : [
+
+  ],
+  "totalTestCount" : 2
+}

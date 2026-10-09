@@ -136,7 +136,7 @@ The old source reproduced the issue during partial scrolling. Two native cases p
 
 ## Phase 2 — Personal on-device accuracy release
 
-Created at the user's request on 2026-10-09. P2-01 was separately approved and completed; the remaining four chats await their own task approvals. Creation alone is not approval to begin implementation. Run P2-01 through P2-05 sequentially, accepting dependencies and requesting the next approval in Main. Later scopes can be refined using the audit, without starting them early.
+Created at the user's request on 2026-10-09. P2-01 through P2-03 were separately approved and accepted; P2-04 was separately approved and has a review-ready implementation handoff. P2-05 awaits its own approval. Creation alone is not approval to begin implementation. Run P2-01 through P2-05 sequentially, accepting dependencies and requesting the next approval in Main. Later scopes can be refined using the audit, without starting them early.
 
 Common constraints: entirely on-device recognition and evaluation; personal testing on the China-market iPhone 15 Pro without an Apple Intelligence requirement; no cloud uploads or TestFlight. Preserve originals, installed data, stable app/storage identifiers and local Personal Team signing settings. Keep raw receipt images, OCR and labels out of Git. Main owns user questions, independent review and signed commits/push.
 
@@ -175,18 +175,19 @@ Common constraints: entirely on-device recognition and evaluation; personal test
 
 ## P2-04 · Faster receipt corrections
 
-- Status: prepared; awaiting dependencies and explicit main-chat approval.
+- Status: implementation independently accepted by Main (2026-10-09); timed physical-phone acceptance and accuracy/time goals remain pending.
 - Dependencies: P2-03 accepted; separate approval
 - Goal: Reduce the time and edits needed to finish a receipt.
 - Scope: Design compact issue-first review, easier original-image comparison and focused edits/retries. Preserve paper/Liquid Glass styling, accessibility, stable wallet transitions, provenance, Save draft and explicit review/reconciliation before Finish.
 - Acceptance: Timed phone walkthroughs for normal, long and deliberately difficult receipts demonstrate less correction effort. Distinguish measured results from remaining user checks.
-- Validation: Meaningful correction/source/retry flows, draft restrictions, long-receipt clearance, accessibility and relevant transition checks.
-- Chat: 01a11f0a-ba3e-7900-8104-a84e50f4758e (local; idle, no implementation started)
+- Validation: 48 unique unit passes; final two scoped native methods pass, broader four-pass/one-timeout result retained; unsigned iPhone SDK Release passes. Focused corrections, source/draft/split gates, field routing, long return and structural large-text checks verified. Phone timings/shortcuts remain pending; no new OCR retry replacement feature.
+- Report: [Focused correction behavior, verification and phone walkthrough](docs/FASTER_CORRECTIONS.md); [Main acceptance](docs/evidence/p2-04/main-chat-review.json). Milestone commit message: `feat: add focused receipt corrections`. P2-05 awaits separate approval.
+- Chat: 01a11f0a-ba3e-7900-8104-a84e50f4758e (local; approved P2-04 implementation)
 
 ## P2-05 · Personal v0.2 release readiness
 
 - Status: prepared; awaiting dependencies and explicit main-chat approval.
-- Dependencies: P2-04 accepted; separate approval
+- Dependencies: P2-04 implementation accepted; pending phone correction/accuracy measurements remain release checks; separate approval
 - Goal: Make the personal v0.2 build restorable and repeatably testable.
 - Scope: Add portable encrypted export/restore for receipts, originals, revisions and related data, independent of the device-bound storage key. Validate files transactionally in an isolated store; copying SQLite alone is insufficient. Prepare upgrade/offline/lifecycle and shopping-session checks.
 - Acceptance: Successful isolated restore with evidence/revision preservation, safe cancellation/error handling, upgrade data preservation and recorded phone release checks. Accuracy/correction targets must be measured or reported unmet; no TestFlight/cloud.

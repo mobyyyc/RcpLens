@@ -1,0 +1,109 @@
+{
+  "task": "P2-04",
+  "date": "2026-10-09",
+  "timezone": "America/Toronto",
+  "baseHead": "a1f0a797331d726188733115a5cbc14bc2a2dfda",
+  "acceptance": "Implementation independently accepted; timed physical-phone acceptance remains pending.",
+  "productionSourceHashesMatchHandoff": true,
+  "sourceHashCount": 51,
+  "independentCompiledDomainMatchesFinalSources": true,
+  "domainCheck": {
+    "compactGuidanceCountsSorted": [
+      4,
+      5,
+      5,
+      5,
+      7
+    ],
+    "partialCorrectionAndSaveGate": "passed",
+    "privateCaptureCount": 5,
+    "privateContentPrinted": false,
+    "provenanceAndAcknowledgmentRoundTrip": "passed",
+    "rawDiagnosticCountsSorted": [
+      13,
+      16,
+      18,
+      19,
+      21
+    ],
+    "signatureRepeatsPerCheck": 30,
+    "task": "P2-04",
+    "unpricedSourceIDsCovered": 72,
+    "compiledSourceSHA256": {
+      "Sliplet/Domain/Receipt.swift": "2686a3364a00784c4520b7fbbe5f99d250e945b12465b6be34291f3a63e13766",
+      "Sliplet/Domain/ReceiptSplit.swift": "4e81f57f311d43bd21055ecceb8855efc4aaa9b0d9724a34162a1fb6de26c482",
+      "Sliplet/Domain/ReceiptReview.swift": "a8d82159859512f5a44610881fdc7e80f8b72775799e713ae113a83e92fc9849",
+      "Sliplet/Domain/ReceiptReviewGuidance.swift": "cb1c3bba33f1ff4dc313df5cb58f30fb7bb64352973bc4b3b517777eb9ddfab3",
+      "Sliplet/Parsing/Parsing.swift": "6b9b5a7371777763863ecc633b8ed3a94ca26b68c04e804b01970c07c5c35325"
+    }
+  },
+  "preservation": {
+    "unchangedPreexistingTrackedAppAndTestFiles": 42,
+    "changedPreexistingFiles": [
+      "Sliplet/Diagnostics/SyntheticNativePreview.swift",
+      "Sliplet/Domain/ReceiptReview.swift",
+      "Sliplet/UI/ReceiptReviewView.swift",
+      "Sliplet/UI/ReceiptSourceView.swift",
+      "Sliplet/UI/ReceiptWorkspace.swift"
+    ],
+    "localSigningDiffUnchanged": true,
+    "baseHead": "a1f0a797331d726188733115a5cbc14bc2a2dfda",
+    "checkedReferencesUnchanged": true,
+    "privateOriginalsUnchanged": 5,
+    "acceptedPriorPrivateEvidenceFilesUnchanged": 186
+  },
+  "finalBaselineFilesUnchanged": 42,
+  "baselineIncludesSyntheticImageResource": true,
+  "finalPreexistingChangedFiles": [
+    "Sliplet/Diagnostics/SyntheticNativePreview.swift",
+    "Sliplet/Domain/ReceiptReview.swift",
+    "Sliplet/UI/ReceiptReviewView.swift",
+    "Sliplet/UI/ReceiptSourceView.swift",
+    "Sliplet/UI/ReceiptWorkspace.swift"
+  ],
+  "localSigningDiffPreserved": true,
+  "nativeFinalScopedResultIndependentlyRead": {
+    "result": "Passed",
+    "passedTests": 2,
+    "failedTests": 0,
+    "skippedTests": 0,
+    "runtimeWarnings": [
+      {
+        "issueType": "Runtime Warning",
+        "message": "Invalid frame dimension (negative or non-finite)."
+      },
+      {
+        "issueType": "Runtime Warning",
+        "message": "Invalid frame dimension (negative or non-finite)."
+      }
+    ]
+  },
+  "unitEvidence": "12 final correction cases and 36 unchanged workflow/split cases across scoped bundles; not a single final-source 48-case run.",
+  "broaderUIResult": "Four passes and one combined long-dark navigation timeout retained. Scoped long-dark source return and field-routing/restart cases subsequently pass; original wall-pause cause remains unestablished.",
+  "unsignedIOSRelease": "Final app sources compile successfully for iPhone SDK Release; no signing, phone installation or phone performance certification.",
+  "visualReview": {
+    "fictionalScreenshotsInspected": [
+      "normal-light-focused.png",
+      "long-dark-focused.png",
+      "large-text-editor.png",
+      "dark-group-confirmation.png",
+      "difficult-dark-reopened.png",
+      "long-dark-full-source-check.png",
+      "long-dark-finished.png"
+    ],
+    "findings": "Relevant photo and amount visible in normal and long editors; group toggle discernible in dark mode; source confirmation and storage footer reachable. Large text remains scrollable; structural audit does not certify full VoiceOver or contrast.",
+    "failedRecordingInspected": "Original sheet closed and ordinary review visible near items25-27; source confirmation remained farther down. No assumption that timeout was solely a driver issue."
+  },
+  "cleanup": {
+    "taskSimulatorRemoved": true,
+    "normalSimulatorsStillPresent": true
+  },
+  "remainingAcceptance": [
+    "Human correction time/effort on normal, long and difficult real receipts",
+    "Physical source alignment, accessibility and immediate Split Done to Edit",
+    "Phone latency and responsiveness; runtime frame/priority warnings retained",
+    "Accuracy remains at accepted P2-03 baseline; no held-out purchases or 95-percent claim"
+  ],
+  "nextTask": "P2-05 remains unstarted and requires separate approval; pending correction/accuracy measurements remain release checks.",
+  "plannedCommitMessage": "feat: add focused receipt corrections"
+}

@@ -1,0 +1,79 @@
+[
+  {
+    "file": "normal-light-focused.png",
+    "sha256": "f643ad1953fcdafa3f1019605674d19e7e21ffff2a1dd74cf0063993f1b32715",
+    "resultBundle": "/tmp/sliplet-p204-ui-confirmed.xcresult",
+    "originalAttachment": "A69ED8B9-7947-43B8-A2AA-C2F4DB7F27A2.png",
+    "content": "fictional fixture only"
+  },
+  {
+    "file": "normal-dark-focused.png",
+    "sha256": "a697ef060bbde6179245e6cf7ebabe7fd22c6850133fe9cbe4a37992205926c2",
+    "resultBundle": "/tmp/sliplet-p204-ui-confirmed.xcresult",
+    "originalAttachment": "A0802801-909C-43F3-8843-880FA2D939BA.png",
+    "content": "fictional fixture only"
+  },
+  {
+    "file": "long-light-focused.png",
+    "sha256": "d9a30ddda0e312a768e50ed6664798658706df3a007d5383a80795c331bca356",
+    "resultBundle": "/tmp/sliplet-p204-ui-confirmed.xcresult",
+    "originalAttachment": "19662CC9-CC59-48FA-A6D9-BA17B86D7E7F.png",
+    "content": "fictional fixture only"
+  },
+  {
+    "file": "long-dark-focused.png",
+    "sha256": "712b3b614589f58590ba94b13ee4676135829931b36d8afc4c75087839afaf93",
+    "resultBundle": "/tmp/sliplet-p204-ui-confirmed.xcresult",
+    "originalAttachment": "A8B1E01D-2791-47C7-A9E7-AE5637394467.png",
+    "content": "fictional fixture only"
+  },
+  {
+    "file": "large-text-editor.png",
+    "sha256": "ec5c586307e1e05f5e9fcae920f36901c0916dff151349491996a8935af058fb",
+    "resultBundle": "/tmp/sliplet-p204-ui-confirmed.xcresult",
+    "originalAttachment": "9E59B219-EFFA-4746-AE60-8E6BEEED2606.png",
+    "content": "fictional fixture only"
+  },
+  {
+    "file": "dark-group-confirmation.png",
+    "sha256": "ae9b8043266c1405e2dfba752713d9899eda3c4b4b049f4d5315cd2d44dcdf42",
+    "resultBundle": "/tmp/sliplet-p204-ui-confirmed.xcresult",
+    "originalAttachment": "8A16D5A2-3F99-4250-99C7-3D56B2743A7B.png",
+    "content": "fictional fixture only"
+  },
+  {
+    "file": "difficult-dark-reopened.png",
+    "sha256": "6c5fc4a84c38fe2d87c5141302250f3af3a6c7be73dc0546d1522f140a4727df",
+    "resultBundle": "/tmp/sliplet-p204-ui-routing-final.xcresult",
+    "originalAttachment": "704ECF23-448A-410E-BD32-77E6FBECDDEC.png",
+    "content": "fictional fixture only"
+  },
+  {
+    "file": "difficult-light-reopened.png",
+    "sha256": "bc8db83781d0eda4236ceb7f4fa1cbd7312424e910a275c3b5447a8bb17b86c1",
+    "resultBundle": "/tmp/sliplet-p204-ui-routing-final.xcresult",
+    "originalAttachment": "839B3CFD-D9A8-4FCF-BAE2-8D1C30DE0388.png",
+    "content": "fictional fixture only"
+  },
+  {
+    "file": "long-dark-finished.png",
+    "sha256": "4f16eb7a68140e6df6b0c9d17e5241899f0c71227a6ad78b3001e464a7ae5220",
+    "resultBundle": "/tmp/sliplet-p204-ui-routing-final.xcresult",
+    "originalAttachment": "9599856F-B710-4A1E-A9BF-7A762C18630A.png",
+    "content": "fictional fixture only"
+  },
+  {
+    "file": "long-dark-full-source-check.png",
+    "sha256": "5016fd08f2f2d677101dab8600bfde66d7f17bf6444922d8dd97d2fde77a05ae",
+    "resultBundle": "/tmp/sliplet-p204-ui-routing-final.xcresult",
+    "originalAttachment": "AC033E99-3D66-4E7E-B821-CB780BF357DF.png",
+    "content": "fictional fixture only"
+  },
+  {
+    "file": "long-dark-after-original-return.png",
+    "sha256": "5daffc6d38b4cf92d3529fd70b03668d7f2d60cff487fd036752efaf35a8ae18",
+    "resultBundle": "/tmp/sliplet-p204-ui-routing-final.xcresult",
+    "originalAttachment": "A9E2C098-F096-4C95-B7AE-0CB9FD62A06F.png",
+    "content": "fictional fixture only"
+  }
+]

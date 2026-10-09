@@ -1,0 +1,235 @@
+{
+  "task": "P2-04",
+  "date": "2026-10-09",
+  "timezone": "America/Toronto",
+  "status": "implementation ready for independent Main review; human phone metrics pending",
+  "baseHead": "a1f0a797331d726188733115a5cbc14bc2a2dfda",
+  "commitOrPushPerformed": false,
+  "p205Started": false,
+  "environment": {
+    "device": "task-created iPhone 15 Pro Simulator",
+    "runtime": "iOS 27.0, 24A434",
+    "simulatorID": "0E164E9C-330F-4F39-829F-61AC7C12991D",
+    "developerDirectory": "/Applications/Xcode.app/Contents/Developer",
+    "physicalPhoneInstalledOrTested": false
+  },
+  "sourceScope": {
+    "finalSwiftFiles": 51,
+    "finalAppSwiftFiles": 36,
+    "hashes": "source-hashes.json",
+    "MainCompiledDomainHashesMatch": true,
+    "preexistingAppAndTestFilesUnchanged": 42,
+    "preexistingChangedFiles": [
+      "Sliplet/Diagnostics/SyntheticNativePreview.swift",
+      "Sliplet/Domain/ReceiptReview.swift",
+      "Sliplet/UI/ReceiptReviewView.swift",
+      "Sliplet/UI/ReceiptSourceView.swift",
+      "Sliplet/UI/ReceiptWorkspace.swift"
+    ],
+    "signingDiffUnchanged": true,
+    "parserRecognitionStorageWalletAndSplitSourcesUnchanged": true,
+    "afterConfirmedUIAppChange": "focused Form accessibility identifier only; focus behavior unchanged",
+    "finalScopedUIUsesFinalAppAndTestSources": true,
+    "finalReleaseUsesFinalAppSources": true
+  },
+  "unitVerification": {
+    "uniquePassingCases": 48,
+    "meaning": "36 unchanged workflow/split cases plus 12 current correction cases; earlier eight correction passes overlap",
+    "earlier44": {
+      "result": "Passed",
+      "totalTestCount": 44,
+      "passedTests": 44,
+      "failedTests": 0,
+      "skippedTests": 0,
+      "runtimeWarnings": [
+        {
+          "issueType": "Runtime Warning",
+          "message": "[Internal] Thread running at User-initiated quality-of-service class waiting on a lower QoS thread running at Default quality-of-service class. Investigate ways to avoid priority inversions"
+        }
+      ],
+      "testFailures": []
+    },
+    "current12": {
+      "result": "Passed",
+      "totalTestCount": 12,
+      "passedTests": 12,
+      "failedTests": 0,
+      "skippedTests": 0,
+      "runtimeWarnings": [],
+      "testFailures": []
+    },
+    "bundles": [
+      "/tmp/sliplet-p204-unit-final.xcresult",
+      "/tmp/sliplet-p204-unit-handoff.xcresult"
+    ],
+    "commands": [
+      "/Applications/Xcode.app/Contents/Developer/usr/bin/xcodebuild -project Sliplet.xcodeproj -scheme Sliplet -destination \"platform=iOS Simulator,id=0E164E9C-330F-4F39-829F-61AC7C12991D\" -derivedDataPath /tmp/sliplet-p204-build \"-only-testing:SlipletTests/ReceiptCorrectionTests\" \"-only-testing:SlipletTests/ReceiptWorkflowTests\" \"-only-testing:SlipletTests/ReceiptSplitTests\" -resultBundlePath /tmp/sliplet-p204-unit-final.xcresult -parallel-testing-enabled NO test",
+      "/Applications/Xcode.app/Contents/Developer/usr/bin/xcodebuild -project Sliplet.xcodeproj -scheme Sliplet -destination \"platform=iOS Simulator,id=0E164E9C-330F-4F39-829F-61AC7C12991D\" -derivedDataPath /tmp/sliplet-p204-build \"-only-testing:SlipletTests/ReceiptCorrectionTests\" -resultBundlePath /tmp/sliplet-p204-unit-handoff.xcresult -parallel-testing-enabled NO test"
+    ],
+    "reuseReason": "Only focused UI focus/accessibility targeting changed after model verification; domain hashes remain equal to independent Main check."
+  },
+  "nativeVerification": {
+    "confirmedBroadRun": {
+      "result": "Failed",
+      "totalTestCount": 5,
+      "passedTests": 4,
+      "failedTests": 1,
+      "skippedTests": 0,
+      "runtimeWarnings": [
+        {
+          "issueType": "Runtime Warning",
+          "message": "Invalid frame dimension (negative or non-finite)."
+        },
+        {
+          "issueType": "Runtime Warning",
+          "message": "Invalid frame dimension (negative or non-finite)."
+        },
+        {
+          "issueType": "Runtime Warning",
+          "message": "Invalid frame dimension (negative or non-finite)."
+        },
+        {
+          "issueType": "Runtime Warning",
+          "message": "Invalid frame dimension (negative or non-finite)."
+        },
+        {
+          "issueType": "Runtime Warning",
+          "message": "Invalid frame dimension (negative or non-finite)."
+        }
+      ],
+      "testFailures": [
+        {
+          "failureText": "Failed to synthesize event: Timed out while synthesizing event.",
+          "targetName": "SlipletUITests",
+          "testIdentifier": 4,
+          "testIdentifierString": "ReceiptCorrectionUITests/testFocusedNormalAndLongLightDarkCancelCompareApplyAndFinish()",
+          "testIdentifierURL": "test://com.apple.xcode/Sliplet/SlipletUITests/ReceiptCorrectionUITests/testFocusedNormalAndLongLightDarkCancelCompareApplyAndFinish",
+          "testName": "testFocusedNormalAndLongLightDarkCancelCompareApplyAndFinish()"
+        }
+      ]
+    },
+    "confirmedBroadBundle": "/tmp/sliplet-p204-ui-confirmed.xcresult",
+    "confirmedBroadCommand": "/Applications/Xcode.app/Contents/Developer/usr/bin/xcodebuild -project /Users/moby/Desktop/cs/Sliplet/Sliplet.xcodeproj -scheme T05Workflow -destination \"platform=iOS Simulator,id=0E164E9C-330F-4F39-829F-61AC7C12991D\" -parallel-testing-enabled NO -derivedDataPath /tmp/sliplet-p204-build \"-only-testing:SlipletUITests/ReceiptCorrectionUITests\" -resultBundlePath /tmp/sliplet-p204-ui-confirmed.xcresult test",
+    "finalScopedRun": {
+      "result": "Passed",
+      "totalTestCount": 2,
+      "passedTests": 2,
+      "failedTests": 0,
+      "skippedTests": 0,
+      "runtimeWarnings": [
+        {
+          "issueType": "Runtime Warning",
+          "message": "Invalid frame dimension (negative or non-finite)."
+        },
+        {
+          "issueType": "Runtime Warning",
+          "message": "Invalid frame dimension (negative or non-finite)."
+        }
+      ],
+      "testFailures": []
+    },
+    "finalScopedBundle": "/tmp/sliplet-p204-ui-routing-final.xcresult",
+    "finalScopedCommand": "/Applications/Xcode.app/Contents/Developer/usr/bin/xcodebuild -project /Users/moby/Desktop/cs/Sliplet/Sliplet.xcodeproj -scheme T05Workflow -destination \"platform=iOS Simulator,id=0E164E9C-330F-4F39-829F-61AC7C12991D\" -parallel-testing-enabled NO -derivedDataPath /tmp/sliplet-p204-build \"-only-testing:SlipletUITests/ReceiptCorrectionUITests/testFocusedLongDarkApplyOriginalReturnAndFinish\" \"-only-testing:SlipletUITests/ReceiptCorrectionUITests/testDifficultSourceRowsAddCancelInvalidApplyDraftReopen\" -test-timeouts-enabled YES -maximum-test-execution-time-allowance 180 -resultBundlePath /tmp/sliplet-p204-ui-routing-final.xcresult test",
+    "coverage": [
+      "conventional long-form navigation only",
+      "normal light/dark and long light: cancel, scoped expanded zoom, explicit amount correction, original review, Finish, wallet reopen within retained combined method",
+      "long dark: isolated Apply, Original Done return, scrolling to full source confirmation, exact reconciliation and Finish",
+      "difficult light/dark: invalid typed values rejected, Cancel discards local edits, actual description/quantity/amount values asserted before Apply, Save draft, split finalization denied, process restart, persisted check and Finish still disabled",
+      "multi-row source highlight navigation and missing-coordinate fallback; explicit green group toggle; cancellation discards it",
+      "largest Dynamic Type initial and amount-editor viewports; detection/hit-region/description audit, expandable original"
+    ],
+    "notAllBroadTestsPassing": true,
+    "lastCombinedMethodFailureRetained": true,
+    "driverFixes": [
+      "unique focused Form target and explicit reviewScreen target",
+      "wait for focused/expanded/source sheet dismissal",
+      "dismiss keyboard using Done before scrolling",
+      "unloaded or empty frames scroll toward bottom; only a meaningful above-screen frame reverses direction",
+      "retain 45-gesture bound and stop after three observed stationary cell snapshots",
+      "do not query a missing target identifier for logs"
+    ]
+  },
+  "unsignedPhoneSDKRelease": {
+    "result": "Passed",
+    "log": "/tmp/sliplet-p204-release-form-final.log",
+    "command": "/Applications/Xcode.app/Contents/Developer/usr/bin/xcodebuild -project Sliplet.xcodeproj -scheme Sliplet -configuration Release -destination generic/platform=iOS -derivedDataPath /tmp/sliplet-p204-release CODE_SIGNING_ALLOWED=NO build",
+    "bundleIdentifier": "com.mobyyyc.RcpLens",
+    "signedOrInstalled": false
+  },
+  "fictionalInteractionCounts": {
+    "bundle": "/tmp/sliplet-p204-ui-confirmed.xcresult",
+    "longFullFormNavigationGestures": 18,
+    "lastAmountAdditionalGestures": 0,
+    "focusedEditorNavigationGestures": 0,
+    "focusedActivityGroups": {
+      "openCheck": 1,
+      "tapAmount": 1,
+      "typeAmount": 1,
+      "apply": 1
+    },
+    "scope": "Fictional missing last amount in a 36-purchase receipt; source checks, finishing, keyboard characters and human elapsed time are excluded. Conventional baseline reaches the field; baseline typing was not established.",
+    "humanSecondsMeasured": false,
+    "under30SecondGoalEstablished": false
+  },
+  "retainedFailures": [
+    {
+      "bundle": "/tmp/sliplet-p204-ui-handoff.xcresult",
+      "summary": "native-earlier-summary.json",
+      "reason": "Immediate Edit after Split Done failed; saved draft restart/reopen later verified. Direct shortcut still requires phone check."
+    },
+    {
+      "bundle": "/tmp/sliplet-p204-ui-confirmed.xcresult",
+      "summary": "native-confirmed-summary.json",
+      "reason": "Combined method timed out synthesizing long dark review drag after large wall-clock pauses; root cause unestablished. Recording shows ordinary review around items 25–27 with original sheet closed. Isolated return subsequently passes."
+    },
+    {
+      "bundle": "/tmp/sliplet-p204-ui-scoped.xcresult",
+      "summary": "native-scoped-earlier-summary.json",
+      "reason": "Quantity reveal exhausted 45 gestures; generic form selection and keyboard-covered gestures were replaced. Isolated long dark return passed."
+    },
+    {
+      "bundle": "/tmp/sliplet-p204-ui-form-final.xcresult",
+      "log": "/tmp/sliplet-p204-ui-form-final.log",
+      "reason": "Test-only invalid lastMatch on an element prevented compilation; corrected."
+    },
+    {
+      "bundle": "/tmp/sliplet-p204-ui-form-verified.xcresult",
+      "summary": "native-driver-failure-summary.json",
+      "reason": "Diagnostic logging queried identifier of an unloaded target; both tests failed before useful navigation. Conditional logging corrected."
+    }
+  ],
+  "warningsAndLimits": [
+    "Native launches report Invalid frame dimension (negative or non-finite); cause not established and warnings are retained, including two in the final passing scoped run.",
+    "Earlier unit bundle reports a priority-inversion runtime warning; current correction-only bundle has none.",
+    "Xcode diagnostic collector reports unavailable simctl despite DEVELOPER_DIR; result bundles contain actual results. Runner cleanup after test shutdown needs explicit task-Simulator boot/uninstall.",
+    "Native automation elapsed durations are not human editing seconds or phone latency.",
+    "Structural accessibility audit is not a complete VoiceOver/contrast certification.",
+    "Immediate Split Done → Edit and long Original Done → Review remain physical-phone checks; the latter has passing isolated Simulator evidence.",
+    "Five exposed development purchases; zero held-out purchases. P2-03 accuracy counters are unchanged and UI compactness is not accuracy."
+  ],
+  "privacyAndConservation": {
+    "fictionalScreenshotsOnly": true,
+    "privateInputsReadOrDisplayedByThisTask": false,
+    "MainIndependentCheck": "main-domain-check.json",
+    "MainPreservationCounters": "preservation.json",
+    "originalsUnchanged": 5,
+    "priorPrivateEvidenceFilesUnchanged": 186,
+    "cloudUploadTelemetryOrModelRequestsAdded": false,
+    "ocrBoxesIDsAndEncodedImageRetained": true,
+    "normalInstalledStoreOrPhoneTouched": false
+  },
+  "phoneProtocol": "../../FASTER_CORRECTIONS.md",
+  "cleanup": {
+    "disposableSimulatorRemoved": true,
+    "runnerUninstalledBeforeRemoval": true,
+    "actions": [
+      "boot",
+      "bootstatus",
+      "uninstall",
+      "shutdown",
+      "delete"
+    ],
+    "removedUUID": "0E164E9C-330F-4F39-829F-61AC7C12991D",
+    "otherSimulatorsChanged": false
+  }
+}

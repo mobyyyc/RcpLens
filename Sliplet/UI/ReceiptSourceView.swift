@@ -4,6 +4,7 @@ import UIKit
 struct ReceiptSourceView: View {
     @Bindable var workspace: ReceiptWorkspace
     @State private var mode = 0
+    @State private var zoomTarget = UUID()
     @Environment(\.dismiss) private var dismiss
     @Environment(\.accessibilityReduceMotion) private var systemReduceMotion
     private var reduceMotion: Bool { ReceiptAccessibility.reduceMotion(systemReduceMotion) }
@@ -17,14 +18,11 @@ struct ReceiptSourceView: View {
                 if workspace.privacyCovered || !workspace.active {
                     ContentUnavailableView("Original locked", systemImage: "lock")
                 } else if mode == 0, let image = workspace.image {
-                    ZoomReceiptImage(bytes: image.bytes, boxes: (workspace.extraction?.rawOCR ?? []).filter { workspace.sourceLineIDs.contains($0.id) }.compactMap(\.boundingBox), reduceMotion: reduceMotion)
+                    ZoomReceiptImage(bytes: image.bytes, boxes: (workspace.extraction?.rawOCR ?? []).filter { workspace.sourceLineIDs.contains($0.id) }.compactMap(\.boundingBox), reduceMotion: reduceMotion, zoomTarget: zoomTarget, rasterID: "sourceRaster")
                         .accessibilityIdentifier("sourceImage")
                     Text("Pinch, double-tap or use the zoom buttons. Highlights show where a line was read.")
                         .font(.footnote).foregroundStyle(.primary).padding()
-                    HStack {
-                        Button("Zoom in", systemImage: "plus.magnifyingglass") { NotificationCenter.default.post(name: .receiptZoomIn, object: nil) }
-                        Button("Zoom out", systemImage: "minus.magnifyingglass") { NotificationCenter.default.post(name: .receiptZoomOut, object: nil) }
-                    }.buttonStyle(ReceiptSecondaryStyle()).padding(.bottom)
+                    ReceiptSourceZoomControls(target: zoomTarget, prefix: "source").padding(.bottom)
                 } else {
                     List {
                         Section { Text("Text read from the original may contain errors or omissions. Check against the image.").font(.footnote) }
@@ -44,6 +42,7 @@ struct ReceiptSourceView: View {
 extension Notification.Name {
     static let receiptZoomIn = Notification.Name("Sliplet.sourceZoomIn")
     static let receiptZoomOut = Notification.Name("Sliplet.sourceZoomOut")
+    static let receiptZoomReset = Notification.Name("Sliplet.sourceZoomReset")
 }
 
 /// In-memory UIKit image view; no file output, disk thumbnails or web cache.
@@ -51,12 +50,16 @@ struct ZoomReceiptImage: UIViewRepresentable {
     let bytes: Data
     let boxes: [ReceiptOCRBox]
     let reduceMotion: Bool
+    let zoomTarget: UUID
+    let rasterID: String
     func makeCoordinator() -> Coordinator { Coordinator() }
     func makeUIView(context: Context) -> UIScrollView {
         let view = UIScrollView()
         view.backgroundColor = .systemBackground
         view.delegate = context.coordinator
         context.coordinator.reduceMotion = reduceMotion
+        context.coordinator.boxes = boxes
+        context.coordinator.zoomTarget = zoomTarget
         view.maximumZoomScale = 8
         view.minimumZoomScale = 0.01
         let imageView = context.coordinator.imageView
@@ -66,6 +69,7 @@ struct ZoomReceiptImage: UIViewRepresentable {
         imageView.frame = CGRect(origin: .zero, size: size)
         imageView.isAccessibilityElement = true
         imageView.accessibilityLabel = "Original receipt image"
+        imageView.accessibilityIdentifier = rasterID
         imageView.accessibilityHint = "Pinch, double tap, or use the zoom buttons. Printed text provides an OCR alternative."
         view.addSubview(imageView); view.contentSize = size
         for box in boxes {
@@ -88,6 +92,10 @@ struct ZoomReceiptImage: UIViewRepresentable {
             let fit = view.bounds.width / max(1, context.coordinator.imageView.bounds.width)
             view.minimumZoomScale = fit; view.maximumZoomScale = max(fit * 8, 2)
             view.setZoomScale(fit, animated: false)
+            if let region = ReceiptSourceGeometry.focus(boxes: context.coordinator.boxes, size: context.coordinator.imageView.bounds.size) {
+                view.zoom(to: region, animated: false)
+            }
+            context.coordinator.describePosition(view)
         }
     }
     static func dismantleUIView(_ view: UIScrollView, coordinator: Coordinator) {
@@ -99,18 +107,38 @@ struct ZoomReceiptImage: UIViewRepresentable {
         weak var scrollView: UIScrollView?
         var fitted = false
         var reduceMotion = false
+        var boxes: [ReceiptOCRBox] = []
+        var zoomTarget = UUID()
         private var tokens: [NSObjectProtocol] = []
         func viewForZooming(in scrollView: UIScrollView) -> UIView? { imageView }
+        func scrollViewDidZoom(_ scrollView: UIScrollView) { describePosition(scrollView) }
+        func scrollViewDidScroll(_ scrollView: UIScrollView) { describePosition(scrollView) }
+        func describePosition(_ view: UIScrollView) {
+            let range = max(1, view.contentSize.height - view.bounds.height)
+            let position = Int(min(100, max(0, view.contentOffset.y / range * 100)))
+            imageView.accessibilityValue = "Zoom \(Int(view.zoomScale * 100)) percent, image position \(position) percent"
+            // A long raster's offscreen accessibility frame must not cover navigation controls.
+            let visible = view.convert(view.bounds, to: imageView).intersection(imageView.bounds)
+            if !visible.isNull && !visible.isEmpty {
+                imageView.accessibilityFrame = UIAccessibility.convertToScreenCoordinates(visible, in: imageView)
+            }
+        }
         @objc func doubleTap(_ gesture: UITapGestureRecognizer) {
             guard let view = scrollView else { return }
             view.setZoomScale(view.zoomScale > view.minimumZoomScale * 1.5 ? view.minimumZoomScale : min(view.maximumZoomScale, view.minimumZoomScale * 3), animated: !reduceMotion && !UIAccessibility.isReduceMotionEnabled)
         }
         func observeZoom() {
-            tokens = [(.receiptZoomIn, 1.6), (.receiptZoomOut, 1 / 1.6)].map { name, factor in
-                NotificationCenter.default.addObserver(forName: name, object: nil, queue: .main) { [weak self] _ in
+            tokens = [(.receiptZoomIn, 1.6), (.receiptZoomOut, 1 / 1.6), (.receiptZoomReset, 0)].map { name, factor in
+                NotificationCenter.default.addObserver(forName: name, object: nil, queue: .main) { [weak self] notification in
+                    let target = notification.userInfo?["target"] as? UUID
                     MainActor.assumeIsolated {
-                        guard let view = self?.scrollView else { return }
-                        view.setZoomScale(min(view.maximumZoomScale, max(view.minimumZoomScale, view.zoomScale * factor)), animated: !(self?.reduceMotion ?? true) && !UIAccessibility.isReduceMotionEnabled)
+                        guard let self, target == self.zoomTarget, let view = self.scrollView else { return }
+                        if factor == 0 {
+                            view.setZoomScale(view.minimumZoomScale, animated: false)
+                            view.setContentOffset(.zero, animated: false)
+                        } else {
+                            view.setZoomScale(min(view.maximumZoomScale, max(view.minimumZoomScale, view.zoomScale * factor)), animated: !self.reduceMotion && !UIAccessibility.isReduceMotionEnabled)
+                        }
                     }
                 }
             }
@@ -135,5 +163,34 @@ struct ZoomReceiptImage: UIViewRepresentable {
             UIColor.systemBackground.setFill(); context.fill(CGRect(origin: .zero, size: size))
             original.draw(in: CGRect(origin: .zero, size: size))
         }
+    }
+}
+
+
+struct ReceiptSourceZoomControls: View {
+    let target: UUID
+    let prefix: String
+    private func signal(_ name: Notification.Name) { NotificationCenter.default.post(name: name, object: nil, userInfo: ["target": target]) }
+    var body: some View {
+        HStack {
+            Button("Zoom in", systemImage: "plus.magnifyingglass") { signal(.receiptZoomIn) }.accessibilityIdentifier(prefix + "ZoomIn")
+            Button("Zoom out", systemImage: "minus.magnifyingglass") { signal(.receiptZoomOut) }.accessibilityIdentifier(prefix + "ZoomOut")
+            Button("Reset zoom", systemImage: "arrow.down.right.and.arrow.up.left") { signal(.receiptZoomReset) }.accessibilityIdentifier(prefix + "ZoomReset")
+        }.labelStyle(.iconOnly).buttonStyle(ReceiptSecondaryStyle())
+    }
+}
+
+/// A display-only region. Neither source coordinates nor encoded original bytes are rewritten.
+enum ReceiptSourceGeometry {
+    static func focus(boxes: [ReceiptOCRBox], size: CGSize) -> CGRect? {
+        guard size.width > 0, size.height > 0, !boxes.isEmpty else { return nil }
+        let bounds = CGRect(origin: .zero, size: size)
+        let union = boxes.reduce(CGRect.null) { region, box in
+            region.union(CGRect(x: box.x * size.width, y: (1 - box.y - box.height) * size.height,
+                               width: box.width * size.width, height: box.height * size.height))
+        }.intersection(bounds)
+        guard !union.isNull, !union.isEmpty else { return nil }
+        // Keep surrounding context; the full image remains scrollable and resettable.
+        return union.insetBy(dx: -size.width * 0.08, dy: -max(size.width * 0.12, union.height * 0.5)).intersection(bounds)
     }
 }

@@ -6,6 +6,10 @@ struct ReceiptReviewView: View {
     @Environment(\.dynamicTypeSize) private var typeSize
     @State private var selectingDate = false
     @State private var pendingDate = Date()
+    @State private var focusedCheck: ReceiptReviewGuidance?
+    @State private var allChecks = false
+    @State private var showChecked = false
+    private var checks: [ReceiptReviewGuidance] { ReceiptReviewGuidance.checks(draft: workspace.draft, extraction: workspace.extraction) }
 
     private func field(_ key: WritableKeyPath<ReceiptReviewDraft, String>) -> Binding<String> {
         Binding(get: { workspace.draft[keyPath: key] }, set: { value in workspace.updateDraft { $0[keyPath: key] = value } })
@@ -13,17 +17,23 @@ struct ReceiptReviewView: View {
     var body: some View {
         Form {
             Section {
-                Label("Check details against the original.", systemImage: "doc.text.magnifyingglass")
-                    .font(.subheadline).foregroundStyle(.primary)
-                if let extraction = workspace.extraction {
-                    if extraction.issues.contains(where: { $0.code == "date_order_check" }) {
-                        Label("The printed date order is ambiguous. Verify month and day.", systemImage: "calendar.badge.exclamationmark").font(.subheadline)
-                    }
-                    if extraction.issues.contains(where: { $0.code == "amount_unparsed_check_source" }) {
-                        Label("Some numeric source rows were not parsed. Check for omitted lines or totals.", systemImage: "exclamationmark.triangle").font(.subheadline)
-                    }
+                let pending = checks.filter { !$0.isChecked(in: workspace.draft) }
+                ForEach(Array(pending.prefix(allChecks ? pending.count : 3))) { check in
+                    checkButton(check)
                 }
-            }
+                if pending.count > 3 {
+                    Button(allChecks ? "Show fewer checks" : "Show all \(pending.count) checks") { allChecks.toggle() }
+                        .frame(minHeight: 44).accessibilityIdentifier("showAllChecks")
+                }
+                let checked = checks.filter { $0.isChecked(in: workspace.draft) }
+                if !checked.isEmpty {
+                    DisclosureGroup("\(checked.count) checked", isExpanded: $showChecked) {
+                        ForEach(checked) { check in checkButton(check) }
+                    }.accessibilityIdentifier("checkedGuidance")
+                }
+                if pending.isEmpty { Text("Review every field and purchase against the original.").font(.subheadline) }
+            } header: { Text("Check first").foregroundStyle(Color(uiColor: .label)) }
+            footer: { Text("These checks can miss errors. Matching totals alone do not establish accuracy.").foregroundStyle(Color(uiColor: .label)) }
             Section {
                 LabeledContent("Merchant") { TextField("Required", text: field(\.merchant), axis: typeSize > .large ? .vertical : .horizontal).multilineTextAlignment(.trailing).focused(editing, equals: "merchant").accessibilityIdentifier("merchantField") }
                 Button {
@@ -98,6 +108,9 @@ struct ReceiptReviewView: View {
         .scrollClipDisabled().scrollEdgeEffectStyle(.soft, for: .vertical)
         .contentMargins(.bottom, 28, for: .scrollContent)
         .accessibilityIdentifier("reviewScreen")
+        .sheet(item: $focusedCheck) { check in
+            ReceiptFocusedCorrectionView(workspace: workspace, check: check)
+        }
         .sheet(isPresented: $selectingDate) {
             NavigationStack {
                 ScrollView {
@@ -124,6 +137,23 @@ struct ReceiptReviewView: View {
                     }
             }.presentationDetents([.medium, .large])
         }
+    }
+    private func checkButton(_ check: ReceiptReviewGuidance) -> some View {
+        Button {
+            editing.wrappedValue = nil
+            focusedCheck = check
+        } label: {
+            HStack(spacing: 12) {
+                Image(systemName: check.isChecked(in: workspace.draft) ? "checkmark.circle" : "doc.text.magnifyingglass")
+                VStack(alignment: .leading, spacing: 4) {
+                    Text(check.title).font(.body.weight(.medium))
+                    Text(check.message).font(.footnote)
+                }
+                Spacer(minLength: 0)
+                Image(systemName: "chevron.right").font(.caption)
+            }.foregroundStyle(.primary).frame(minHeight: 44)
+        }.buttonStyle(.borderless).accessibilityIdentifier("reviewCheck-" + check.id)
+            .accessibilityHint("Opens focused editing and original photo comparison")
     }
     private var reconciliation: some View {
         VStack(alignment: .leading, spacing: 10) {
