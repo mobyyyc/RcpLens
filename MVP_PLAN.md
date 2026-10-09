@@ -31,11 +31,15 @@ Status: demo implementation complete in Simulator; user review pending. T06 exac
 
 Exit: a saved real receipt produces an exact split and is findable by purchased item later.
 
-## Next phase, not task-broken yet
-Physical iPhone 15 Pro camera capture, phone-specific performance/privacy validation, repeated personal dogfood, reliability hardening and eventual trusted testers.
+## Next phase proposal · 2026-10-09
+
+The user has tested the iPhone 15 Pro build and reports that Face ID and the other app functions work well, with receipt recognition the remaining major weakness. Camera capture and privacy/UI follow-ups are implemented. This feedback does not replace a measured recognition or full device-protection test.
+
+The proposed next version focuses on recognition accuracy, correction effort, portable restore and everyday reliability before purchase-memory features. See [draft v0.2 roadmap](docs/NEXT_VERSION.md). Next-task implementation is not yet approved; privacy and test-audience preferences are pending.
 
 ## Execution
-Tasks are separate user-owned chats in the Sliplet project, coordinated from the original planning chat. The user approves one next task at a time here; the main chat starts and follows its execution chat, verifies acceptance, commits/pushes verified changes, then reports completion, current milestone, commit message/hash and next task and asks for approval. Stop before starting another task. T01–T06 are complete and accepted; approved T07 is implemented and verified, independently reviewed and ready for user review. Default order is T01, T02, T03, T04, T05, T06, T07. T05 requires T02 design approval plus T03/T04. T06/T07 follow T05. The main chat updates task status and evidence in TASKS.md and PROGRESS.md while preserving other entries.
+
+The original planning chat remains the user's main point of contact. Earlier tasks have dedicated historical chats; do not create additional chats without an explicit request. Approve one next task at a time here, verify its changes, commit/push the verified result, then report the preceding task, current milestone, actual commit message/hash and proposed next task before asking for approval. Default to one app implementation task at a time. The next-version roadmap remains a draft; its first proposed task is the recognition failure audit. Keep TASKS.md and PROGRESS.md current and avoid creating distant implementation tasks.
 
 Detailed acceptance criteria and test requirements are in TASKS.md. Keep the registry concise; do not create distant-roadmap tasks.
 

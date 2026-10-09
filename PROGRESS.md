@@ -158,3 +158,9 @@ Next task: guided physical iPhone test of Face ID/passcode and camera capture, a
 Previous task: app lock and receipt checkmarks (`ea03a41`). Current milestone: demo visual refinement. The wallet’s upward motion lifted the fixed-size pocket backing off the bottom safe area, exposing receipt paper below the controls. The backing now grows by the upward travel so its top follows the wallet while its bottom keeps covering the screen. Existing feathering, wallet motion and control positions remain intact.
 
 The old source reproduced the issue during partial scrolling. Two native cases passed after the fix: bottom pixel coverage through both scroll directions with a tappable import control, and repeated receipt detail/return layering and position checks. Both Simulator and unsigned physical SDK Release builds passed. [Before/after and validation](docs/evidence/t08-bottom-cover/README.md). Next task remains the guided physical iPhone camera and Face ID check, awaiting approval.
+
+## Physical-device feedback and next-version planning · 2026-10-09
+
+The user tested Sliplet on their iPhone 15 Pro and reports that Face ID and the rest of the app work well, while receipt recognition is poor. Record this as user device feedback; quantitative receipt accuracy, correction time and hardware-protection certification have not been established by this report. Recognition is now the main usability bottleneck.
+
+A draft [v0.2 roadmap](docs/NEXT_VERSION.md) proposes diagnosis, capture/layout experiments, retailer parsing, faster correction and personal release/restore readiness, followed later by purchase memory. It preserves the established interface and offline core. Recognition privacy and next-test audience preferences are pending; implementation requires approval of the next task. No app code or extraction settings changed for planning.
