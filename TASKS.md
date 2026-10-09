@@ -1,6 +1,6 @@
 # Task registry
 
-The main chat coordinates these task chats. Phase 1 task chats T01–T07 were archived on 2026-10-09 after their implementation handoffs; their records and evidence below remain available. Phase 2 chats are prepared, not authorized to begin implementation. The user approves one task at a time in the main chat; the main chat verifies, commits/pushes and reports the result before requesting approval for the next task. Dependencies must be verified from actual files/results, not assumed from a chat title.
+The main chat coordinates these task chats. Phase 1 task chats T01–T07 were archived on 2026-10-09 after their implementation handoffs; their records and evidence below remain available. Phase 2 chats require separate task-specific approval; P2-01 was approved on 2026-10-09. The user approves one task at a time in the main chat; the main chat verifies, commits/pushes and reports the result before requesting approval for the next task. Dependencies must be verified from actual files/results, not assumed from a chat title.
 
 ## T01 — 01 · Xcode and SwiftUI foundation
 
@@ -136,19 +136,20 @@ The old source reproduced the issue during partial scrolling. Two native cases p
 
 ## Phase 2 — Personal on-device accuracy release
 
-Created at the user's request on 2026-10-09. All five chats are idle after reading the planning documents. Creation is not approval to begin implementation. Run P2-01 through P2-05 sequentially, accepting dependencies and requesting the next approval in Main. Later scopes can be refined using the audit, without starting them early.
+Created at the user's request on 2026-10-09. P2-01 was separately approved and completed; the remaining four chats await their own task approvals. Creation alone is not approval to begin implementation. Run P2-01 through P2-05 sequentially, accepting dependencies and requesting the next approval in Main. Later scopes can be refined using the audit, without starting them early.
 
 Common constraints: entirely on-device recognition and evaluation; personal testing on the China-market iPhone 15 Pro without an Apple Intelligence requirement; no cloud uploads or TestFlight. Preserve originals, installed data, stable app/storage identifiers and local Personal Team signing settings. Keep raw receipt images, OCR and labels out of Git. Main owns user questions, independent review and signed commits/push.
 
 ## P2-01 · Recognition failure audit
 
-- Status: prepared; awaiting dependencies and explicit main-chat approval.
-- Dependencies: none; explicit approval to start is pending
+- Status: complete and accepted after independent main-chat review (2026-10-09); ready for signed milestone commit.
+- Dependencies: none; user explicitly approved P2-01 in Main on 2026-10-09
 - Goal: Separate capture, text recognition, layout association and interpretation failures using reproducible checked references.
 - Scope: Start with the existing five references and available problematic phone photos. Specify a private corpus expansion toward 30 purchases, grouped by purchase and split into development/held-out sets. Measure per-store fields, exact item amounts, omissions/extras and latency/correction effort where actual phone measurements are available.
 - Acceptance: A private reproducible baseline, aggregate failure report with denominators and limitations, and a ranked experiment plan. Unmeasured phone metrics remain explicitly pending. No production recognition change in this audit.
 - Validation: Reproduce checked evaluation results, validate scoring and receipt-level set separation; synthetic scorer checks for missing/extra lines.
-- Chat: 01a11f0a-0bc6-7490-90fc-8b250e2c593f (local; idle, no implementation started)
+- Acceptance evidence: Unchanged production Swift recognition/parser compiled in an isolated local Mac worker. Historical, frozen Swift and fresh Vision/Swift runs all recover 57/66 exact purchase amounts, 2/5 totals and zero reconciled receipts. Five successful repeat pairs agree. Per-store counts, private failure-index evidence, conservative stage suspects, 30-purchase expansion/split plan and explicit unmeasured phone metrics are documented in [recognition audit](docs/RECOGNITION_AUDIT.md). Twelve new checks and 14 existing evaluation tests pass; independent rescoring/hash/purchase-separation verification passes. All five existing purchases remain development only; held-out set is empty. No production behavior, originals, installed receipts or signing settings changed. Main independently reproduced the archived/current scores, passed the 12 new checks and 14 unchanged historical checks, verified final evidence/source hashes and confirmed 46 existing app/test files plus the signing diff unchanged. P2-02 remains unstarted. See [Main review](docs/evidence/p2-01/main-chat-review.json).
+- Chat: 01a11f0a-0bc6-7490-90fc-8b250e2c593f (local; complete and independently accepted)
 
 ## P2-02 · Capture and document layout
 

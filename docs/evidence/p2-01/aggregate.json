@@ -1,0 +1,514 @@
+{
+  "schema_version": 1,
+  "task": "P2-01",
+  "measured_on": "Mac; not iPhone",
+  "environment": {
+    "macOS": "27.0.1",
+    "machine": "arm64",
+    "xcode": "Xcode 27.0\nBuild version 27A266a"
+  },
+  "source_head": "0c58fc98c17dc4e11aa1f8e615a07e3c5551a10d",
+  "source_sha256": {
+    "evaluation/receipt-audit/Worker.swift": "53d7828cda0db434060b2c815621dc0361e06862581c63ba62e069d09b960e3b",
+    "evaluation/receipt-audit/build.sh": "4ec088513970fec506a3471ab1ba7e9e65ade08c47337f5729a8318ba278d23f",
+    "evaluation/receipt-audit/audit.py": "1f1394d0efffa39269b0b4c95507a1309b44557ace08fb00c51fc4fd004c18db",
+    "evaluation/receipt-audit/verify.py": "4c864db08c5a4f009e22061910defb00c4fb7f1d56b4f01f5a458998545d084b",
+    "evaluation/receipt-audit/test_audit.py": "ce0d9ce3aff601507f5629f449c62059b5f92bb8ffd49dfae1b76c8350988492",
+    "evaluation/receipt-eval/evaluate.py": "7517a92a68e7ecfaea106c09e2d8cd2f1718fd34a96b4703175ea5bbf63d7e51",
+    "Sliplet/Domain/Receipt.swift": "2686a3364a00784c4520b7fbbe5f99d250e945b12465b6be34291f3a63e13766",
+    "Sliplet/Domain/ReceiptReview.swift": "9bdcd2ba0df1e61676a64deff786568b1c6e47df255e4ef6b0b0a77e26651246",
+    "Sliplet/Domain/ReceiptSplit.swift": "4e81f57f311d43bd21055ecceb8855efc4aaa9b0d9724a34162a1fb6de26c482",
+    "Sliplet/Domain/RecognizedText.swift": "6ada986903723b6f95af98299ef2e3a3dbe2c9818de729aa918f40cac43d90b9",
+    "Sliplet/Recognition/ReceiptImage.swift": "db41851944626c6daca911b695e51ddaa2b0fd2a3a68669493bc6f08da084c5e",
+    "Sliplet/Recognition/VisionTextRecognizer.swift": "da751a819d8b3aec9e552d2c11874bef885e7e1b3984fab12d38829628686d37",
+    "Sliplet/Parsing/Parsing.swift": "58db08b9056884a26c151e8ce3516adf9adb36e70f14e0ee23b547bbb403235f",
+    "Sliplet/Persistence/ReceiptStore.swift": "95b44c690d3cd9ce76a172e09035c22f00bb961a4837c72b15efec100d9dc7ef"
+  },
+  "worker_sha256": "b0ba8d02a0bd37aeaf59ea05d217e343d0df938bd8a54395a8020730f8b37fca",
+  "checked_purchases": 5,
+  "corpus_splits": {
+    "development": 5
+  },
+  "historical_python_reproduction": {
+    "all": {
+      "counts": {
+        "merchant_expected": 5,
+        "merchant_correct": 3,
+        "field_corrections": 7,
+        "date_expected": 5,
+        "date_correct": 3,
+        "subtotal_expected": 4,
+        "subtotal_correct": 4,
+        "total_expected": 5,
+        "total_correct": 2,
+        "lines_expected": 73,
+        "items_expected": 66,
+        "detected_lines": 61,
+        "line_amounts_correct": 61,
+        "item_amounts_correct": 57,
+        "amount_corrections": 0,
+        "omitted_lines": 12,
+        "invented_lines": 1,
+        "correction_operations": 20,
+        "receipts_scored": 5,
+        "reconciled": 0,
+        "omitted_purchases": 9,
+        "extra_purchase_proxies": 1,
+        "wrong_matched_purchase_amounts": 0
+      },
+      "line_failure_suspects": {},
+      "field_failure_evidence": {
+        "merchant_expected_brand_in_returned_header": 2
+      },
+      "mac_stage_ms_median": {
+        "decodeMS": null,
+        "ocrMS": null,
+        "parserMS": null
+      },
+      "mac_process_wall_ms_median": null,
+      "mac_process_wall_ms_max": null
+    },
+    "Costco": {
+      "counts": {
+        "merchant_expected": 2,
+        "merchant_correct": 2,
+        "field_corrections": 2,
+        "date_expected": 2,
+        "date_correct": 2,
+        "subtotal_expected": 2,
+        "subtotal_correct": 2,
+        "total_expected": 2,
+        "total_correct": 0,
+        "lines_expected": 44,
+        "items_expected": 37,
+        "detected_lines": 38,
+        "line_amounts_correct": 38,
+        "item_amounts_correct": 34,
+        "amount_corrections": 0,
+        "omitted_lines": 6,
+        "invented_lines": 0,
+        "correction_operations": 8,
+        "receipts_scored": 2,
+        "reconciled": 0,
+        "omitted_purchases": 3,
+        "extra_purchase_proxies": 0,
+        "wrong_matched_purchase_amounts": 0
+      },
+      "line_failure_suspects": {},
+      "field_failure_evidence": {},
+      "mac_stage_ms_median": {
+        "decodeMS": null,
+        "ocrMS": null,
+        "parserMS": null
+      },
+      "mac_process_wall_ms_median": null,
+      "mac_process_wall_ms_max": null
+    },
+    "No Frills": {
+      "counts": {
+        "merchant_expected": 2,
+        "merchant_correct": 0,
+        "field_corrections": 4,
+        "date_expected": 2,
+        "date_correct": 0,
+        "subtotal_expected": 2,
+        "subtotal_correct": 2,
+        "total_expected": 2,
+        "total_correct": 2,
+        "lines_expected": 26,
+        "items_expected": 26,
+        "detected_lines": 21,
+        "line_amounts_correct": 21,
+        "item_amounts_correct": 21,
+        "amount_corrections": 0,
+        "omitted_lines": 5,
+        "invented_lines": 0,
+        "correction_operations": 9,
+        "receipts_scored": 2,
+        "reconciled": 0,
+        "omitted_purchases": 5,
+        "extra_purchase_proxies": 0,
+        "wrong_matched_purchase_amounts": 0
+      },
+      "line_failure_suspects": {},
+      "field_failure_evidence": {
+        "merchant_expected_brand_in_returned_header": 2
+      },
+      "mac_stage_ms_median": {
+        "decodeMS": null,
+        "ocrMS": null,
+        "parserMS": null
+      },
+      "mac_process_wall_ms_median": null,
+      "mac_process_wall_ms_max": null
+    },
+    "T&T": {
+      "counts": {
+        "merchant_expected": 1,
+        "merchant_correct": 1,
+        "field_corrections": 1,
+        "date_expected": 1,
+        "date_correct": 1,
+        "total_expected": 1,
+        "total_correct": 0,
+        "lines_expected": 3,
+        "items_expected": 3,
+        "detected_lines": 2,
+        "line_amounts_correct": 2,
+        "item_amounts_correct": 2,
+        "amount_corrections": 0,
+        "omitted_lines": 1,
+        "invented_lines": 1,
+        "correction_operations": 3,
+        "receipts_scored": 1,
+        "reconciled": 0,
+        "omitted_purchases": 1,
+        "extra_purchase_proxies": 1,
+        "wrong_matched_purchase_amounts": 0
+      },
+      "line_failure_suspects": {},
+      "field_failure_evidence": {},
+      "mac_stage_ms_median": {
+        "decodeMS": null,
+        "ocrMS": null,
+        "parserMS": null
+      },
+      "mac_process_wall_ms_median": null,
+      "mac_process_wall_ms_max": null
+    }
+  },
+  "production_swift_frozen_ocr": {
+    "all": {
+      "counts": {
+        "merchant_expected": 5,
+        "merchant_correct": 3,
+        "field_corrections": 7,
+        "date_expected": 5,
+        "date_correct": 3,
+        "subtotal_expected": 4,
+        "subtotal_correct": 4,
+        "total_expected": 5,
+        "total_correct": 2,
+        "lines_expected": 73,
+        "items_expected": 66,
+        "detected_lines": 61,
+        "line_amounts_correct": 61,
+        "item_amounts_correct": 57,
+        "amount_corrections": 0,
+        "omitted_lines": 12,
+        "invented_lines": 1,
+        "correction_operations": 20,
+        "receipts_scored": 5,
+        "reconciled": 0,
+        "omitted_purchases": 9,
+        "extra_purchase_proxies": 1,
+        "wrong_matched_purchase_amounts": 0
+      },
+      "line_failure_suspects": {
+        "layout_association_suspect": 6,
+        "interpretation_or_description_match_suspect": 3,
+        "capture_or_ocr_or_transcription_unresolved": 3
+      },
+      "field_failure_evidence": {
+        "merchant_expected_brand_in_returned_header": 2
+      },
+      "mac_stage_ms_median": {
+        "decodeMS": null,
+        "ocrMS": null,
+        "parserMS": null
+      },
+      "mac_process_wall_ms_median": null,
+      "mac_process_wall_ms_max": null
+    },
+    "Costco": {
+      "counts": {
+        "merchant_expected": 2,
+        "merchant_correct": 2,
+        "field_corrections": 2,
+        "date_expected": 2,
+        "date_correct": 2,
+        "subtotal_expected": 2,
+        "subtotal_correct": 2,
+        "total_expected": 2,
+        "total_correct": 0,
+        "lines_expected": 44,
+        "items_expected": 37,
+        "detected_lines": 38,
+        "line_amounts_correct": 38,
+        "item_amounts_correct": 34,
+        "amount_corrections": 0,
+        "omitted_lines": 6,
+        "invented_lines": 0,
+        "correction_operations": 8,
+        "receipts_scored": 2,
+        "reconciled": 0,
+        "omitted_purchases": 3,
+        "extra_purchase_proxies": 0,
+        "wrong_matched_purchase_amounts": 0
+      },
+      "line_failure_suspects": {
+        "layout_association_suspect": 1,
+        "interpretation_or_description_match_suspect": 3,
+        "capture_or_ocr_or_transcription_unresolved": 2
+      },
+      "field_failure_evidence": {},
+      "mac_stage_ms_median": {
+        "decodeMS": null,
+        "ocrMS": null,
+        "parserMS": null
+      },
+      "mac_process_wall_ms_median": null,
+      "mac_process_wall_ms_max": null
+    },
+    "No Frills": {
+      "counts": {
+        "merchant_expected": 2,
+        "merchant_correct": 0,
+        "field_corrections": 4,
+        "date_expected": 2,
+        "date_correct": 0,
+        "subtotal_expected": 2,
+        "subtotal_correct": 2,
+        "total_expected": 2,
+        "total_correct": 2,
+        "lines_expected": 26,
+        "items_expected": 26,
+        "detected_lines": 21,
+        "line_amounts_correct": 21,
+        "item_amounts_correct": 21,
+        "amount_corrections": 0,
+        "omitted_lines": 5,
+        "invented_lines": 0,
+        "correction_operations": 9,
+        "receipts_scored": 2,
+        "reconciled": 0,
+        "omitted_purchases": 5,
+        "extra_purchase_proxies": 0,
+        "wrong_matched_purchase_amounts": 0
+      },
+      "line_failure_suspects": {
+        "capture_or_ocr_or_transcription_unresolved": 1,
+        "layout_association_suspect": 4
+      },
+      "field_failure_evidence": {
+        "merchant_expected_brand_in_returned_header": 2
+      },
+      "mac_stage_ms_median": {
+        "decodeMS": null,
+        "ocrMS": null,
+        "parserMS": null
+      },
+      "mac_process_wall_ms_median": null,
+      "mac_process_wall_ms_max": null
+    },
+    "T&T": {
+      "counts": {
+        "merchant_expected": 1,
+        "merchant_correct": 1,
+        "field_corrections": 1,
+        "date_expected": 1,
+        "date_correct": 1,
+        "total_expected": 1,
+        "total_correct": 0,
+        "lines_expected": 3,
+        "items_expected": 3,
+        "detected_lines": 2,
+        "line_amounts_correct": 2,
+        "item_amounts_correct": 2,
+        "amount_corrections": 0,
+        "omitted_lines": 1,
+        "invented_lines": 1,
+        "correction_operations": 3,
+        "receipts_scored": 1,
+        "reconciled": 0,
+        "omitted_purchases": 1,
+        "extra_purchase_proxies": 1,
+        "wrong_matched_purchase_amounts": 0
+      },
+      "line_failure_suspects": {
+        "layout_association_suspect": 1
+      },
+      "field_failure_evidence": {},
+      "mac_stage_ms_median": {
+        "decodeMS": null,
+        "ocrMS": null,
+        "parserMS": null
+      },
+      "mac_process_wall_ms_median": null,
+      "mac_process_wall_ms_max": null
+    }
+  },
+  "production_swift_fresh_ocr": {
+    "all": {
+      "counts": {
+        "merchant_expected": 5,
+        "merchant_correct": 3,
+        "field_corrections": 7,
+        "date_expected": 5,
+        "date_correct": 3,
+        "subtotal_expected": 4,
+        "subtotal_correct": 4,
+        "total_expected": 5,
+        "total_correct": 2,
+        "lines_expected": 73,
+        "items_expected": 66,
+        "detected_lines": 61,
+        "line_amounts_correct": 61,
+        "item_amounts_correct": 57,
+        "amount_corrections": 0,
+        "omitted_lines": 12,
+        "invented_lines": 1,
+        "correction_operations": 20,
+        "receipts_scored": 5,
+        "reconciled": 0,
+        "omitted_purchases": 9,
+        "extra_purchase_proxies": 1,
+        "wrong_matched_purchase_amounts": 0
+      },
+      "line_failure_suspects": {
+        "layout_association_suspect": 6,
+        "interpretation_or_description_match_suspect": 3,
+        "capture_or_ocr_or_transcription_unresolved": 3
+      },
+      "field_failure_evidence": {
+        "merchant_expected_brand_in_returned_header": 2
+      },
+      "mac_stage_ms_median": {
+        "decodeMS": 8.440971374511719,
+        "ocrMS": 222.43094444274902,
+        "parserMS": 9.742975234985352
+      },
+      "mac_process_wall_ms_median": 248.593375,
+      "mac_process_wall_ms_max": 321.593708
+    },
+    "Costco": {
+      "counts": {
+        "merchant_expected": 2,
+        "merchant_correct": 2,
+        "field_corrections": 2,
+        "date_expected": 2,
+        "date_correct": 2,
+        "subtotal_expected": 2,
+        "subtotal_correct": 2,
+        "total_expected": 2,
+        "total_correct": 0,
+        "lines_expected": 44,
+        "items_expected": 37,
+        "detected_lines": 38,
+        "line_amounts_correct": 38,
+        "item_amounts_correct": 34,
+        "amount_corrections": 0,
+        "omitted_lines": 6,
+        "invented_lines": 0,
+        "correction_operations": 8,
+        "receipts_scored": 2,
+        "reconciled": 0,
+        "omitted_purchases": 3,
+        "extra_purchase_proxies": 0,
+        "wrong_matched_purchase_amounts": 0
+      },
+      "line_failure_suspects": {
+        "layout_association_suspect": 1,
+        "interpretation_or_description_match_suspect": 3,
+        "capture_or_ocr_or_transcription_unresolved": 2
+      },
+      "field_failure_evidence": {},
+      "mac_stage_ms_median": {
+        "decodeMS": 9.678959846496582,
+        "ocrMS": 256.5409541130066,
+        "parserMS": 9.900987148284912
+      },
+      "mac_process_wall_ms_median": 285.0935415,
+      "mac_process_wall_ms_max": 321.593708
+    },
+    "No Frills": {
+      "counts": {
+        "merchant_expected": 2,
+        "merchant_correct": 0,
+        "field_corrections": 4,
+        "date_expected": 2,
+        "date_correct": 0,
+        "subtotal_expected": 2,
+        "subtotal_correct": 2,
+        "total_expected": 2,
+        "total_correct": 2,
+        "lines_expected": 26,
+        "items_expected": 26,
+        "detected_lines": 21,
+        "line_amounts_correct": 21,
+        "item_amounts_correct": 21,
+        "amount_corrections": 0,
+        "omitted_lines": 5,
+        "invented_lines": 0,
+        "correction_operations": 9,
+        "receipts_scored": 2,
+        "reconciled": 0,
+        "omitted_purchases": 5,
+        "extra_purchase_proxies": 0,
+        "wrong_matched_purchase_amounts": 0
+      },
+      "line_failure_suspects": {
+        "capture_or_ocr_or_transcription_unresolved": 1,
+        "layout_association_suspect": 4
+      },
+      "field_failure_evidence": {
+        "merchant_expected_brand_in_returned_header": 2
+      },
+      "mac_stage_ms_median": {
+        "decodeMS": 8.126497268676758,
+        "ocrMS": 227.36847400665283,
+        "parserMS": 9.146511554718018
+      },
+      "mac_process_wall_ms_median": 251.99193749999995,
+      "mac_process_wall_ms_max": 259.88441699999987
+    },
+    "T&T": {
+      "counts": {
+        "merchant_expected": 1,
+        "merchant_correct": 1,
+        "field_corrections": 1,
+        "date_expected": 1,
+        "date_correct": 1,
+        "total_expected": 1,
+        "total_correct": 0,
+        "lines_expected": 3,
+        "items_expected": 3,
+        "detected_lines": 2,
+        "line_amounts_correct": 2,
+        "item_amounts_correct": 2,
+        "amount_corrections": 0,
+        "omitted_lines": 1,
+        "invented_lines": 1,
+        "correction_operations": 3,
+        "receipts_scored": 1,
+        "reconciled": 0,
+        "omitted_purchases": 1,
+        "extra_purchase_proxies": 1,
+        "wrong_matched_purchase_amounts": 0
+      },
+      "line_failure_suspects": {
+        "layout_association_suspect": 1
+      },
+      "field_failure_evidence": {},
+      "mac_stage_ms_median": {
+        "decodeMS": 8.511066436767578,
+        "ocrMS": 193.94803047180176,
+        "parserMS": 5.134940147399902
+      },
+      "mac_process_wall_ms_median": 214.84900000000007,
+      "mac_process_wall_ms_max": 214.84900000000007
+    }
+  },
+  "equal_successful_repeat_pairs": 5,
+  "successful_repeat_pairs": 5,
+  "phone_latency_ms": null,
+  "human_correction_seconds": null,
+  "quantity_corrections": "excluded from Swift proxy; numeric quantity adapter cannot establish printed unit/semantics",
+  "failure_taxonomy": "automated evidence-location suspects; capture versus OCR and actual invented lines need human adjudication",
+  "preservation": {
+    "originals": true,
+    "archive": true,
+    "sources": true,
+    "signing_project": true
+  }
+}

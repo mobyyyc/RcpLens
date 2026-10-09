@@ -1,5 +1,7 @@
 # Receipt extraction evaluation
 
+Current production follow-up (2026-10-09): [P2-01 recognition audit](RECOGNITION_AUDIT.md) reproduces this five-reference pilot with frozen OCR/current Swift and fresh production Vision/current Swift, and reports per-store counts, failure evidence, purchase-level expansion and explicit pending phone measurements. The historical T03 model comparison below is preserved; no model benchmark or production recognition behavior was changed by P2-01.
+
 Date: 2026-10-07, America/Toronto. **Status: five-receipt pilot evaluated against independently human-verified labels; Vision plus deterministic parsing selected for the next manual-review demo.** No production app screens/storage were modified.
 
 ## Corpus and reference truth

@@ -1,0 +1,40 @@
+{
+  "task": "P2-01",
+  "independentProductionRescore": {
+    "merchant_expected": 5,
+    "merchant_correct": 3,
+    "date_expected": 5,
+    "date_correct": 3,
+    "subtotal_expected": 4,
+    "subtotal_correct": 4,
+    "total_expected": 5,
+    "total_correct": 2,
+    "lines_expected": 73,
+    "items_expected": 66,
+    "line_amounts_correct": 61,
+    "item_amounts_correct": 57,
+    "omitted_lines": 12,
+    "omitted_purchases": 9,
+    "invented_lines": 1
+  },
+  "matchedAggregate": true,
+  "productionSourcesUnchanged": 46,
+  "localSigningDiffUnchanged": true,
+  "sourceHead": "0c58fc98c17dc4e11aa1f8e615a07e3c5551a10d",
+  "date": "2026-10-09",
+  "status": "accepted",
+  "tests": {
+    "newAuditPassed": 12,
+    "unchangedHistoricalPassed": 14,
+    "failed": 0
+  },
+  "finalReadOnlyVerification": "passed: originals, archive, source and signing hashes; checked scores; purchase splits; repeat pairs",
+  "publicAggregateMatchesPrivateFinal": true,
+  "limitations": [
+    "Five previously exposed development purchases only; no held-out validation",
+    "No measured physical-phone latency or human correction time",
+    "Failure categories are evidence-location suspects, not human-adjudicated capture/OCR causes",
+    "Swift correction proxy excludes quantity semantics"
+  ],
+  "commitMessage": "eval: audit on-device receipt recognition baseline"
+}

@@ -1,0 +1,59 @@
+{
+  "task": "P2-01",
+  "date": "2026-10-09",
+  "timezone": "America/Toronto",
+  "status": "ready_for_independent_main_review",
+  "head": "0c58fc98c17dc4e11aa1f8e615a07e3c5551a10d",
+  "commands": [
+    {
+      "command": "sh evaluation/receipt-audit/build.sh",
+      "result": "pass; standalone unchanged-production-source Mac worker compiled"
+    },
+    {
+      "command": "python3 -m unittest discover -s evaluation/receipt-audit -p 'test_*.py' -v",
+      "result": "12 tests pass, 0 failures"
+    },
+    {
+      "command": "python3 -m unittest discover -s evaluation/receipt-eval/tests -v",
+      "result": "14 tests pass, 0 failures"
+    },
+    {
+      "command": "python3 evaluation/receipt-audit/audit.py --run private-receipts/evaluation/p2-01-final",
+      "result": "5 frozen Swift replays, 10 fresh successful OCR/parser requests; 5/5 equal normalized repeat pairs"
+    },
+    {
+      "command": "python3 evaluation/receipt-audit/verify.py --run private-receipts/evaluation/p2-01-final",
+      "result": "pass: source/archive/original/signing hashes, purchase separation, checked scores and repeat pairs"
+    }
+  ],
+  "source_sha256": {
+    "evaluation/receipt-audit/Worker.swift": "53d7828cda0db434060b2c815621dc0361e06862581c63ba62e069d09b960e3b",
+    "evaluation/receipt-audit/build.sh": "4ec088513970fec506a3471ab1ba7e9e65ade08c47337f5729a8318ba278d23f",
+    "evaluation/receipt-audit/audit.py": "1f1394d0efffa39269b0b4c95507a1309b44557ace08fb00c51fc4fd004c18db",
+    "evaluation/receipt-audit/verify.py": "4c864db08c5a4f009e22061910defb00c4fb7f1d56b4f01f5a458998545d084b",
+    "evaluation/receipt-audit/test_audit.py": "ce0d9ce3aff601507f5629f449c62059b5f92bb8ffd49dfae1b76c8350988492",
+    "evaluation/receipt-eval/evaluate.py": "7517a92a68e7ecfaea106c09e2d8cd2f1718fd34a96b4703175ea5bbf63d7e51",
+    "Sliplet/Domain/Receipt.swift": "2686a3364a00784c4520b7fbbe5f99d250e945b12465b6be34291f3a63e13766",
+    "Sliplet/Domain/ReceiptReview.swift": "9bdcd2ba0df1e61676a64deff786568b1c6e47df255e4ef6b0b0a77e26651246",
+    "Sliplet/Domain/ReceiptSplit.swift": "4e81f57f311d43bd21055ecceb8855efc4aaa9b0d9724a34162a1fb6de26c482",
+    "Sliplet/Domain/RecognizedText.swift": "6ada986903723b6f95af98299ef2e3a3dbe2c9818de729aa918f40cac43d90b9",
+    "Sliplet/Recognition/ReceiptImage.swift": "db41851944626c6daca911b695e51ddaa2b0fd2a3a68669493bc6f08da084c5e",
+    "Sliplet/Recognition/VisionTextRecognizer.swift": "da751a819d8b3aec9e552d2c11874bef885e7e1b3984fab12d38829628686d37",
+    "Sliplet/Parsing/Parsing.swift": "58db08b9056884a26c151e8ce3516adf9adb36e70f14e0ee23b547bbb403235f",
+    "Sliplet/Persistence/ReceiptStore.swift": "95b44c690d3cd9ce76a172e09035c22f00bb961a4837c72b15efec100d9dc7ef"
+  },
+  "worker_sha256": "b0ba8d02a0bd37aeaf59ea05d217e343d0df938bd8a54395a8020730f8b37fca",
+  "preservation": {
+    "originals": true,
+    "archive": true,
+    "sources": true,
+    "signing_project": true
+  },
+  "tests_passed": 26,
+  "tests_failed": 0,
+  "phone_latency": "unmeasured",
+  "human_correction_seconds": "unmeasured",
+  "held_out_purchases": 0,
+  "committed": false,
+  "pushed": false
+}
