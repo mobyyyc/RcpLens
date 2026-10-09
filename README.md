@@ -1,12 +1,14 @@
-# RcpLens
+# Sliplet
 
 An iOS-only personal purchase memory app. Import a receipt, correct it quickly, save it, split items with other people and find purchases later.
 
 Status: T01–T06 accepted, including the wallet-transition refinement through T07 approval. T07 purchase history and local search are implemented and verified, independently reviewed, with the verified Release installed; user review pending. The native imported-image demo supports review, drafts, exact reconciliation, local saving, reopening, deletion and exact item splits. The home wallet now holds a chronological paper stack with in-place expansion, archive/star and configurable swipe actions. See [purchase search and evidence](docs/SEARCH.md), [wallet design](docs/WALLET_DESIGN.md), [native redesign](docs/UI_REDESIGN.md), [demo verification](docs/IMPORT_DEMO.md), [MVP_PLAN.md](MVP_PLAN.md), [TASKS.md](TASKS.md), [PROGRESS.md](PROGRESS.md), and [docs/PRODUCT.md](docs/PRODUCT.md).
 
+Sliplet was previously named RcpLens. The existing bundle ID, Keychain services and encryption contexts retain their original identifiers so installed apps and saved receipts continue to work. Historical verification artifacts retain the names used when they were captured.
+
 ## Try the receipt demo on your Mac
 
-Open `RcpLens.xcodeproj` in Xcode 27, select the shared **RcpLens** scheme and an iPhone simulator running iOS 27, then Run. Xcode 27 displays simulated devices in **Device Hub**.
+Open `Sliplet.xcodeproj` in Xcode 27, select the shared **Sliplet** scheme and an iPhone simulator running iOS 27, then Run. Xcode 27 displays simulated devices in **Device Hub**.
 
 Choose **Import → Photo library** to select a receipt image already added to Simulator Photos. With the simulator running, add a Finder image through Terminal (replace the example path):
 
@@ -32,13 +34,13 @@ For command-line builds, select Xcode for this shell without changing the system
 ```sh
 export DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer
 xcrun simctl list devices available
-xcodebuild -project RcpLens.xcodeproj -scheme RcpLens -configuration Debug \
+xcodebuild -project Sliplet.xcodeproj -scheme Sliplet -configuration Debug \
   -destination 'platform=iOS Simulator,id=50661E83-1F58-466B-99F0-9DC517D8EC82' \
-  -derivedDataPath /tmp/RcpLens-T05-DerivedData \
+  -derivedDataPath /tmp/Sliplet-T05-DerivedData \
   CODE_SIGNING_ALLOWED=YES CODE_SIGN_IDENTITY=- build
-xcodebuild -project RcpLens.xcodeproj -scheme RcpLens -configuration Debug \
+xcodebuild -project Sliplet.xcodeproj -scheme Sliplet -configuration Debug \
   -destination 'platform=iOS Simulator,id=50661E83-1F58-466B-99F0-9DC517D8EC82' \
-  -derivedDataPath /tmp/RcpLens-T05-DerivedData -parallel-testing-enabled NO \
+  -derivedDataPath /tmp/Sliplet-T05-DerivedData -parallel-testing-enabled NO \
   CODE_SIGNING_ALLOWED=YES CODE_SIGN_IDENTITY=- test
 ```
 
@@ -48,10 +50,10 @@ Use local ad-hoc signing for Simulator Keychain access; no Apple account is requ
 
 ## Source boundaries
 
-One app target, one hosted XCTest target and a separately selected native UI-test target. `RcpLens/App` manages scene/protected-data lifecycle; `UI` contains the wallet, review, saved receipt and original-image screens; `Domain` holds exact-money, review and receipt/evidence models. `Recognition` accepts encoded image bytes and returns positioned Vision observations; `Parsing` produces a deterministic editable draft. `Persistence` implements transactional SQLite with encrypted receipt/image payloads and a Keychain key. `evaluation/receipt-eval` remains a separate Mac-only benchmark. `Diagnostics` is Debug-only, and `Resources` contains the public synthetic fixture.
+One app target, one hosted XCTest target and a separately selected native UI-test target. `Sliplet/App` manages scene/protected-data lifecycle; `UI` contains the wallet, review, saved receipt and original-image screens; `Domain` holds exact-money, review and receipt/evidence models. `Recognition` accepts encoded image bytes and returns positioned Vision observations; `Parsing` produces a deterministic editable draft. `Persistence` implements transactional SQLite with encrypted receipt/image payloads and a Keychain key. `evaluation/receipt-eval` remains a separate Mac-only benchmark. `Diagnostics` is Debug-only, and `Resources` contains the public synthetic fixture.
 
 Private receipt images and extracted personal data must not enter Git. Use the ignored `private-receipts/` folder for consented inputs and private verification logs/results. Synthetic diagnostics use fictional content. Explicit local Debug test launches can read consented private inputs from a separate simulator inbox; private workflow reports expose only aggregates. Release contains no test importer or checked-reference controls.
 
-GitHub repository: [mobyyyc/RcpLens](https://github.com/mobyyyc/RcpLens). Local `main` tracks `origin/main`.
+GitHub repository: [mobyyyc/Sliplet](https://github.com/mobyyyc/Sliplet). Local `main` tracks `origin/main`.
 
 Phone layout fixes and iPhone 15 Pro Simulator verification: [bottom insets, glass actions and wallet motion](docs/evidence/t07-phone-layout/README.md). After updating sources, use Xcode Run to refresh the installed phone app.

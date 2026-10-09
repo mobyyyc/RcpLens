@@ -28,7 +28,7 @@ for test in manifest:
             destination = args.output / (label + suffix + '.png')
             shutil.copyfile(args.attachments / attachment['exportedFileName'], destination)
             images.append({'path': destination.name, 'test': test['testIdentifier'], 'sha256': hashlib.sha256(destination.read_bytes()).hexdigest()})
-files = sorted([*root.glob('RcpLens/**/*.swift'), *root.glob('RcpLensTests/*.swift'), *root.glob('RcpLensUITests/*.swift'), root / 'RcpLens.xcodeproj/project.pbxproj'])
+files = sorted([*root.glob('Sliplet/**/*.swift'), *root.glob('SlipletTests/*.swift'), *root.glob('SlipletUITests/*.swift'), root / 'Sliplet.xcodeproj/project.pbxproj'])
 live_hashes = {str(path.relative_to(root)): hashlib.sha256(path.read_bytes()).hexdigest() for path in files}
 hashes = json.loads(args.source_hashes.read_text()) if args.source_hashes else live_hashes
 drift = [path for path in sorted(set(hashes) | set(live_hashes)) if hashes.get(path) != live_hashes.get(path)]

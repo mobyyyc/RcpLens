@@ -43,17 +43,17 @@ Use the existing Simulator with Xcode selected for the shell:
 
 ```sh
 DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer xcodebuild \
-  -project RcpLens.xcodeproj -scheme RcpLens -configuration Debug \
+  -project Sliplet.xcodeproj -scheme Sliplet -configuration Debug \
   -destination 'platform=iOS Simulator,id=50661E83-1F58-466B-99F0-9DC517D8EC82' \
-  -derivedDataPath /tmp/RcpLens-T06-DerivedData -parallel-testing-enabled NO \
-  CODE_SIGNING_ALLOWED=YES CODE_SIGN_IDENTITY=- test -only-testing:RcpLensTests
+  -derivedDataPath /tmp/Sliplet-T06-DerivedData -parallel-testing-enabled NO \
+  CODE_SIGNING_ALLOWED=YES CODE_SIGN_IDENTITY=- test -only-testing:SlipletTests
 
 DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer xcodebuild \
-  -project RcpLens.xcodeproj -scheme T05Workflow -configuration Debug \
+  -project Sliplet.xcodeproj -scheme T05Workflow -configuration Debug \
   -destination 'platform=iOS Simulator,id=50661E83-1F58-466B-99F0-9DC517D8EC82' \
-  -derivedDataPath /tmp/RcpLens-T06-DerivedData -parallel-testing-enabled NO \
+  -derivedDataPath /tmp/Sliplet-T06-DerivedData -parallel-testing-enabled NO \
   CODE_SIGNING_ALLOWED=YES CODE_SIGN_IDENTITY=- test \
-  -only-testing:RcpLensUITests/ReceiptSplitUITests
+  -only-testing:SlipletUITests/ReceiptSplitUITests
 ```
 
 Native test launches use `--t05-synthetic-preview split` and the separate fictional preview store/keychain service. Resume relaunches retain only that test store. Normal Simulator receipts, including the ten DEMO samples, are not purged, replaced or opened by these checks. The final hosted unit result contains **73 passes, one existing physical-file-protection skip, and zero failures** (74 total). Its 15 split-engine cases and seven encrypted split-storage cases use fictional data. An independent main-chat comparison of the actual allocator against Python Fraction passed **40/40 cases**, including full signed Int64 extremes; this checks the allocator separately from whole-engine, UI and persistence coverage. Final native execution evidence and limits are recorded in [the validation summary](evidence/t06-splitting/validation-summary.json).

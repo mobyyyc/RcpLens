@@ -1,6 +1,6 @@
 import XCTest
 import Foundation
-@testable import RcpLens
+@testable import Sliplet
 
 enum SearchFixture {
     static func extraction(merchant: String? = "FICTIONAL CORNER MART", date: ReceiptDate? = try! .init(year: 2026, month: 10, day: 8)) -> ReceiptExtraction {

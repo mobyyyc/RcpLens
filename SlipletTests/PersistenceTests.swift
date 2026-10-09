@@ -2,7 +2,7 @@ import XCTest
 import Foundation
 import CryptoKit
 import Security
-@testable import RcpLens
+@testable import Sliplet
 
 /// Fictional inputs only. Never point this suite at the application store or a private corpus.
 @MainActor
@@ -20,7 +20,7 @@ final class PersistenceTests: XCTestCase {
     private let time = Date(timeIntervalSince1970: 1_700_000_000)
 
     private func directory() throws -> URL {
-        let url = FileManager.default.temporaryDirectory.appendingPathComponent("RcpLens-T04-test-" + UUID().uuidString)
+        let url = FileManager.default.temporaryDirectory.appendingPathComponent("Sliplet-T04-test-" + UUID().uuidString)
         try FileManager.default.createDirectory(at: url, withIntermediateDirectories: true)
         return url
     }

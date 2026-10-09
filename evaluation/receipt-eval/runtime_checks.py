@@ -6,7 +6,7 @@ from pathlib import Path
 import sys
 from evaluate import worker, write_json, PRIVATE
 os.umask(0o077)
-binary=Path('/tmp/RcpLens-T03-worker')
+binary=Path('/tmp/Sliplet-T03-worker')
 probe=worker(binary,{'operation':'probe'})
 checks={}
 checks['forced_unavailable']=worker(binary,{'operation':'text','text':'SYNTHETIC TOTAL 1.00','forceUnavailable':True})['status']=='forced_unavailable'

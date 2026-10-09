@@ -4,12 +4,12 @@ Verified 2026-10-07 on Xcode 27.0 / Swift 6.4, iOS 27.0 (24A434), iPhone 18 Pro 
 
 ## Implemented boundary
 
-- `RcpLens/Domain/Receipt.swift`: validated currency and Int64 minor-unit money, overflow-checked addition/subtraction, exact coefficient/scale quantities and rates, civil purchase dates, optional financial fields, original OCR/confidence/normalized geometry, exact parser bytes/issues, immutable evidence metadata, UUIDs and append-only correction snapshots.
-- `RcpLens/Persistence/ReceiptStore.swift`: actor, transactional create/read/revise/delete/purge, optimistic revision guard, encrypted image ownership, closed-store errors, schema v1→v2 migration, future-version rejection and empty-bootstrap recovery.
+- `Sliplet/Domain/Receipt.swift`: validated currency and Int64 minor-unit money, overflow-checked addition/subtraction, exact coefficient/scale quantities and rates, civil purchase dates, optional financial fields, original OCR/confidence/normalized geometry, exact parser bytes/issues, immutable evidence metadata, UUIDs and append-only correction snapshots.
+- `Sliplet/Persistence/ReceiptStore.swift`: actor, transactional create/read/revise/delete/purge, optimistic revision guard, encrypted image ownership, closed-store errors, schema v1→v2 migration, future-version rejection and empty-bootstrap recovery.
 - `StoreCipher.swift`: CryptoKit AES-256-GCM with fresh nonce and authenticated receipt/asset/owner/purpose identity; manifest key authentication.
 - `StoreKey.swift`: system Keychain creation/read with explicit non-sync and WhenUnlockedThisDeviceOnly accessibility; no replacement for an unreadable key.
 - `SQLiteDatabase.swift`: bound statements, sanitized numeric database failures and atomic transactions. No OCR/content/key logging or network calls.
-- `RcpLensTests/PersistenceTests.swift`: synthetic failure/reopen/migration/key/cleanup/protection/precision tests.
+- `SlipletTests/PersistenceTests.swift`: synthetic failure/reopen/migration/key/cleanup/protection/precision tests.
 - `SyntheticStorageDiagnostics.swift` and Debug app task: isolated fictional process-relaunch/crash/delete evidence. Neither diagnostic nor fault injection compiles into Release. The foundation screen and its original model/OCR diagnostic remain intact.
 - `Configuration/Simulator.entitlements` and simulator-only app build settings: local ad-hoc identity needed by Simulator Keychain. No Apple account/team/provisioning or device signing settings were configured. Device builds continue to derive identity from normal provisioning later.
 
@@ -51,22 +51,22 @@ From the repository root, use installed Xcode per command; do not change global 
 
 ```sh
 export DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer
-xcodebuild -project RcpLens.xcodeproj -scheme RcpLens -configuration Debug \
+xcodebuild -project Sliplet.xcodeproj -scheme Sliplet -configuration Debug \
   -destination 'platform=iOS Simulator,id=50661E83-1F58-466B-99F0-9DC517D8EC82' \
-  -derivedDataPath /tmp/RcpLens-T04-DerivedData \
+  -derivedDataPath /tmp/Sliplet-T04-DerivedData \
   CODE_SIGNING_ALLOWED=YES CODE_SIGN_IDENTITY=- build
 
 # Use a new, nonexistent resultBundlePath for each run.
-xcodebuild -project RcpLens.xcodeproj -scheme RcpLens -configuration Debug \
+xcodebuild -project Sliplet.xcodeproj -scheme Sliplet -configuration Debug \
   -destination 'platform=iOS Simulator,id=50661E83-1F58-466B-99F0-9DC517D8EC82' \
-  -derivedDataPath /tmp/RcpLens-T04-DerivedData \
-  -resultBundlePath /tmp/RcpLens-T04-tests-verified.xcresult \
+  -derivedDataPath /tmp/Sliplet-T04-DerivedData \
+  -resultBundlePath /tmp/Sliplet-T04-tests-verified.xcresult \
   -parallel-testing-enabled NO CODE_SIGNING_ALLOWED=YES CODE_SIGN_IDENTITY=- test
-xcrun xcresulttool get test-results summary --path /tmp/RcpLens-T04-tests-verified.xcresult
+xcrun xcresulttool get test-results summary --path /tmp/Sliplet-T04-tests-verified.xcresult
 
-xcodebuild -project RcpLens.xcodeproj -scheme RcpLens -configuration Release \
+xcodebuild -project Sliplet.xcodeproj -scheme Sliplet -configuration Release \
   -destination 'platform=iOS Simulator,id=50661E83-1F58-466B-99F0-9DC517D8EC82' \
-  -derivedDataPath /tmp/RcpLens-T04-Release-DerivedData \
+  -derivedDataPath /tmp/Sliplet-T04-Release-DerivedData \
   CODE_SIGNING_ALLOWED=YES CODE_SIGN_IDENTITY=- build
 ```
 
@@ -74,7 +74,7 @@ For the separate-process checks, install the signed Debug product, then launch e
 
 ```sh
 xcrun simctl install 50661E83-1F58-466B-99F0-9DC517D8EC82 \
-  /tmp/RcpLens-T04-DerivedData/Build/Products/Debug-iphonesimulator/RcpLens.app
+  /tmp/Sliplet-T04-DerivedData/Build/Products/Debug-iphonesimulator/Sliplet.app
 xcrun simctl launch --terminate-running-process 50661E83-1F58-466B-99F0-9DC517D8EC82 \
   com.mobyyyc.RcpLens --synthetic-storage-create
 xcrun simctl launch --terminate-running-process 50661E83-1F58-466B-99F0-9DC517D8EC82 \
@@ -90,7 +90,7 @@ xcrun simctl launch --terminate-running-process 50661E83-1F58-466B-99F0-9DC517D8
   com.mobyyyc.RcpLens --synthetic-storage-verify-deleted
 ```
 
-The complete xcresults/build logs are outside Git under `/tmp/RcpLens-T04-*`. Public evidence is aggregate and synthetic only. No raw private fixture or database is source-controlled.
+The complete xcresults/build logs are outside Git under `/tmp/Sliplet-T04-*`. Public evidence is aggregate and synthetic only. No raw private fixture or database is source-controlled.
 
 ## Integration handoff for T05
 
@@ -112,4 +112,4 @@ Practical limits: 32 MiB per original asset and 8 MiB per encrypted receipt docu
 
 The T05 wallet follow-up adds an optional encrypted `ReceiptRecord.organization` containing archive/star flags. Historical receipt documents omit this field and continue decoding with both flags false. `organize` runs transactionally with an optimistic correction-revision guard and an optional revocable permit. It loads current organization inside the transaction, toggles only the requested flag, and preserves original extraction, asset, timestamps and correction history. `revise` carries existing organization forward.
 
-`walletSettings`/`saveWalletSettings` use the existing metadata table and authenticated AES-GCM context `RcpLens/wallet-settings/v1`. Missing preferences use Archive-left/Star-right; malformed or unauthentic payloads fail rather than silently reset. Writes honor permit revocation and rollback. These changes do not alter schema version 2 or add a plaintext index. Three new fictional persistence tests cover legacy decoding, edits/reopen, evidence preservation, encrypted metadata, stale revisions, revocation and failure before commit.
+`walletSettings`/`saveWalletSettings` use the existing metadata table and authenticated AES-GCM context `Sliplet/wallet-settings/v1`. Missing preferences use Archive-left/Star-right; malformed or unauthentic payloads fail rather than silently reset. Writes honor permit revocation and rollback. These changes do not alter schema version 2 or add a plaintext index. Three new fictional persistence tests cover legacy decoding, edits/reopen, evidence preservation, encrypted metadata, stale revisions, revocation and failure before commit.

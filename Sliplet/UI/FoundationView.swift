@@ -16,7 +16,7 @@ struct FoundationView: View {
                 }
                 #endif
             }
-            .navigationTitle("RcpLens")
+            .navigationTitle("Sliplet")
             #if DEBUG
             .sheet(isPresented: .constant(ProcessInfo.processInfo.arguments.contains("--synthetic-diagnostics"))) {
                 NavigationStack { DiagnosticsView(autoRun: true) }

@@ -11,7 +11,7 @@ M0 — environment, design and extraction validation: complete and accepted. M1 
 - Xcode 27.0 found at /Applications/Xcode.app.
 - Planning documents and seven task chats created, with acceptance criteria and dependencies.
 - iOS 27.0 simulator runtime verified installed (build 24A434).
-- Local Git repository initialized from the existing GitHub `main` history; original LICENSE preserved. `origin` points to `git@github.com:mobyyyc/RcpLens.git` and local `main` tracks `origin/main`.
+- Local Git repository initialized from the existing GitHub `main` history; original LICENSE preserved. `origin` points to `git@github.com:mobyyyc/Sliplet.git` and local `main` tracks `origin/main`.
 - Repository commit identity matches the existing local GitHub profile repository; SSH commit signing remains enabled.
 - T01: one native SwiftUI iPhone app and hosted XCTest target; Debug/Release simulator builds and actual launch passed.
 - Simulator Foundation Models generated a 39-character synthetic response; Vision recognized expected text from a bundled fictional PNG. Three tests passed with no failures or skips. Commands/evidence: [docs/FOUNDATION.md](docs/FOUNDATION.md).
@@ -122,3 +122,11 @@ Five affected native cases pass across two source-identical runs: long-paper/hea
 ### Phone layout refinement (2026-10-08)
 
 The review's explicit clipping and fixed blank spacer caused the visible bottom frame. Native soft edges and a bottom safe-area bar replace that arrangement. The home reader also inherited an oversized container from the retained stack: its geometry is now fixed to the scene, it reserves the complete action-bar inset, and its closing position compensates the native scroll inset. All requested paper/footer controls remain reachable; the wallet front/back/backing share bounded, slower movement. The user's Xcode Personal Team settings remain local. Verification and earlier failed footer iterations are recorded in [the scope manifest](docs/evidence/t07-phone-layout/validation-summary.json). Physical camera work is still separate; the user can update the already-installed phone demo with Xcode Run.
+
+
+## 2026-10-08 — Sliplet rename
+
+Renamed the app display name, Xcode project, shared scheme, Swift module, source and test directories, current documentation and development scripts to Sliplet. Origin now points to `git@github.com:mobyyyc/Sliplet.git`; the renamed GitHub main branch matched the pre-rename local HEAD. Bundle, Keychain and authenticated encryption identifiers remain stable to preserve existing installations and receipts. Personal Team signing settings stay local.
+
+Validation: renamed hosted test suite passed (84 tests, one skipped, zero failures). Simulator Release build passed; its Info.plist reports Sliplet for display name, bundle name and executable while retaining the installed app bundle identifier. Installing and launching the renamed Release preserved all 12 encrypted receipts, 12 original assets and wallet preferences.
+Physical iPhone SDK Release compilation also passed with signing disabled.

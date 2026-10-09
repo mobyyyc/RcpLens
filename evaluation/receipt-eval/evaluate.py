@@ -404,7 +404,7 @@ def benchmark(args):
 def main():
     os.umask(0o077)
     ap=argparse.ArgumentParser()
-    ap.add_argument('--worker',type=Path,default=Path('/tmp/RcpLens-T03-worker'))
+    ap.add_argument('--worker',type=Path,default=Path('/tmp/Sliplet-T03-worker'))
     commands=ap.add_subparsers(dest='command',required=True)
     prep=commands.add_parser('prepare'); prep.add_argument('--run',type=Path,required=True); prep.add_argument('--corpus',type=Path,default=PRIVATE); prep.add_argument('--synthetic',action='store_true')
     bench=commands.add_parser('benchmark'); bench.add_argument('--run',type=Path,required=True); bench.add_argument('--approaches',nargs='+',choices=['B','C'],default=['B','C']); bench.add_argument('--repeats',type=int,choices=[1,2],default=2); bench.add_argument('--labels',type=Path)

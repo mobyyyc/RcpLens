@@ -45,7 +45,7 @@
       const title = {detail:'Receipt',edit:app.importing?'Review':'Edit',source:'Original',processing:'Import',error:'Import'}[app.view];
       return `<button type="button" class="nav-action" data-action="back">‹ ${back}</button><span class="toolbar-title">${title}</span>${action}`;
     }
-    return `<span class="micro">RcpLens</span><button type="button" class="nav-action import" data-action="import" aria-label="Import a receipt image">＋ Import</button>`;
+    return `<span class="micro">Sliplet</span><button type="button" class="nav-action import" data-action="import" aria-label="Import a receipt image">＋ Import</button>`;
   }
   function tabbar(app) {
     if (['edit','source','processing','error','detail'].includes(app.view)) return '';
@@ -218,5 +218,5 @@
   window.matchMedia('(prefers-reduced-motion: reduce)').addEventListener('change',()=>applySettings());
   applySettings();
   // Only synthetic state is exposed for reproducible review checks.
-  window.RcpLensDesign = {getReceipts:count=>makeReceipts(count),parseCents:cents,expectedTotal:expected,snapshot:()=>apps.map(a=>({concept:a.id,view:a.view,count:a.receipts.length,query:a.query,merchant:a.merchant,month:a.month,pending:a.pending}))};
+  window.SlipletDesign = {getReceipts:count=>makeReceipts(count),parseCents:cents,expectedTotal:expected,snapshot:()=>apps.map(a=>({concept:a.id,view:a.view,count:a.receipts.length,query:a.query,merchant:a.merchant,month:a.month,pending:a.pending}))};
 })();

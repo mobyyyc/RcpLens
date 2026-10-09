@@ -17,7 +17,7 @@ ROOT = Path(__file__).resolve().parents[1]
 PRIVATE = ROOT / 'private-receipts'
 EVIDENCE = ROOT / 'docs/evidence/t05'
 SIMULATOR = '50661E83-1F58-466B-99F0-9DC517D8EC82'
-DERIVED_DATA = '/tmp/RcpLens-T05-DerivedData'
+DERIVED_DATA = '/tmp/Sliplet-T05-DerivedData'
 ENV = {**os.environ, 'DEVELOPER_DIR': '/Applications/Xcode.app/Contents/Developer'}
 
 
@@ -38,7 +38,7 @@ def write(path, obj):
 
 
 def prepare(private=True):
-    command(['xcrun', 'simctl', 'install', SIMULATOR, str(Path(DERIVED_DATA)/'Build/Products/Debug-iphonesimulator/RcpLens.app')])
+    command(['xcrun', 'simctl', 'install', SIMULATOR, str(Path(DERIVED_DATA)/'Build/Products/Debug-iphonesimulator/Sliplet.app')])
     container = Path(command(['xcrun', 'simctl', 'get_app_container', SIMULATOR, 'com.mobyyyc.RcpLens', 'data']))
     inbox = container / 'Documents/T05TestInbox'
     if private and inbox.exists(): shutil.rmtree(inbox)
@@ -68,7 +68,7 @@ def prepare(private=True):
             count += 1
         if count != 5: raise ValueError('unexpected_corpus_count')
     dest = inbox / 'slot5'; dest.mkdir(parents=True, exist_ok=True, mode=0o700)
-    shutil.copyfile(ROOT / 'RcpLens/Resources/synthetic-receipt.png', dest / 'source.png')
+    shutil.copyfile(ROOT / 'Sliplet/Resources/synthetic-receipt.png', dest / 'source.png')
     write(dest / 'request.json', {'image': 'source.png', 'expected': {'merchant': 'FICTIONAL SHOP', 'date': '2026-10-07',
         'subtotal': 1234, 'total': 1234, 'lines': [{'kind':'purchase','description':'FICTIONAL ITEM','amount':1234,'quantity':'1'}]}})
     print(json.dumps({'status':'prepared','private_sources_verified':count if private else 0,'synthetic_sources':1}))
@@ -79,11 +79,11 @@ def run(private, accessibility=False):
     run.mkdir(parents=True, mode=0o700)
     container = Path(command(['xcrun','simctl','get_app_container',SIMULATOR,'com.mobyyyc.RcpLens','data']))
     for path in (container/'Documents/T05TestInbox').glob('*/report.json'): path.unlink()
-    target = 'RcpLensUITests/LocalReceiptWorkflowTests' if private else ('RcpLensUITests/NativeAccessibilityTests' if accessibility else 'RcpLensUITests/SyntheticUIWorkflowTests')
+    target = 'SlipletUITests/LocalReceiptWorkflowTests' if private else ('SlipletUITests/NativeAccessibilityTests' if accessibility else 'SlipletUITests/SyntheticUIWorkflowTests')
     env = {**ENV, 'TEST_RUNNER_RCPLENS_T05_PRIVATE': 'YES' if private else 'NO'}
-    source_files = list((ROOT/'RcpLens').rglob('*.swift')) + list((ROOT/'RcpLensUITests').rglob('*.swift')) + [ROOT/'RcpLens.xcodeproj/project.pbxproj']
+    source_files = list((ROOT/'Sliplet').rglob('*.swift')) + list((ROOT/'SlipletUITests').rglob('*.swift')) + [ROOT/'Sliplet.xcodeproj/project.pbxproj']
     write(run/'source-hashes.json',{str(path.relative_to(ROOT)):hashlib.sha256(path.read_bytes()).hexdigest() for path in sorted(source_files)})
-    result = subprocess.run(['xcodebuild','-project','RcpLens.xcodeproj','-scheme','T05Workflow','-configuration','Debug',
+    result = subprocess.run(['xcodebuild','-project','Sliplet.xcodeproj','-scheme','T05Workflow','-configuration','Debug',
         '-destination',f'platform=iOS Simulator,id={SIMULATOR}','-derivedDataPath',DERIVED_DATA,
         '-resultBundlePath',str(run/'tests.xcresult'),'-parallel-testing-enabled','NO',
         '-only-testing:'+target,'CODE_SIGNING_ALLOWED=YES','CODE_SIGN_IDENTITY=-','test'], env=env,capture_output=True,cwd=ROOT)

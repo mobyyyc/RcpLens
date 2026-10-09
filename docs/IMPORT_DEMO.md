@@ -4,8 +4,8 @@ Native SwiftUI on iPhone 18 Pro Simulator, iOS 27, Xcode 27. The import/review/s
 
 ## Try the app
 
-1. Open the existing iPhone simulator / Device Hub and launch RcpLens. Tap Import, then Photo library or Files.
-2. To add a private Mac image to Simulator Photos, use the installed toolchain explicitly. Type the command below through its final space, then drag the image from Finder into Terminal to insert its quoted path. Run it, then choose the image in RcpLens's photo picker. Device Hub drag behaviour is not assumed.
+1. Open the existing iPhone simulator / Device Hub and launch Sliplet. Tap Import, then Photo library or Files.
+2. To add a private Mac image to Simulator Photos, use the installed toolchain explicitly. Type the command below through its final space, then drag the image from Finder into Terminal to insert its quoted path. Run it, then choose the image in Sliplet's photo picker. Device Hub drag behaviour is not assumed.
 
    ```sh
    DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer xcrun simctl addmedia booted "/absolute/path/to/your/receipt.heic"
@@ -37,16 +37,16 @@ Use per-command `DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer`. Simu
 
 ```sh
 DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer xcodebuild \
-  -project RcpLens.xcodeproj -scheme RcpLens -configuration Debug \
+  -project Sliplet.xcodeproj -scheme Sliplet -configuration Debug \
   -destination 'platform=iOS Simulator,id=50661E83-1F58-466B-99F0-9DC517D8EC82' \
-  -derivedDataPath /tmp/RcpLens-T05-Unit-DerivedData \
-  -resultBundlePath /tmp/RcpLens-T05-unit-reviewed.xcresult \
+  -derivedDataPath /tmp/Sliplet-T05-Unit-DerivedData \
+  -resultBundlePath /tmp/Sliplet-T05-unit-reviewed.xcresult \
   -parallel-testing-enabled NO CODE_SIGNING_ALLOWED=YES CODE_SIGN_IDENTITY=- test
 
 DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer xcodebuild \
-  -project RcpLens.xcodeproj -scheme RcpLens -configuration Release \
+  -project Sliplet.xcodeproj -scheme Sliplet -configuration Release \
   -destination 'platform=iOS Simulator,id=50661E83-1F58-466B-99F0-9DC517D8EC82' \
-  -derivedDataPath /tmp/RcpLens-T05-Release-DerivedData \
+  -derivedDataPath /tmp/Sliplet-T05-Release-DerivedData \
   CODE_SIGNING_ALLOWED=YES CODE_SIGN_IDENTITY=- build
 
 # These explicitly local private checks require the already-consented ignored corpus/reference files.
@@ -81,7 +81,7 @@ Current primary Apple pages checked; the installed iOS 27 SDK and successful bui
 ## Verified results and limits
 
 - **Release:** the coordinator independently rebuilt the final app, verified its deep/strict ad-hoc signature and absence of compiled Debug/test controls, and confirmed all 26 snapshot source hashes match. See [root-release.json](evidence/t05/root-release.json). That verified Release app is installed and normally launched on the original simulator.
-- **Unit suite:** 43 passed, 0 failed, 1 physical-device protection skip (44 total). Final result bundle: `/tmp/RcpLens-T05-unit-reviewed.xcresult`; public aggregate: [unit-tests.json](evidence/t05/unit-tests.json). The save-refresh regression also checks immediate reopen and revised-summary visibility before retry.
+- **Unit suite:** 43 passed, 0 failed, 1 physical-device protection skip (44 total). Final result bundle: `/tmp/Sliplet-T05-unit-reviewed.xcresult`; public aggregate: [unit-tests.json](evidence/t05/unit-tests.json). The save-refresh regression also checks immediate reopen and revised-summary visibility before retry.
 - **Five consented originals:** all five passed import → draft → process restart → reference-assisted correction → source check → save/restart/verify → delete. All five preserved exact supplied bytes and original parser fields, and matched independently human-checked merchant/date, line kinds/descriptions/amounts, subtotal and total. The private verifier does not separately score corrected quantities or currency; exact typed quantity/currency behaviour has unit coverage. Two passed the completion gate; three remained Needs review because reference fields/arithmetic were unresolved. This is a round-trip/correction test, not fresh extraction accuracy or a timed human correction study. Public counts: [private-workflow.json](evidence/t05/private-workflow.json). The dedicated test database has zero receipts and assets after deletion ([deletion.json](evidence/t05/deletion.json)).
 - **Ordinary native picker:** two synthetic UI tests passed, including the actual system picker, expected uncorrected synthetic OCR identity, merchant replacement through the keyboard, source viewing, malformed-input recovery, cancellation and Home/background clearing. The test selects a dated individual image, never an arbitrary stock photo or its containing grid. Public aggregate: [synthetic-ui-tests.json](evidence/t05/synthetic-ui-tests.json).
 - **Accessibility:** three final native tests passed structure/description/hit-region audits across wallet, detail, review, source and library, plus large-text/reduced-motion/opaque/increased-contrast tap paths. The contrast audit retains **14 narrowly classified findings**, with **0 unclassified findings**: ten reading-text samples and two native Glass action labels measure 20.47–20.82:1 against their captured backgrounds; one is the intentionally disabled Finish button (white on grey, 3.23:1); one is a native list row partly beneath the floating toolbar. Initial actual heading contrast of 3.29:1 was corrected using concrete semantic label colours. The handler accepts only these specific fixture labels/control states/frame overlaps, and verifies black glyph-interior contrast ≥7:1 for the reading/action exceptions; unexpected or insufficient-contrast findings fail the test. Auditor inconsistency for the measured reading text is an inference from the screenshots, not a claim of complete accessibility certification. Dominant-background/glyph-interior sampling excludes antialias edges and does not cover every native Glass state or device setting. See [accessibility.json](evidence/t05/accessibility.json), per-element labels/roles/frames/reasons/colours/ratios in [contrast-diagnostics.json](evidence/t05/contrast-diagnostics.json), a fictional [flagged example](evidence/t05/contrast-diagnostic-example.png), and the coordinator's independent [measured example](evidence/t05/root-contrast-example.json).

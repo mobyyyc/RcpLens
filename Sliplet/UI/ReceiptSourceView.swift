@@ -42,8 +42,8 @@ struct ReceiptSourceView: View {
 }
 
 extension Notification.Name {
-    static let receiptZoomIn = Notification.Name("RcpLens.sourceZoomIn")
-    static let receiptZoomOut = Notification.Name("RcpLens.sourceZoomOut")
+    static let receiptZoomIn = Notification.Name("Sliplet.sourceZoomIn")
+    static let receiptZoomOut = Notification.Name("Sliplet.sourceZoomOut")
 }
 
 /// In-memory UIKit image view; no file output, disk thumbnails or web cache.

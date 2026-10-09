@@ -42,29 +42,29 @@ xcrun swift --version
 xcrun simctl list runtimes
 xcrun simctl list devices available
 
-xcodebuild -project RcpLens.xcodeproj -scheme RcpLens -configuration Debug \
+xcodebuild -project Sliplet.xcodeproj -scheme Sliplet -configuration Debug \
   -destination 'platform=iOS Simulator,id=50661E83-1F58-466B-99F0-9DC517D8EC82' \
-  -derivedDataPath /tmp/RcpLens-T01-DerivedData CODE_SIGNING_ALLOWED=NO build
+  -derivedDataPath /tmp/Sliplet-T01-DerivedData CODE_SIGNING_ALLOWED=NO build
 
 # Boot only if this simulator is Shutdown. Calling boot on a booted device reports an error.
 xcrun simctl boot 50661E83-1F58-466B-99F0-9DC517D8EC82
 xcrun simctl bootstatus 50661E83-1F58-466B-99F0-9DC517D8EC82 -b
 xcrun simctl install 50661E83-1F58-466B-99F0-9DC517D8EC82 \
-  /tmp/RcpLens-T01-DerivedData/Build/Products/Debug-iphonesimulator/RcpLens.app
+  /tmp/Sliplet-T01-DerivedData/Build/Products/Debug-iphonesimulator/Sliplet.app
 xcrun simctl launch 50661E83-1F58-466B-99F0-9DC517D8EC82 \
   com.mobyyyc.RcpLens --synthetic-diagnostics
 
 # Use a new resultBundlePath on repeated runs: xcodebuild requires it not to exist.
-xcodebuild -project RcpLens.xcodeproj -scheme RcpLens -configuration Debug \
+xcodebuild -project Sliplet.xcodeproj -scheme Sliplet -configuration Debug \
   -destination 'platform=iOS Simulator,id=50661E83-1F58-466B-99F0-9DC517D8EC82' \
-  -derivedDataPath /tmp/RcpLens-T01-DerivedData \
-  -resultBundlePath /tmp/RcpLens-T01-tests.xcresult -parallel-testing-enabled NO \
+  -derivedDataPath /tmp/Sliplet-T01-DerivedData \
+  -resultBundlePath /tmp/Sliplet-T01-tests.xcresult -parallel-testing-enabled NO \
   CODE_SIGNING_ALLOWED=NO test
-xcrun xcresulttool get test-results summary --path /tmp/RcpLens-T01-tests.xcresult
+xcrun xcresulttool get test-results summary --path /tmp/Sliplet-T01-tests.xcresult
 
-xcodebuild -project RcpLens.xcodeproj -scheme RcpLens -configuration Release \
+xcodebuild -project Sliplet.xcodeproj -scheme Sliplet -configuration Release \
   -destination 'platform=iOS Simulator,id=50661E83-1F58-466B-99F0-9DC517D8EC82' \
-  -derivedDataPath /tmp/RcpLens-T01-DerivedData CODE_SIGNING_ALLOWED=NO build
+  -derivedDataPath /tmp/Sliplet-T01-DerivedData CODE_SIGNING_ALLOWED=NO build
 ```
 
 For evidence, relaunch Debug after tests (the test runner replaces the foreground app), wait for the UI to show finished checks, then capture:
@@ -72,10 +72,10 @@ For evidence, relaunch Debug after tests (the test runner replaces the foregroun
 ```sh
 xcrun simctl launch 50661E83-1F58-466B-99F0-9DC517D8EC82 \
   com.mobyyyc.RcpLens --synthetic-diagnostics
-xcrun simctl io 50661E83-1F58-466B-99F0-9DC517D8EC82 screenshot /tmp/RcpLens-checks.png
-rcplens_container=$(xcrun simctl get_app_container \
+xcrun simctl io 50661E83-1F58-466B-99F0-9DC517D8EC82 screenshot /tmp/Sliplet-checks.png
+sliplet_container=$(xcrun simctl get_app_container \
   50661E83-1F58-466B-99F0-9DC517D8EC82 com.mobyyyc.RcpLens data)
-cat "$rcplens_container/Library/Caches/synthetic-diagnostics.json"
+cat "$sliplet_container/Library/Caches/synthetic-diagnostics.json"
 ```
 
 Launch without the argument to see the foundation home screen. The committed PNG can be regenerated with `xcrun swift scripts/make-synthetic-fixture.swift` on macOS. This AppKit script writes only fictional fixture content, not app code or real data.

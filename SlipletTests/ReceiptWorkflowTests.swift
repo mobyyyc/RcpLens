@@ -2,7 +2,7 @@ import XCTest
 import UIKit
 import ImageIO
 import UniformTypeIdentifiers
-@testable import RcpLens
+@testable import Sliplet
 
 final class ReceiptWorkflowTests: XCTestCase, @unchecked Sendable {
     func testElasticStackIsOrderedReversibleAndAnchoredAtThePocket() {

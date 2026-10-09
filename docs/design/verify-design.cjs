@@ -19,9 +19,9 @@ let reviewBrowser;
   const screenshot = name => page.locator('.concepts').screenshot({path:path.join(base,'evidence',name),animations:'disabled'});
   const app = id => page.locator(`#${id}`);
   check('Initial render: two concepts, three recent receipt buttons each', await page.locator('.slip').count()===6);
-  const arithmetic = await page.evaluate(() => [5,50,500].every(n=>RcpLensDesign.getReceipts(n).every(r=> r.status==='Saved' ? r.total===RcpLensDesign.expectedTotal(r) : r.total-RcpLensDesign.expectedTotal(r)===100)));
+  const arithmetic = await page.evaluate(() => [5,50,500].every(n=>SlipletDesign.getReceipts(n).every(r=> r.status==='Saved' ? r.total===SlipletDesign.expectedTotal(r) : r.total-SlipletDesign.expectedTotal(r)===100)));
   check('Synthetic amounts reconcile; deliberate $1 discrepancies are marked Needs review',arithmetic);
-  check('Decimal input parses cents exactly and rejects malformed amounts',await page.evaluate(()=>RcpLensDesign.parseCents('12.34')===1234 && RcpLensDesign.parseCents('0.01')===1 && RcpLensDesign.parseCents('1.234')===null && RcpLensDesign.parseCents('-1')===null));
+  check('Decimal input parses cents exactly and rejects malformed amounts',await page.evaluate(()=>SlipletDesign.parseCents('12.34')===1234 && SlipletDesign.parseCents('0.01')===1 && SlipletDesign.parseCents('1.234')===null && SlipletDesign.parseCents('-1')===null));
   await screenshot('concepts-wallet.png');
   for (const count of [5,50,500]) {
     await page.locator('#collection').selectOption(String(count));

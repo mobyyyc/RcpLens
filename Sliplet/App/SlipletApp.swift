@@ -1,7 +1,7 @@
 import SwiftUI
 
 @main
-struct RcpLensApp: App {
+struct SlipletApp: App {
     @UIApplicationDelegateAdaptor(ReceiptPrivacyDelegate.self) private var privacyDelegate
     var body: some Scene {
         WindowGroup { ReceiptSessionView() }

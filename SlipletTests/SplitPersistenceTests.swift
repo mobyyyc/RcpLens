@@ -1,6 +1,6 @@
 import XCTest
 import Foundation
-@testable import RcpLens
+@testable import Sliplet
 
 @MainActor final class SplitPersistenceTests: XCTestCase {
     private struct Key: ReceiptStoreKeyProvider {

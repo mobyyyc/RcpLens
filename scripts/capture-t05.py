@@ -38,7 +38,7 @@ def main():
             if not ready.exists(): raise RuntimeError("synthetic_preview_not_ready")
             time.sleep(1.5)
             # CoreSimulator may refuse to overwrite a screenshot created by another process.
-            with tempfile.TemporaryDirectory(prefix="rcplens-native-capture-") as staging:
+            with tempfile.TemporaryDirectory(prefix="sliplet-native-capture-") as staging:
                 screenshot = Path(staging) / (name + ".png")
                 command(["xcrun", "simctl", "io", sim, "screenshot", str(screenshot)])
                 shutil.copyfile(screenshot, args.output_directory / screenshot.name)

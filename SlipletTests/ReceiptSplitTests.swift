@@ -1,6 +1,6 @@
 import XCTest
 import Foundation
-@testable import RcpLens
+@testable import Sliplet
 
 enum SplitFixture {
     static let a = UUID(uuidString: "00000000-0000-0000-0000-000000000001")!

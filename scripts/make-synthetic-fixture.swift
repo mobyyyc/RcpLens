@@ -18,5 +18,5 @@ for (index, line) in ["SYNTHETIC STORE", "TEST ITEM      12.34", "TOTAL         
     (line as NSString).draw(at: NSPoint(x: 70, y: 450 - index * 130), withAttributes: attributes)
 }
 NSGraphicsContext.restoreGraphicsState()
-let url = URL(fileURLWithPath: "RcpLens/Resources/synthetic-receipt.png")
+let url = URL(fileURLWithPath: "Sliplet/Resources/synthetic-receipt.png")
 try bitmap.representation(using: .png, properties: [:])!.write(to: url)

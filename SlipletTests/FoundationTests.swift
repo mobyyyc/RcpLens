@@ -1,5 +1,5 @@
 import XCTest
-@testable import RcpLens
+@testable import Sliplet
 
 final class FoundationTests: XCTestCase {
     func testVisionRecognizesImportedSyntheticPNG() async throws {
