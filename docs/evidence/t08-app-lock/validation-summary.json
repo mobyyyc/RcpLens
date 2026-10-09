@@ -1,0 +1,19 @@
+{
+  "unitTests": 10,
+  "uiTests": 8,
+  "unitResult": "Sliplet-Lock-unit2.xcresult",
+  "uiResult": "Sliplet-Lock-ui3.xcresult",
+  "simulatorRelease": "passed",
+  "physicalSDKRelease": "passed; compilation only",
+  "simulatorSignature": "passed",
+  "releaseFixtureSwitches": "absent",
+  "authenticationTests": "Injected outcomes only, isolated preferences and fictional receipt store",
+  "nativeBiometrics": "Physical iPhone validation pending",
+  "testRunner": "DYLD missing XCTest; disposable runner removed after tests; main app preserved",
+  "toolDiagnostics": "Existing debugger version lookup and diagnostic-collection simctl lookup messages remain nonfatal.",
+  "normalWallet": {
+    "receipts": 12,
+    "originals": 12,
+    "encryptedPayloadsAndPreferences": "unchanged"
+  }
+}

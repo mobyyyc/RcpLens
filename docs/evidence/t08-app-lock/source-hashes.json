@@ -1,0 +1,12 @@
+{
+  "Sliplet/App/ReceiptAppLock.swift": "12a91e24997c890fac5238a5ea794fa29d7b09ffadf864481aabb9cb46b97f42",
+  "Sliplet/App/SlipletApp.swift": "a9a5984bc6136f59e2828fc27e055e10fc6f76a961830bc590e5b8682f60966f",
+  "Sliplet/Diagnostics/ReceiptAppLockFixture.swift": "55da113bca7aaff7d63dace078466310cb7325fdb6819818785d8ea5f1aa14b4",
+  "Sliplet/UI/ReceiptWalletScene.swift": "6225aa39fcf9772623056df442ac142d22f624611317fc65cdb705c793b197bc",
+  "Sliplet/UI/ReceiptReviewView.swift": "078d21de8e9d4397de3c189eeb9b4e41340969204e696d0ddca99fa47286aede",
+  "Sliplet/UI/ReceiptSearchViews.swift": "92ba57fc7d248f77f8f6280c05cd0e94dd4328776ba58c37e8fb0863be84f8dd",
+  "SlipletTests/ReceiptAppLockTests.swift": "e0533c3d8536ae73aa181b6689d682406b0e2a3741a7a0939433e9be5034fcfd",
+  "SlipletUITests/ReceiptAppLockUITests.swift": "aff42bd7eb0e0f34629631e134d46dcbee7e78232b17b0f7a97192212f3f8432",
+  "SlipletUITests/ReceiptUIWorkflowTests.swift": "eb02399e7b16dc77efcdd38fc16e7fbf9e20f11bc2869a8539864f3016147e80",
+  "scripts/test-ui.sh": "761d8f55823152c99454e136f0d20505fb93b6ddbac8e25dde58f5edc4e50024"
+}

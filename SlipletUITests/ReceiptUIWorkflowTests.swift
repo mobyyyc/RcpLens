@@ -185,7 +185,7 @@ import Vision
                     let measured = self.pixelContrast(screenshot)
                     if let measured { detail["foreground"] = measured.foreground; detail["background"] = measured.background; detail["measuredRatio"] = measured.ratio }
                     let walletLabels = ["2026-10-07", "2026-10-06", "2026-10-05", "CAD 12.34"]
-                    let detailLabels = ["2026-10-07 · CAD", "12.34", "Qty unknown", "Saved on this device"]
+                    let detailLabels = ["2026-10-07 · CAD", "12.34", "Qty unknown", "Reviewed and saved"]
                     if element.elementType == .staticText, element.isEnabled,
                        (mode == "wallet" && walletLabels.contains(element.label) || mode == "detail" && detailLabels.contains(element.label) || mode == "library" && element.label == "2026-10-07"),
                        let measured, measured.foreground == "#000000", measured.ratio >= 7 {
@@ -647,13 +647,13 @@ import Vision
         XCTAssertEqual(app.buttons["splitOpen"].frame.width, app.buttons["splitOpen"].frame.height, accuracy: 1, "The icon action remains circular")
         app.terminate()
     }
-    func testLongWalletReceiptFooterClearsRaisedActions() {
+    func testLongWalletReceiptBottomClearsRaisedActions() {
         let app = launch("long-wallet")
         XCTAssertGreaterThanOrEqual(app.frame.maxY - app.buttons["import"].frame.maxY, 40)
         let paper = app.buttons["receipt-1"]
         XCTAssertTrue(paper.waitForExistence(timeout: 20)); paper.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.07)).tap()
         XCTAssertTrue(app.buttons["edit"].waitForExistence(timeout: 10))
-        let footer = app.descendants(matching: .any)["walletReceiptFooter"]
+        let footer = app.descendants(matching: .any)["receiptPaperTotal"]
         for _ in 0..<10 {
             if footer.exists && footer.isHittable && footer.frame.maxY < app.buttons["edit"].frame.minY - 12 { break }
             app.swipeUp()
@@ -661,9 +661,9 @@ import Vision
         capture(app, "Phone-layout-long-wallet-before-footer-check")
         let tree = XCTAttachment(string: app.debugDescription); tree.name = "Phone-layout-long-wallet-tree"; tree.lifetime = .keepAlways; add(tree)
         XCTAssertTrue(footer.isHittable)
-        XCTAssertLessThan(footer.frame.maxY, app.buttons["edit"].frame.minY - 12, "The paper bottom and footer can be read above the actions")
+        XCTAssertLessThan(footer.frame.maxY, app.buttons["edit"].frame.minY - 12, "The final total can be read above the actions")
         app.swipeUp(); app.swipeUp()
-        XCTAssertLessThan(app.buttons["edit"].frame.minY - footer.frame.maxY, 80, "The scroll end must not add a second action-bar-sized blank area")
+        XCTAssertLessThan(app.buttons["edit"].frame.minY - footer.frame.maxY, 110, "The scroll end must not add a second action-bar-sized blank area")
         capture(app, "Phone-layout-long-wallet-bottom")
         app.buttons["back"].tap(); XCTAssertTrue(paper.waitForExistence(timeout: 10)); app.terminate()
     }

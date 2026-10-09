@@ -413,6 +413,8 @@ private struct WalletReadingScene: View {
     private let reviewInput: ReceiptReviewDraft?
     @State private var fullHeight: CGFloat = 0
     @State private var statusHeight: CGFloat = 0
+    @State private var statusMeasured = false
+    @State private var footerMeasured = false
     @State private var footerHeight: CGFloat = 0
     @State private var canvasY: CGFloat = 0
     @State private var canvasMeasured = false
@@ -425,8 +427,8 @@ private struct WalletReadingScene: View {
         self.visibleToAccessibility = visibleToAccessibility; self.onReady = onReady
         reviewInput = record.current.reviewInput.flatMap { try? JSONDecoder().decode(ReceiptReviewDraft.self, from: $0) }
     }
-    private var paperTop: CGFloat { max(52, statusHeight + 12) }
-    private var ready: Bool { fullHeight > 0 && statusHeight > 0 && footerHeight > 0 && canvasMeasured }
+    private var paperTop: CGFloat { max(12, statusHeight + 12) }
+    private var ready: Bool { fullHeight > 0 && statusMeasured && footerMeasured && canvasMeasured }
 
     var body: some View {
         GeometryReader { geometry in
@@ -435,21 +437,19 @@ private struct WalletReadingScene: View {
                     ZStack(alignment: .topLeading) {
                         Color.clear
                         HStack {
-                            Label(ReceiptCompletion.isComplete(record) ? "Reviewed" : "Needs review", systemImage: ReceiptCompletion.isComplete(record) ? "checkmark.circle" : "exclamationmark.circle")
+                            if !ReceiptCompletion.isComplete(record) { Label("Needs review", systemImage: "exclamationmark.circle") }
                             Spacer()
                             if record.isStarred { Image(systemName: "star.fill").accessibilityLabel("Starred") }
                         }.font(.footnote.weight(.medium)).fixedSize(horizontal: false, vertical: true)
                             .padding(.horizontal, 34).padding(.top, 10)
-                            .onGeometryChange(for: CGFloat.self) { $0.size.height } action: { statusHeight = $0 }
+                            .onGeometryChange(for: CGFloat.self) { $0.size.height } action: { statusHeight = $0; statusMeasured = true }
                             .opacity(expanded ? 1 : 0)
                         VStack(alignment: .leading, spacing: 18) {
                             if loading { ProgressView("Loading original").font(.footnote) }
                             if let error { Text(error).font(.subheadline) }
                             if record.current.fields.currency == nil { Text("Currency needs confirmation. Edit to check the saved amounts.").font(.footnote) }
-                            Label("Saved on this device", systemImage: "lock").font(.footnote)
-                                .accessibilityIdentifier("walletReceiptFooter")
                         }.padding(.horizontal, 30).fixedSize(horizontal: false, vertical: true)
-                            .onGeometryChange(for: CGFloat.self) { $0.size.height } action: { footerHeight = $0 }
+                            .onGeometryChange(for: CGFloat.self) { $0.size.height } action: { footerHeight = $0; footerMeasured = true }
                             .offset(y: fullHeight + paperTop + 22).opacity(expanded ? 1 : 0)
                     }
                     .frame(width: geometry.size.width, height: fullHeight + paperTop + 22 + footerHeight)
@@ -505,7 +505,7 @@ private struct WalletMorphingPaper: View, Animatable {
         let width = blend(start.width, destination.width)
         let height = blend(start.height, destination.height)
         ZStack(alignment: .topLeading) {
-            WalletReadingContent(fields: record.current.fields, input: reviewInput).equatable()
+            WalletReadingContent(fields: record.current.fields, input: reviewInput, reviewed: ReceiptCompletion.isComplete(record)).equatable()
                 .frame(width: destination.width).fixedSize(horizontal: false, vertical: true)
                 .onGeometryChange(for: CGFloat.self) { $0.size.height } action: { onFullHeight($0) }
                 .scaleEffect(x: destination.width > 0 ? width / destination.width : 1, y: 1, anchor: .topLeading)
@@ -529,10 +529,11 @@ private struct WalletMorphingPaper: View, Animatable {
 private struct WalletReadingContent: View, Equatable {
     let fields: ReceiptFields
     let input: ReceiptReviewDraft?
+    let reviewed: Bool
     nonisolated static func == (lhs: Self, rhs: Self) -> Bool {
-        lhs.fields == rhs.fields && lhs.input == rhs.input
+        lhs.fields == rhs.fields && lhs.input == rhs.input && lhs.reviewed == rhs.reviewed
     }
-    var body: some View { ReceiptPaper(fields: fields, input: input, showsSurface: false) }
+    var body: some View { ReceiptPaper(fields: fields, input: input, showsSurface: false, reviewed: reviewed) }
 }
 
 private struct WalletCrown: View {
@@ -790,6 +791,7 @@ struct ReceiptPreviewPaper: View {
                 Text(fields.merchant ?? "Merchant missing").font(.headline).lineLimit(typeSize.isAccessibilitySize ? nil : 2)
                 Spacer(minLength: 8)
                 if record.isStarred { Image(systemName: "star.fill").font(.caption) }
+                if ReceiptCompletion.isComplete(record) { ReceiptReviewedMark() }
             }
             ViewThatFits(in: .horizontal) {
                 HStack(alignment: .firstTextBaseline) { Text(ExactInput.dateText(fields.purchaseDate).nilIfEmpty ?? "Date missing").font(.footnote); Spacer(); total }
@@ -841,6 +843,7 @@ struct ReceiptWalletSettingsView: View {
     var body: some View {
         NavigationStack {
             Form {
+                ReceiptAppLockSettings()
                 Section {
                     Picker("Receipt paper", selection: Binding(get: { workspace.walletSettings.paperAppearance }, set: { appearance in
                         var settings = workspace.walletSettings

@@ -26,8 +26,17 @@ struct ReceiptSessionView: View {
         #endif
         return ReceiptWorkspace()
     }()
+    @State private var appLock: ReceiptAppLock = {
+        #if DEBUG
+        if SyntheticNativePreview.enabled || WorkflowTestInput.enabled { return ReceiptAppLockFixture.make() }
+        #endif
+        return ReceiptAppLock()
+    }()
     var body: some View {
-        ReceiptHome(workspace: workspace).id(workspace.sessionID)
+        Group {
+            if appLock.unlocked { ReceiptHome(workspace: workspace).id(workspace.sessionID) }
+            else { ReceiptLockScreen(lock: appLock) }
+        }.environment(appLock)
             #if DEBUG
             .dynamicTypeSize(SyntheticNativePreview.enabled && ProcessInfo.processInfo.arguments.contains("--t05-large-text") ? .accessibility5 : systemTypeSize)
             .preferredColorScheme(SyntheticNativePreview.enabled ? (ProcessInfo.processInfo.arguments.contains("--t05-light") ? .light : .dark) : nil)
@@ -38,7 +47,9 @@ struct ReceiptSessionView: View {
                     return
                 }
                 #endif
-                workspace.activate(protectedDataAvailable: UIApplication.shared.isProtectedDataAvailable)
+                appLock.resume()
+                if appLock.unlocked { activateWorkspace() }
+                else { await appLock.unlock() }
                 #if DEBUG
                 await SyntheticNativePreview.run(workspace)
                 await SyntheticNativePreview.addRequestedDemoReceipts(workspace)
@@ -46,19 +57,30 @@ struct ReceiptSessionView: View {
             }
             .onChange(of: scenePhase) { _, phase in
                 switch phase {
-                case .background: workspace.suspend()
+                case .background: appLock.suspend(); workspace.suspend()
                 case .active:
                     ReceiptPrivacyCover.hide()
-                    workspace.activate(protectedDataAvailable: UIApplication.shared.isProtectedDataAvailable)
+                    let authenticateReturn = appLock.resume()
+                    if appLock.unlocked { activateWorkspace() }
+                    else if authenticateReturn { Task { await appLock.unlock() } }
+                    // Transient Face ID inactivity never starts another prompt.
                 case .inactive:
                     ReceiptPrivacyCover.show()
                     workspace.privacyCovered = true // Unsaved data is retained through transient picker inactivity.
                 @unknown default: workspace.suspend()
                 }
             }
-            .onReceive(NotificationCenter.default.publisher(for: UIApplication.protectedDataWillBecomeUnavailableNotification)) { _ in workspace.suspend() }
+            .onChange(of: appLock.unlocked) { _, unlocked in
+                if unlocked && scenePhase == .active { activateWorkspace() }
+            }
+            .onReceive(NotificationCenter.default.publisher(for: UIApplication.protectedDataWillBecomeUnavailableNotification)) { _ in appLock.revoke(); workspace.suspend() }
             .onReceive(NotificationCenter.default.publisher(for: UIApplication.protectedDataDidBecomeAvailableNotification)) { _ in
-                if scenePhase == .active { ReceiptPrivacyCover.hide(); workspace.activate(protectedDataAvailable: true) }
+                if scenePhase == .active {
+                    ReceiptPrivacyCover.hide()
+                    let authenticateReturn = appLock.resume()
+                    if appLock.unlocked { activateWorkspace() }
+                    else if authenticateReturn { Task { await appLock.unlock() } }
+                }
             }
             #if DEBUG
             .sheet(isPresented: .constant(ProcessInfo.processInfo.arguments.contains("--synthetic-diagnostics"))) {
@@ -69,4 +91,9 @@ struct ReceiptSessionView: View {
             .task { await SyntheticStorageDiagnostics.runIfRequested() }
             #endif
     }
+    private func activateWorkspace() {
+        guard appLock.unlocked else { return }
+        workspace.activate(protectedDataAvailable: UIApplication.shared.isProtectedDataAvailable)
+    }
+
 }

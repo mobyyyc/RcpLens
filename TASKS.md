@@ -119,3 +119,11 @@ The main chat coordinates these task chats. The user approves one task at a time
 - Acceptance: capture leads to existing editable review only after Use photo; unaccepted photos never save; Simulator has a clear alternative; normal buttons share the app's sizing/style.
 - Validation: six unique UI checks passed, with the three affected capture/layout cases rerun after final refinements; Simulator and unsigned physical SDK Release builds passed. [Evidence](docs/evidence/t08-camera/README.md). Actual camera permission, orientation, focus and sharpness are physical-iPhone checks.
 - Next task: user review and guided physical camera test, awaiting approval. [Camera test steps](docs/CAMERA.md).
+
+## T08 privacy and receipt-status follow-up · 2026-10-09
+
+Previous task: guided camera capture (`8cd0246`). Current milestone: usable demo polish and device preparation. Completed receipts now use a corner checkmark in previews and wallet/history detail; routine review/saved labels are removed while incomplete warnings remain. Optional Face ID app lock defaults to a five-minute return delay, uses passcode fallback, gates store opening, requires fresh authentication at launch, and verifies changes that weaken protection. Existing encrypted receipt storage remains unchanged.
+
+Ten lock/lifecycle unit checks and eight final native UI checks passed, including cancellation, retry, immediate return, grace return, settings, wallet/history checkmarks, repeated home transitions and long-paper bottom clearance. Simulator and unsigned physical SDK Release builds passed. The recurring alert came from a disposable XCTest runner missing its test launch environment; it was uninstalled and command-line UI tests now clean it up on exit. [Implementation and iPhone checks](docs/APP_LOCK.md), [validation](docs/evidence/t08-app-lock/validation-summary.json).
+
+Next task: guided physical iPhone test of Face ID/passcode and camera capture, awaiting user approval.

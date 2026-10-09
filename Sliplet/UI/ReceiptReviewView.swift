@@ -202,6 +202,7 @@ struct ReceiptPaper: View {
     let fields: ReceiptFields
     var input: ReceiptReviewDraft? = nil
     var showsSurface = true
+    var reviewed = false
     @Environment(\.dynamicTypeSize) private var typeSize
     private func money(_ value: ReceiptMoney?, raw: String? = nil) -> String {
         value.map { ExactInput.format($0.minorUnits, scale: $0.currency.minorUnitScale) } ?? raw?.nilIfEmpty ?? "Missing"
@@ -211,7 +212,11 @@ struct ReceiptPaper: View {
     }
     private var content: some View {
         VStack(alignment: .leading, spacing: 18) {
-            Text(fields.merchant ?? "Merchant missing").font(.title2.weight(.semibold))
+            HStack(alignment: .top, spacing: 12) {
+                Text(fields.merchant ?? "Merchant missing").font(.title2.weight(.semibold))
+                Spacer(minLength: 0)
+                if reviewed { ReceiptReviewedMark() }
+            }
             Text("\(ExactInput.dateText(fields.purchaseDate).nilIfEmpty ?? "Date missing") · \(fields.currency?.code ?? "Currency missing")").font(.subheadline).foregroundStyle(.primary)
             Divider()
             Text("Items").font(.headline)
@@ -231,10 +236,18 @@ struct ReceiptPaper: View {
             ForEach(fields.adjustments.filter { $0.kind == .tax }) { adjustment in amountRow(adjustment.label ?? "Tax", adjustment.amount, raw: input?.lines.first { $0.id == adjustment.id }?.amount) }
             ForEach(fields.adjustments.filter { $0.kind != .discount && $0.kind != .tax }) { adjustment in amountRow(adjustment.label ?? adjustment.kind.rawValue.capitalized, adjustment.amount, raw: input?.lines.first { $0.id == adjustment.id }?.amount) }
             Divider()
-            amountRow("Total", fields.total, raw: input?.total).font(.title3.weight(.semibold))
+            amountRow("Total", fields.total, raw: input?.total).font(.title3.weight(.semibold)).accessibilityIdentifier("receiptPaperTotal")
         }.padding(24).frame(maxWidth: .infinity, alignment: .leading)
     }
     private func amountRow(_ name: String, _ value: ReceiptMoney?, raw: String? = nil) -> some View {
         LabeledContent(name) { Text(money(value, raw: raw)).monospacedDigit().foregroundStyle(.primary) }.foregroundStyle(.primary).accessibilityElement(children: .combine)
+    }
+}
+
+struct ReceiptReviewedMark: View {
+    var body: some View {
+        Image(systemName: "checkmark.circle.fill").font(.system(size: 18, weight: .medium))
+            .foregroundStyle(.primary.opacity(0.65))
+            .accessibilityLabel("Reviewed and saved").accessibilityIdentifier("receiptReviewedMark")
     }
 }

@@ -4,6 +4,8 @@ An iOS-only personal purchase memory app. Import a receipt, correct it quickly, 
 
 Status: T01–T06 accepted, including the wallet-transition refinement through T07 approval. T07 purchase history and local search are implemented and verified, independently reviewed, with the verified Release installed; user review pending. The native imported-image demo supports review, drafts, exact reconciliation, local saving, reopening, deletion and exact item splits. The home wallet now holds a chronological paper stack with in-place expansion, archive/star and configurable swipe actions. See [shared native UI components](docs/UI_COMPONENTS.md), [purchase search and evidence](docs/SEARCH.md), [wallet design](docs/WALLET_DESIGN.md), [native redesign](docs/UI_REDESIGN.md), [demo verification](docs/IMPORT_DEMO.md), [MVP_PLAN.md](MVP_PLAN.md), [TASKS.md](TASKS.md), [PROGRESS.md](PROGRESS.md), and [docs/PRODUCT.md](docs/PRODUCT.md).
 
+Completed receipts now use a corner checkmark. Optional Face ID app lock supports passcode fallback and a five-minute default return delay. See [privacy settings and phone checks](docs/APP_LOCK.md).
+
 Sliplet was previously named RcpLens. The existing bundle ID, Keychain services and encryption contexts retain their original identifiers so installed apps and saved receipts continue to work. Historical verification artifacts retain the names used when they were captured.
 
 ## Try the receipt demo on your Mac
