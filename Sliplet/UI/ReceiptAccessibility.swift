@@ -26,9 +26,12 @@ struct ReceiptProminentStyle: PrimitiveButtonStyle {
     @Environment(\.accessibilityReduceTransparency) private var systemOpaque
     @Environment(\.colorSchemeContrast) private var systemContrast
     func makeBody(configuration: Configuration) -> some View {
+        let button = Button(role: configuration.role, action: configuration.trigger) {
+            configuration.label.frame(minHeight: 30)
+        }
         if ReceiptAccessibility.reduceTransparency(systemOpaque) || ReceiptAccessibility.contrast(systemContrast) == .increased {
-            Button(configuration).buttonStyle(.borderedProminent).foregroundStyle(Color(uiColor: .systemBackground)).controlSize(.regular)
-        } else { Button(configuration).buttonStyle(.glassProminent).foregroundStyle(Color(uiColor: .systemBackground)).controlSize(.regular) }
+            button.buttonStyle(.borderedProminent).foregroundStyle(Color(uiColor: .systemBackground)).controlSize(.regular)
+        } else { button.buttonStyle(.glassProminent).foregroundStyle(Color(uiColor: .systemBackground)).controlSize(.regular) }
     }
 }
 
@@ -43,11 +46,28 @@ struct ReceiptActionBarLayout: ViewModifier {
 }
 
 struct ReceiptSecondaryStyle: PrimitiveButtonStyle {
+    var circular = false
     @Environment(\.accessibilityReduceTransparency) private var opaque
     @Environment(\.colorSchemeContrast) private var contrast
-    func makeBody(configuration: Configuration) -> some View {
-        if ReceiptAccessibility.reduceTransparency(opaque) || ReceiptAccessibility.contrast(contrast) == .increased {
-            Button(configuration).buttonStyle(.bordered).controlSize(.regular)
-        } else { Button(configuration).buttonStyle(.glass).controlSize(.regular) }
+    @Environment(\.isEnabled) private var enabled
+    @ViewBuilder func makeBody(configuration: Configuration) -> some View {
+        let solid = ReceiptAccessibility.reduceTransparency(opaque) || ReceiptAccessibility.contrast(contrast) == .increased
+        if circular {
+            let button = Button(role: configuration.role, action: configuration.trigger) {
+                configuration.label.frame(width: 44, height: 44)
+            }.buttonStyle(.plain).foregroundStyle(.primary).opacity(enabled ? 1 : 0.4)
+            if solid {
+                button.background { Circle().fill(Color(uiColor: .secondarySystemGroupedBackground)) }
+                    .overlay { Circle().stroke(.primary.opacity(0.35), lineWidth: 1) }
+            } else {
+                button.glassEffect(.regular.interactive(), in: .circle)
+            }
+        } else {
+            let button = Button(role: configuration.role, action: configuration.trigger) {
+                configuration.label.frame(minHeight: 30)
+            }.buttonBorderShape(.capsule)
+            if solid { button.buttonStyle(.bordered).controlSize(.regular) }
+            else { button.buttonStyle(.glass).controlSize(.regular) }
+        }
     }
 }

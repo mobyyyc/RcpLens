@@ -121,7 +121,8 @@ import CryptoKit
             workspace.backToWallet()
             try? await Task.sleep(for: .seconds(1.5))
             guard !Task.isCancelled else { return }
-            workspace.open(records[0])
+            // Older top paper travels downward; the middle paper above travels upward.
+            workspace.open(records[2])
             try? await Task.sleep(for: .seconds(1.5))
             guard !Task.isCancelled else { return }
             workspace.backToWallet()

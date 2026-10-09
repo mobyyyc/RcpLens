@@ -182,7 +182,7 @@ struct ReceiptHome: View {
                 HStack(spacing: 12) {
                     Button { workspace.splitVisible = true } label: {
                         Image(systemName: "person.2")
-                    }.buttonStyle(ReceiptSecondaryStyle()).buttonBorderShape(.circle)
+                    }.buttonStyle(ReceiptSecondaryStyle(circular: true))
                         .accessibilityLabel("Split").accessibilityIdentifier("splitOpen")
                         .disabled(workspace.saving || workspace.selected == nil || workspace.image == nil)
                     Spacer(minLength: 0)

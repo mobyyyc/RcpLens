@@ -207,7 +207,7 @@ struct ReceiptWalletScene: View {
                     .zIndex(Double(records.count + 2))
                 }
                 if let presented {
-                    liftedPaper(workspace.selected ?? presented, geometry: geometry)
+                    liftedPaper(presented, geometry: geometry)
                         .frame(width: geometry.size.width, height: geometry.size.height)
                         .zIndex(Double(selectedLayer))
                     // The entire live stack is hidden. Each visible neighbour has one frozen
@@ -250,7 +250,7 @@ struct ReceiptWalletScene: View {
                     if presented?.id != record.id { preparePresentation(record, geometry: geometry) }
                 } else if presented != nil {
                     let returningID = presented?.id
-                    withAnimation(motion, completionCriteria: .logicallyComplete) { expanded = false } completion: {
+                    withAnimation(motion, completionCriteria: .removed) { expanded = false } completion: {
                         guard selectedID == nil, presented?.id == returningID else { return }
                         var transaction = Transaction(animation: nil)
                         transaction.disablesAnimations = true
@@ -260,12 +260,7 @@ struct ReceiptWalletScene: View {
                     }
                 }
             }
-            .task(id: presented?.id) {
-                guard presented != nil, selectedID != nil else { return }
-                try? await Task.sleep(for: .milliseconds(24))
-                guard !Task.isCancelled, selectedID != nil else { return }
-                withAnimation(motion) { expanded = true }
-            }
+
         }
     }
     private func preparePresentation(_ record: ReceiptRecord, geometry: GeometryProxy) {
@@ -345,8 +340,9 @@ struct ReceiptWalletScene: View {
         return ReceiptSwipePaper(record: record, settings: workspace.walletSettings, revealedID: $revealedID, identifier: "receipt-\(index)") {
             if revealedID != nil { withAnimation(motion) { revealedID = nil } }
             else {
+                // Freeze the screen rectangle before navigation changes native insets.
+                preparePresentation(record, geometry: geometry)
                 workspace.open(record)
-                if selectedID == record.id { preparePresentation(record, geometry: geometry) }
             }
         } perform: { action in
             withAnimation(motion) { revealedID = nil }
@@ -395,11 +391,15 @@ struct ReceiptWalletScene: View {
                            tilt: selectedTilt, reduceMotion: reduceMotion,
                            error: workspace.errorMessage,
                            loading: selectedID != nil && workspace.image == nil && workspace.errorMessage == nil,
-                           visibleToAccessibility: selectedID != nil)
+                           visibleToAccessibility: selectedID != nil) {
+            guard selectedID == record.id, presented?.id == record.id, !expanded else { return }
+            withAnimation(motion) { expanded = true }
+        }
     }
 }
 
-/// Reading scroll updates stay in this subtree; they do not rebuild/sort the wallet stack.
+/// The reader keeps its full scroll extent while the paper returns. Its single paper
+/// lives in scene coordinates, so native inset/offset clamping cannot teleport it.
 private struct WalletReadingScene: View {
     let record: ReceiptRecord
     let expanded: Bool
@@ -409,92 +409,130 @@ private struct WalletReadingScene: View {
     let error: String?
     let loading: Bool
     let visibleToAccessibility: Bool
-    @State private var readingOffset: CGFloat = 0
-    @State private var readingTopInset: CGFloat = 0
+    var onReady: () -> Void
+    private let reviewInput: ReceiptReviewDraft?
+    @State private var fullHeight: CGFloat = 0
+    @State private var statusHeight: CGFloat = 0
+    @State private var footerHeight: CGFloat = 0
+    @State private var canvasY: CGFloat = 0
+    @State private var canvasMeasured = false
+    @State private var returnCanvasY: CGFloat?
+    init(record: ReceiptRecord, expanded: Bool, origin: CGRect, tilt: Double,
+         reduceMotion: Bool, error: String?, loading: Bool, visibleToAccessibility: Bool,
+         onReady: @escaping () -> Void) {
+        self.record = record; self.expanded = expanded; self.origin = origin; self.tilt = tilt
+        self.reduceMotion = reduceMotion; self.error = error; self.loading = loading
+        self.visibleToAccessibility = visibleToAccessibility; self.onReady = onReady
+        reviewInput = record.current.reviewInput.flatMap { try? JSONDecoder().decode(ReceiptReviewDraft.self, from: $0) }
+    }
+    private var paperTop: CGFloat { max(52, statusHeight + 12) }
+    private var ready: Bool { fullHeight > 0 && statusHeight > 0 && footerHeight > 0 && canvasMeasured }
 
     var body: some View {
         GeometryReader { geometry in
-            ScrollView {
-                WalletLiftedPaper(record: record, expanded: expanded, origin: origin,
-                                  width: max(0, geometry.size.width - 60), viewportHeight: geometry.size.height,
-                                  returnOffset: readingOffset - readingTopInset, tilt: tilt, reduceMotion: reduceMotion,
-                                  error: error, loading: loading)
+            ZStack(alignment: .topLeading) {
+                ScrollView {
+                    ZStack(alignment: .topLeading) {
+                        Color.clear
+                        HStack {
+                            Label(ReceiptCompletion.isComplete(record) ? "Reviewed" : "Needs review", systemImage: ReceiptCompletion.isComplete(record) ? "checkmark.circle" : "exclamationmark.circle")
+                            Spacer()
+                            if record.isStarred { Image(systemName: "star.fill").accessibilityLabel("Starred") }
+                        }.font(.footnote.weight(.medium)).fixedSize(horizontal: false, vertical: true)
+                            .padding(.horizontal, 34).padding(.top, 10)
+                            .onGeometryChange(for: CGFloat.self) { $0.size.height } action: { statusHeight = $0 }
+                            .opacity(expanded ? 1 : 0)
+                        VStack(alignment: .leading, spacing: 18) {
+                            if loading { ProgressView("Loading original").font(.footnote) }
+                            if let error { Text(error).font(.subheadline) }
+                            if record.current.fields.currency == nil { Text("Currency needs confirmation. Edit to check the saved amounts.").font(.footnote) }
+                            Label("Saved on this device", systemImage: "lock").font(.footnote)
+                                .accessibilityIdentifier("walletReceiptFooter")
+                        }.padding(.horizontal, 30).fixedSize(horizontal: false, vertical: true)
+                            .onGeometryChange(for: CGFloat.self) { $0.size.height } action: { footerHeight = $0 }
+                            .offset(y: fullHeight + paperTop + 22).opacity(expanded ? 1 : 0)
+                    }
+                    .frame(width: geometry.size.width, height: fullHeight + paperTop + 22 + footerHeight)
+                    .onGeometryChange(for: CGFloat.self) { $0.frame(in: .named("walletScene")).minY } action: {
+                        canvasY = $0; canvasMeasured = true
+                    }
+                }
+                .scrollClipDisabled().scrollEdgeEffectStyle(.soft, for: .vertical)
+                .contentMargins(.bottom, geometry.safeAreaInsets.bottom + 12, for: .scrollContent)
+                .scrollDisabled(!expanded)
+                .allowsHitTesting(expanded)
+                .accessibilityIdentifier("detailScreen")
+                .accessibilityHidden(!visibleToAccessibility)
+
+                WalletMorphingPaper(reviewInput: reviewInput, record: record, expanded: expanded,
+                                    progress: expanded ? 1 : 0,
+                                    origin: origin,
+                                    destination: CGRect(x: 30, y: paperTop + (expanded ? canvasY : returnCanvasY ?? canvasY),
+                                                        width: max(0, geometry.size.width - 60), height: max(origin.height, fullHeight)),
+                                    tilt: tilt, reduceMotion: reduceMotion) { fullHeight = $0 }
+                    .allowsHitTesting(false)
+                    .accessibilityHidden(!visibleToAccessibility)
             }
-            // The reader uses native insets. Expanding its viewport by the safe-area
-            // bar height would put its scroll end below the physical screen.
-            .scrollClipDisabled().scrollEdgeEffectStyle(.soft, for: .vertical)
-            .contentMargins(.bottom, 12, for: .scrollContent)
-            .scrollDisabled(!expanded)
-            .onScrollGeometryChange(for: CGSize.self) {
-                CGSize(width: $0.contentOffset.y + $0.contentInsets.top, height: $0.contentInsets.top)
-            } action: { _, scroll in
-                readingTopInset = scroll.height
-                if expanded { readingOffset = scroll.width }
+            .onChange(of: ready, initial: true) { _, measured in
+                if measured { onReady() }
             }
-            .accessibilityIdentifier("detailScreen")
-            .accessibilityHidden(!visibleToAccessibility)
+            .onChange(of: expanded) { _, reading in
+                if !reading { returnCanvasY = canvasY }
+            }
         }
     }
 }
 
-/// A single paper silhouette changes its rectangle; its torn bottom travels with that rectangle.
-private struct WalletLiftedPaper: View {
+/// One animatable value drives the whole silhouette. Both content layouts are measured
+/// at their final widths, rather than rebuilding receipt rows during every animation frame.
+private struct WalletMorphingPaper: View, Animatable {
+    let reviewInput: ReceiptReviewDraft?
     let record: ReceiptRecord
     let expanded: Bool
+    var progress: CGFloat
     let origin: CGRect
-    let width: CGFloat
-    let viewportHeight: CGFloat
-    let returnOffset: CGFloat
+    let destination: CGRect
     let tilt: Double
     let reduceMotion: Bool
-    let error: String?
-    let loading: Bool
-    @State private var fullHeight: CGFloat = 244
-    @State private var statusHeight: CGFloat = 0
-    @State private var footerHeight: CGFloat = 0
-    @Environment(\.dynamicTypeSize) private var typeSize
-    private var reading: Bool { expanded || reduceMotion }
-    private var paperWidth: CGFloat { reading ? width : origin.width }
-    private var paperHeight: CGFloat { reading ? fullHeight : origin.height }
-    // Preserve the regular 52-point transition destination, but clear the actual status row at larger sizes.
-    private var readingPaperTop: CGFloat { max(52, statusHeight + 12) }
-    var body: some View {
-        ZStack(alignment: .topLeading) {
-            HStack {
-                Label(ReceiptCompletion.isComplete(record) ? "Reviewed" : "Needs review", systemImage: ReceiptCompletion.isComplete(record) ? "checkmark.circle" : "exclamationmark.circle")
-                Spacer()
-                if record.isStarred { Image(systemName: "star.fill").accessibilityLabel("Starred") }
-            }.font(.footnote.weight(.medium)).fixedSize(horizontal: false, vertical: true)
-                .padding(.horizontal, 34).padding(.top, 10)
-                .onGeometryChange(for: CGFloat.self) { $0.size.height } action: { statusHeight = $0 }
-                .opacity(expanded ? 1 : 0)
-            ZStack(alignment: .topLeading) {
-                ReceiptPaper(fields: record.current.fields, input: record.current.reviewInput.flatMap { try? JSONDecoder().decode(ReceiptReviewDraft.self, from: $0) }, showsSurface: false)
-                    .frame(width: paperWidth).fixedSize(horizontal: false, vertical: true)
-                    .onGeometryChange(for: CGFloat.self) { $0.size.height } action: { fullHeight = $0 }
-                    .opacity(expanded ? 1 : 0).accessibilityHidden(!expanded)
-                ReceiptPreviewPaper(record: record)
-                    .frame(width: paperWidth).opacity(expanded ? 0 : 1).accessibilityHidden(true)
-            }
-            .frame(width: paperWidth, height: paperHeight, alignment: .topLeading)
-            .clipShape(ReceiptPaperEdge())
-            .background { ReceiptPaperBackground() }
-            .receiptPaperStyle()
-            .rotationEffect(.degrees(reading ? 0 : tilt))
-            .offset(x: reading ? 30 : origin.minX, y: reading ? readingPaperTop : origin.minY + returnOffset)
-            VStack(alignment: .leading, spacing: 18) {
-                if loading { ProgressView("Loading original").font(.footnote) }
-                if let error { Text(error).font(.subheadline) }
-                if record.current.fields.currency == nil { Text("Currency needs confirmation. Edit to check the saved amounts.").font(.footnote) }
-                Label("Saved on this device", systemImage: "lock").font(.footnote)
-                    .accessibilityIdentifier("walletReceiptFooter")
-            }.padding(.horizontal, 30).fixedSize(horizontal: false, vertical: true)
-                .onGeometryChange(for: CGFloat.self) { $0.size.height } action: { footerHeight = $0 }
-                .offset(y: fullHeight + readingPaperTop + 22).opacity(expanded ? 1 : 0)
-        }
-        .frame(maxWidth: .infinity, alignment: .topLeading)
-        .frame(height: expanded ? fullHeight + readingPaperTop + 22 + footerHeight : viewportHeight, alignment: .topLeading)
+    var onFullHeight: (CGFloat) -> Void
+    nonisolated var animatableData: CGFloat {
+        get { progress }
+        set { progress = newValue }
     }
+    private func blend(_ start: CGFloat, _ end: CGFloat) -> CGFloat { start + (end - start) * progress }
+    var body: some View {
+        let start = reduceMotion ? destination : origin
+        let width = blend(start.width, destination.width)
+        let height = blend(start.height, destination.height)
+        ZStack(alignment: .topLeading) {
+            WalletReadingContent(fields: record.current.fields, input: reviewInput).equatable()
+                .frame(width: destination.width).fixedSize(horizontal: false, vertical: true)
+                .onGeometryChange(for: CGFloat.self) { $0.size.height } action: { onFullHeight($0) }
+                .scaleEffect(x: destination.width > 0 ? width / destination.width : 1, y: 1, anchor: .topLeading)
+                .opacity(progress).accessibilityHidden(!expanded)
+            ReceiptPreviewPaper(record: record)
+                .frame(width: origin.width, height: origin.height, alignment: .topLeading)
+                .scaleEffect(x: origin.width > 0 ? width / origin.width : 1, y: 1, anchor: .topLeading)
+                .opacity(1 - progress).accessibilityHidden(true)
+        }
+        .frame(width: width, height: height, alignment: .topLeading)
+        .clipShape(ReceiptPaperEdge())
+        .background { ReceiptPaperBackground() }
+        .receiptPaperStyle()
+        .rotationEffect(.degrees(reduceMotion ? 0 : tilt * Double(1 - progress)))
+        .offset(x: blend(start.minX, destination.minX), y: blend(start.minY, destination.minY))
+    }
+}
+
+/// Geometry-only updates do not reformat every purchase row. Environment-driven
+/// changes still update the underlying native receipt view.
+private struct WalletReadingContent: View, Equatable {
+    let fields: ReceiptFields
+    let input: ReceiptReviewDraft?
+    nonisolated static func == (lhs: Self, rhs: Self) -> Bool {
+        lhs.fields == rhs.fields && lhs.input == rhs.input
+    }
+    var body: some View { ReceiptPaper(fields: fields, input: input, showsSurface: false) }
 }
 
 private struct WalletCrown: View {

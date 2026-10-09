@@ -279,7 +279,7 @@ import Vision
             app.launch()
             let button = app.buttons["import"]
             XCTAssertTrue(button.waitForExistence(timeout: 30))
-            XCTAssertLessThanOrEqual(button.frame.height, 50, "Import uses a compact native control height")
+            XCTAssertEqual(button.frame.height, 44, accuracy: 1, "Import must match the visible 44-point navigation glass control")
             let measured = try XCTUnwrap(pixelContrast(button.screenshot()))
             XCTAssertEqual(measured.foreground, mode == "dark" ? "#000000" : "#FFFFFF")
             XCTAssertGreaterThanOrEqual(measured.ratio, 7)
@@ -604,7 +604,7 @@ import Vision
         let app = XCUIApplication(); app.launchArguments = ["--t05-synthetic-preview", "review"]
         app.launch(); XCTAssertTrue(app.buttons["saveDraft"].waitForExistence(timeout: 30))
         let save = app.buttons["saveDraft"]
-        XCTAssertLessThanOrEqual(save.frame.height, 50, "Draft and finish use the standard native control size")
+        XCTAssertEqual(save.frame.height, 44, accuracy: 1, "Bottom actions must match the visible 44-point navigation glass control")
         XCTAssertEqual(save.frame.height, app.buttons["finishSave"].frame.height, accuracy: 2)
         XCTAssertGreaterThanOrEqual(app.frame.maxY - save.frame.maxY, 40, "Actions clear the home indicator comfortably")
         app.buttons["original"].tap()
@@ -643,6 +643,8 @@ import Vision
         save.tap(); XCTAssertTrue(app.buttons["edit"].waitForExistence(timeout: 10))
         XCTAssertGreaterThanOrEqual(app.frame.maxY - app.buttons["edit"].frame.maxY, 40)
         XCTAssertGreaterThanOrEqual(app.frame.maxY - app.buttons["splitOpen"].frame.maxY, 40)
+        XCTAssertEqual(app.buttons["splitOpen"].frame.height, app.buttons["edit"].frame.height, accuracy: 1, "Circular secondary and primary capsule actions share the same height")
+        XCTAssertEqual(app.buttons["splitOpen"].frame.width, app.buttons["splitOpen"].frame.height, accuracy: 1, "The icon action remains circular")
         app.terminate()
     }
     func testLongWalletReceiptFooterClearsRaisedActions() {

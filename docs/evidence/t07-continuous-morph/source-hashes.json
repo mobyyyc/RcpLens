@@ -1,0 +1,8 @@
+{
+  "Sliplet/UI/ReceiptWalletScene.swift": "83a73491188113307f9ff036fc3db255e2154660cc266388e061a567f3c171a5",
+  "Sliplet/UI/ReceiptAccessibility.swift": "86d83766fafcae18d7e42858aedbf54d1dabd7a92821e8e0e21f087c8f0f3752",
+  "Sliplet/UI/ReceiptHome.swift": "25da9fb9e0f77817fea9903dad8706f8457de21623eea680ecb9a3aab453f1c6",
+  "Sliplet/Diagnostics/SyntheticNativePreview.swift": "3eba136ed5b2424d9b4288d58ac836fa2bf313831b14ce845d2a2a6732bd8cea",
+  "SlipletUITests/ReceiptUIWorkflowTests.swift": "53b72a8738f7fceadfab9f0e8c772fc2ac19f9e5d5122f715dd3f7040c5edff8",
+  "scripts/capture-wallet-motion.py": "131d44ec71bd8d7c0871cf69a2fd06e52d2ad4a0073bf2be87b14c58fd760fe3"
+}
