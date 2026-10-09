@@ -1,0 +1,21 @@
+{
+  "fictional": true,
+  "variants": {
+    "baseline": {
+      "orientations_passed": 8,
+      "normalized_box_tolerance": 0.015,
+      "first_last_text_present": true,
+      "original_jpegs_unchanged": true,
+      "mixed_language_recognized": false,
+      "observations": 4
+    },
+    "document-lines": {
+      "orientations_passed": 8,
+      "normalized_box_tolerance": 0.015,
+      "first_last_text_present": true,
+      "original_jpegs_unchanged": true,
+      "mixed_language_recognized": false,
+      "observations": 4
+    }
+  }
+}

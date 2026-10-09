@@ -153,13 +153,14 @@ Common constraints: entirely on-device recognition and evaluation; personal test
 
 ## P2-02 · Capture and document layout
 
-- Status: prepared; awaiting dependencies and explicit main-chat approval.
-- Dependencies: P2-01 accepted; separate approval
+- Status: complete and independently accepted in Main on 2026-10-09; no production candidate promoted.
+- Dependencies: P2-01 independently accepted/pushed (`52fff21`); separate P2-02 approval received.
 - Goal: Improve capture and document structure only where measurements show a benefit.
 - Scope: Use the audit to choose image quality/crop/perspective experiments and compare accurate text OCR with Vision document recognition. Retain original photos/orientation and map processed coordinates back to original evidence. Preserve long and mixed-language receipts.
 - Acceptance: Before/after scoring on identical inputs, correct source highlights, a conservative fallback and latency results. Promote improvements only when correction burden improves without material retailer regressions.
 - Validation: Target identified failures, image orientation/source mapping, long-receipt retention, fallback and relevant actual-device checks.
-- Chat: 01a11f0a-a799-7613-a539-649aea09f8dc (local; idle, no implementation started)
+- Result: Six variants × five checked development images × two passes. Baseline 57/66 exact purchases; document paths 45–46/66. Price association retained 57/66 but regressed No Frills extra-line/correction proxies. No candidate promoted; production remains unchanged. 14 layout checks, 12 audit checks and 14 historical checks passed; Mac worker/iOS SDK typecheck, 16 fictional orientation requests, full parser repeats and read-only capture verification passed. Native tables actually applied 69 rows on three images; two had no tables. Phone latency, unseen validation, human correction seconds and mixed-language OCR quality remain unmeasured. [Results/handoff](docs/CAPTURE_LAYOUT_EVALUATION.md).
+- Chat: 01a11f0a-a799-7613-a539-649aea09f8dc (local; complete and independently accepted)
 
 ## P2-03 · Retailer parsing accuracy
 
