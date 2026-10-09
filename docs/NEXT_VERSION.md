@@ -1,6 +1,6 @@
 # Proposed next test version — Sliplet v0.2
 
-Draft for user approval. Prepared 2026-10-09, America/Toronto. This is a roadmap proposal, not authorization to begin the next implementation task or upload receipts. The user confirmed entirely on-device recognition and a personal test build on 2026-10-09. P2-01 was separately approved and accepted; P2-02 was then separately approved, completed its experiments and independently accepted. P2-03 and later implementation still require task-specific approval.
+Draft for user approval. Prepared 2026-10-09, America/Toronto. This is a roadmap proposal, not authorization to begin the next implementation task or upload receipts. The user confirmed entirely on-device recognition and a personal test build on 2026-10-09. P2-01 was separately approved and accepted; P2-02 was then separately approved, completed its experiments and independently accepted. P2-03 was separately approved and independently accepted. P2-04 and P2-05 still require task-specific approval.
 
 ## Current position
 
@@ -28,7 +28,7 @@ Photograph a normal No Frills, Costco or T&T receipt, correct a small number of 
 | 4. Make corrections faster | Compact issue-first review, convenient original-image comparison and focused edits/retries for uncertain rows. Preserve normal review and Save draft. | Timed phone walkthroughs: fewer edits and faster review, including long receipts and one deliberately bad image. Fully reconciled does not automatically mean fully accurate. |
 | 5. Prepare the personal v0.2 build | Portable encrypted export/restore for receipts and originals, safe upgrades, offline/lifecycle checks and a repeatable release checklist. | Restore into an isolated test store, confirm original images and revisions, retain existing data across an upgrade, and complete repeated real shopping/import/review/search/split sessions on the iPhone. |
 
-The first task, **Recognition failure audit and expanded baseline**, is accepted; see [measured audit](RECOGNITION_AUDIT.md). The approved P2-02 capture/document-layout experiments are complete and accepted: document/association alternatives did not pass the no-regression gate, so production is unchanged. See [comparison and limits](CAPTURE_LAYOUT_EVALUATION.md). The next proposed approval is P2-03 retailer parsing. The user requested five corresponding Phase 2 chats on 2026-10-09; they are recorded in TASKS.md. Subsequent task details should use measured findings; do not dispatch all milestones at once.
+The first task, **Recognition failure audit and expanded baseline**, is accepted; see [measured audit](RECOGNITION_AUDIT.md). The approved P2-02 capture/document-layout experiments are complete and accepted: document/association alternatives did not pass the no-regression gate, so P2-02 promoted no production change. See [comparison and limits](CAPTURE_LAYOUT_EVALUATION.md). P2-03 is also accepted; the next proposed approval is P2-04 faster corrections. The user requested five corresponding Phase 2 chats on 2026-10-09; they are recorded in TASKS.md. Subsequent task details should use measured findings; do not dispatch all milestones at once.
 
 ## Measurement and release gates
 
@@ -54,4 +54,11 @@ Then consider a small trusted-tester release and feedback workflow. Multiple wal
 
 ## Working rhythm
 
-Keep the user in this main chat. For each approved task, report the preceding task, current milestone, verification, actual commit message/hash and proposed next task, then ask for approval. The requested five Phase 2 chats exist; P2-01 is accepted, P2-02 is accepted, and the remaining three wait for separate task approvals. Creating these chats does not authorize implementation. Do not create additional chats unless explicitly requested.
+Keep the user in this main chat. For each approved task, report the preceding task, current milestone, verification, actual commit message/hash and proposed next task, then ask for approval. The requested five Phase 2 chats exist; P2-01 is accepted, P2-02 is accepted, P2-03 is accepted, and the remaining two wait for separate task approvals. Creating these chats does not authorize implementation. Do not create additional chats unless explicitly requested.
+
+
+## P2-03 implementation handoff · 2026-10-09
+
+P2-01/P2-02 are accepted (`52fff21`, `1e5680b`); the user separately approved P2-03. The parser changes are implemented and locally verified, independently accepted in Main. On five exposed development purchases, merchant/date matches rise 3/5→5/5, totals 2/5→3/5 and correction proxy falls 20→14 without measured store accuracy regression. Exact purchases remain 57/66; omitted purchases and Costco totals are still unresolved. Sixty native checks, 48 evaluator checks, frozen/fresh comparison and unsigned iOS SDK Release build pass. [Full evidence and limits](RETAILER_PARSING_EVALUATION.md).
+
+There are zero held-out purchases; quantity/unit accuracy, human correction time and phone latency remain unmeasured. The added parser work and a large initial Mac OCR timing outlier are explicitly recorded. The proposed release targets are not met or certified. Original/source conservation, mandatory review/drafts, exact cents/splits, signing/storage identities and entirely local recognition remain intact. P2-04 is the next proposal only after Main acceptance and separate user approval; no correction UI or personal-release work starts in P2-03.

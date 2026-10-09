@@ -164,13 +164,14 @@ Common constraints: entirely on-device recognition and evaluation; personal test
 
 ## P2-03 · Retailer parsing accuracy
 
-- Status: prepared; awaiting dependencies and explicit main-chat approval.
+- Status: complete and independently accepted in Main on 2026-10-09; limited interpretation improvement, release accuracy target remains unmet.
 - Dependencies: P2-01 and P2-02 accepted; separate approval
 - Goal: Improve interpretation of No Frills, Costco and T&T receipt layouts.
 - Scope: Implement evidence-driven item/amount pairing, wrapped lines, quantity/weight, discounts, taxes/deposits and total rules with a conservative generic fallback. Keep ambiguity visible. Money arithmetic stays deterministic.
 - Acceptance: Per-store development and held-out comparisons, omissions/extras and no unacceptable regressions. Never tune rules using held-out labels; matching totals alone do not establish correctness.
-- Validation: Real failure regressions and independent arithmetic checks; unseen purchase scoring without fixture-specific rules.
-- Chat: 01a11f0a-b32c-79e2-935a-f827fdb443f8 (local; idle, no implementation started)
+- Validation: 60 native unit passes (22 new parser cases), 48 evaluator checks, before/after frozen replay and ten fresh local Vision requests, read-only preservation/provenance verification, unsigned iOS Release SDK build. Five exposed development purchases only; zero held-out purchases. No receipt-ID rules or label edits. Main independently checked final sources and counters; release/generalization/phone timing remain unverified.
+- Evidence: merchant/date 3/5→5/5, totals 2/5→3/5, correction proxy 20→14, purchases unchanged 57/66, all-line amounts unchanged 61/73, omissions 12, extras 1→0; no measured store accuracy regression. [Report](docs/RETAILER_PARSING_EVALUATION.md).
+- Chat: 01a11f0a-b32c-79e2-935a-f827fdb443f8 (local; complete and independently accepted)
 
 ## P2-04 · Faster receipt corrections
 
