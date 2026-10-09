@@ -164,3 +164,7 @@ The old source reproduced the issue during partial scrolling. Two native cases p
 The user tested Sliplet on their iPhone 15 Pro and reports that Face ID and the rest of the app work well, while receipt recognition is poor. Record this as user device feedback; quantitative receipt accuracy, correction time and hardware-protection certification have not been established by this report. Recognition is now the main usability bottleneck.
 
 A draft [v0.2 roadmap](docs/NEXT_VERSION.md) proposes diagnosis, capture/layout experiments, retailer parsing, faster correction and personal release/restore readiness, followed later by purchase memory. It preserves the established interface and offline core. Recognition privacy and next-test audience preferences are pending; implementation requires approval of the next task. No app code or extraction settings changed for planning.
+
+### v0.2 preferences confirmed · 2026-10-09
+
+The user confirmed that recognition must remain entirely on-device for the next version and that the next build is for personal testing to improve everyday accuracy. Cloud evaluation and friend/TestFlight distribution are outside v0.2. These preference replies do not approve the proposed recognition audit; implementation remains pending explicit approval.

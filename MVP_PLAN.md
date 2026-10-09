@@ -35,7 +35,7 @@ Exit: a saved real receipt produces an exact split and is findable by purchased 
 
 The user has tested the iPhone 15 Pro build and reports that Face ID and the other app functions work well, with receipt recognition the remaining major weakness. Camera capture and privacy/UI follow-ups are implemented. This feedback does not replace a measured recognition or full device-protection test.
 
-The proposed next version focuses on recognition accuracy, correction effort, portable restore and everyday reliability before purchase-memory features. See [draft v0.2 roadmap](docs/NEXT_VERSION.md). Next-task implementation is not yet approved; privacy and test-audience preferences are pending.
+The proposed next version focuses on recognition accuracy, correction effort, portable restore and everyday reliability before purchase-memory features. See [draft v0.2 roadmap](docs/NEXT_VERSION.md). Next-task implementation is not yet approved. The user confirmed entirely on-device recognition and personal testing for v0.2.
 
 ## Execution
 

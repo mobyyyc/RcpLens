@@ -1,6 +1,6 @@
 # Proposed next test version — Sliplet v0.2
 
-Draft for user approval. Prepared 2026-10-09, America/Toronto. This is a roadmap proposal, not authorization to begin the next implementation task or upload receipts. Until preferences are confirmed, retain the accepted local-first approach and plan a personal test build.
+Draft for user approval. Prepared 2026-10-09, America/Toronto. This is a roadmap proposal, not authorization to begin the next implementation task or upload receipts. The user confirmed entirely on-device recognition and a personal test build on 2026-10-09. The roadmap and first implementation task still await approval.
 
 ## Current position
 
@@ -42,15 +42,15 @@ The first implementation task proposed for approval is **Recognition failure aud
 
 ## Recognition options
 
-Default proposal: improve on-device Vision and interpretation first. Compare modern document recognition and carefully chosen OCR/image options. Preserve a reliable fallback on the user's China-market iPhone.
+Confirmed v0.2 scope: all recognition stays on-device and the next test build is for the user alone. Improve Vision and interpretation first. Compare modern document recognition and carefully chosen OCR/image options. Preserve a reliable fallback on the user's China-market iPhone.
 
-If the user permits it, a later benchmark may evaluate optional cloud assistance using explicitly approved inputs. Do not upload existing private receipts, introduce automatic cloud routing or make the core app require an online service. Any such route needs its own accuracy, latency, cost and privacy decision before implementation. Apple Intelligence enhancement on eligible devices is another measured optional branch, not a requirement for this release.
+Cloud assistance and cloud benchmarks are outside v0.2. Any future cloud evaluation requires a separate user decision and explicit approval of inputs. Apple Intelligence enhancement on eligible devices remains a measured optional branch; this version must work on the user’s own iPhone without Apple Intelligence.
 
 ## Beyond v0.2
 
 Once real receipt data is dependable, build purchase memory: user-confirmed item aliases, past purchase lookup, same-item price history and repeat purchases. Price comparisons must respect package size, weight, quantity and currency; unknown quantities cannot support unit-price claims. Small spending summaries can follow accurate data.
 
-Then consider a small trusted-tester release and feedback workflow. Multiple wallets, broad analytics, accounts/sync, subscriptions, AI chat and warranty integrations stay later proposals rather than immediate implementation tasks. If friends are the next audience, adjust the release milestone for distribution, onboarding and support before inviting them.
+Then consider a small trusted-tester release and feedback workflow. Multiple wallets, broad analytics, accounts/sync, subscriptions, AI chat and warranty integrations stay later proposals rather than immediate implementation tasks. Friends and TestFlight distribution are outside the next personal test version. Revisit distribution, onboarding and support after the user’s everyday accuracy goals are met.
 
 ## Working rhythm
 
