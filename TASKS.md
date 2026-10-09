@@ -127,3 +127,9 @@ Previous task: guided camera capture (`8cd0246`). Current milestone: usable demo
 Ten lock/lifecycle unit checks and eight final native UI checks passed, including cancellation, retry, immediate return, grace return, settings, wallet/history checkmarks, repeated home transitions and long-paper bottom clearance. Simulator and unsigned physical SDK Release builds passed. The recurring alert came from a disposable XCTest runner missing its test launch environment; it was uninstalled and command-line UI tests now clean it up on exit. [Implementation and iPhone checks](docs/APP_LOCK.md), [validation](docs/evidence/t08-app-lock/validation-summary.json).
 
 Next task: guided physical iPhone test of Face ID/passcode and camera capture, awaiting user approval.
+
+## T08 screen-bottom cover follow-up · 2026-10-09
+
+Previous task: app lock and receipt checkmarks (`ea03a41`). Current milestone: demo visual refinement. The wallet’s upward motion lifted the fixed-size pocket backing off the bottom safe area, exposing receipt paper below the controls. The backing now grows by the upward travel so its top follows the wallet while its bottom keeps covering the screen. Existing feathering, wallet motion and control positions remain intact.
+
+The old source reproduced the issue during partial scrolling. Two native cases passed after the fix: bottom pixel coverage through both scroll directions with a tappable import control, and repeated receipt detail/return layering and position checks. Both Simulator and unsigned physical SDK Release builds passed. [Before/after and validation](docs/evidence/t08-bottom-cover/README.md). Next task remains the guided physical iPhone camera and Face ID check, awaiting approval.

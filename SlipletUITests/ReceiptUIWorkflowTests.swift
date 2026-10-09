@@ -428,6 +428,36 @@ import Vision
         XCTAssertTrue(drawn)
         return stride(from: 0, to: 36, by: 4).reduce(0.0) { $0 + Double(pixels[$1]) + Double(pixels[$1 + 1]) + Double(pixels[$1 + 2]) } / 27
     }
+    func testPocketBackingCoversScreenBottomDuringScroll() throws {
+        let app = XCUIApplication()
+        app.launchArguments = ["--t05-synthetic-preview", "elastic"]
+        app.launch()
+        XCTAssertTrue(app.staticTexts["13 saved"].waitForExistence(timeout: 40))
+        app.buttons["walletSettings"].tap()
+        app.buttons["paperAppearanceSetting"].tap(); app.buttons["Always white"].tap()
+        let done = app.buttons["Done"]
+        XCTAssertEqual(XCTWaiter.wait(for: [XCTNSPredicateExpectation(predicate: NSPredicate(format: "enabled == true"), object: done)], timeout: 10), .completed)
+        done.tap()
+        for direction in ["pull", "push"] {
+            for step in 0..<4 {
+                if direction == "pull" { app.swipeUp() } else { app.swipeDown() }
+                let shot = XCTAttachment(screenshot: XCUIScreen.main.screenshot())
+                shot.name = "Pocket-bottom-" + direction + "-\(step)"; shot.lifetime = .keepAlways; add(shot)
+                // Exclude rounded corners and the center home indicator. White paper must
+                // never reappear below the backing as the pocket follows partial scrolling.
+                for x in [0.25, 0.75] {
+                    for distance in [12.0, 20.0, 28.0] {
+                        let point = CGPoint(x: app.frame.width * x, y: app.frame.maxY - distance)
+                        XCTAssertLessThan(try paperBrightness(app, at: point), 20,
+                                          "Paper leaked below the cover during \(direction) step \(step), distance \(distance)")
+                    }
+                }
+            }
+        }
+        app.buttons["import"].tap()
+        XCTAssertTrue(app.buttons["Files"].waitForExistence(timeout: 5))
+        app.terminate()
+    }
     func testReceiptAppearanceChangesPaperOnlyAndPersistsAcrossRelaunch() throws {
         let app = XCUIApplication(); app.launchArguments = ["--t05-synthetic-preview", "one"]; app.launch()
         let paper = app.buttons["receipt-0"]

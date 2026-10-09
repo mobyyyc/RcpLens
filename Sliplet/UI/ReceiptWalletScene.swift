@@ -368,11 +368,13 @@ struct ReceiptWalletScene: View {
             .allowsHitTesting(presented == nil)
     }
     private func pocketBacking(in geometry: GeometryProxy) -> some View {
-        // Feather the occlusion behind the leather face so the paper's soft shadows enter
-        // the pocket without a rectangular cutoff. The lower backing remains fully opaque.
+        // The top follows the pocket, but coverage must always reach the screen bottom.
+        // Upward drift and end pull otherwise lift the backing off the home-indicator area.
+        // Keep the existing feather above the fully opaque lower backing.
         let feather: CGFloat = 32
+        let upwardTravel = max(0, -pocketMotion)
         return Color(uiColor: .systemGroupedBackground)
-            .frame(width: geometry.size.width, height: 32 + geometry.safeAreaInsets.bottom + feather)
+            .frame(width: geometry.size.width, height: 32 + geometry.safeAreaInsets.bottom + feather + upwardTravel)
             .mask {
                 VStack(spacing: 0) {
                     LinearGradient(colors: [.clear, .black], startPoint: .top, endPoint: .bottom)

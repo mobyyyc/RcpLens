@@ -1,0 +1,11 @@
+{
+  "baseline": "Original source reproduced the bottom strip during a partial scroll; pixel brightness 88 exceeded the dark-background limit of 20. Checking only the fully pulled-out state missed the issue.",
+  "fixed": "Two native UI cases passed: 48 screen-bottom pixel probes over four upward and four downward scroll steps; import remains tappable; repeated detail/return cycles preserve position and visible layering.",
+  "simulatorRelease": "passed; signature verified",
+  "physicalSDKRelease": "passed; compilation only",
+  "normalWallet": "12 receipts and 12 originals; encrypted payloads, preferences and key-check unchanged",
+  "results": [
+    "Sliplet-Bottom-Cover-before2.xcresult",
+    "Sliplet-Bottom-Cover-fixed.xcresult"
+  ]
+}
