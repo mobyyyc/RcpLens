@@ -1,0 +1,23 @@
+{
+  "beforeCount": 3,
+  "beforeReady": true,
+  "beforeSHA256": "90478acb6e47595fc0037742572ccfe942580e0ca7309f20bce717fed3cf9dc8",
+  "storeRelativePath": "Library/Application Support/T05SyntheticPreviewStore/receipts.sqlite",
+  "beforeSource": "50e1fb0",
+  "beforeBundle": "com.mobyyyc.RcpLens",
+  "beforeVersion": "0.1",
+  "afterVersion": "0.2",
+  "afterCount": 3,
+  "afterReady": true,
+  "afterMode": "resume",
+  "afterSHA256": "90478acb6e47595fc0037742572ccfe942580e0ca7309f20bce717fed3cf9dc8",
+  "encryptedStoreByteIdentical": true,
+  "sameReceiptCount": true,
+  "installedOverPriorApp": true,
+  "fictionalOnly": true,
+  "upgradeSimulatorID": "F88BB64E-F6CE-4806-B5B5-4992146DE6EF",
+  "afterSourceIncludesBackupImplementation": true,
+  "finalSourceUpgradeVerified": true,
+  "afterBuild": "2",
+  "afterBundle": "com.mobyyyc.RcpLens"
+}

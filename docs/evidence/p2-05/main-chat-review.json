@@ -1,0 +1,73 @@
+{
+  "task": "P2-05",
+  "reviewedAt": "2026-10-09T23:24:39.435612-04:00",
+  "status": "Implementation independently accepted; prepared personal v0.2 build. Physical release checks remain pending.",
+  "baseCommit": "50e1fb08d117aae4b17a0be92daefdba0a56b8cf",
+  "userChoices": {
+    "password": "User chosen and required on another device",
+    "restore": "Add missing receipts, preserve existing versions and local settings"
+  },
+  "independentMainChecks": {
+    "review": "Reviewed format, transaction boundaries, semantic validation, cancellation, session guards and native picker callback ordering.",
+    "passwordOnlyDecryption": {
+      "implementation": "Node built-in crypto, no device storage key",
+      "passedChecks": 12,
+      "evidence": "main-independent-decrypt.json"
+    },
+    "xcresultSummariesRead": {
+      "fullUnit": {
+        "passed": 139,
+        "skipped": 1,
+        "failed": 0
+      },
+      "currentBackupMigration": {
+        "passed": 14,
+        "skipped": 0,
+        "failed": 0
+      },
+      "sessionNative": {
+        "passed": 4,
+        "failed": 0
+      },
+      "finalExportNative": {
+        "passed": 2,
+        "failed": 0
+      }
+    },
+    "testScopes": "Different runs and refinements; do not add repeated methods to inflate unique coverage. Eight distinct native workflows are documented in validation.json.",
+    "sourceHashesMatch": 55,
+    "fictionalScreenshotHashesMatch": 10,
+    "visualReview": [
+      "fictional-merge-preview.png",
+      "fictional-backup-restore-dark.png"
+    ],
+    "release": {
+      "compiled": true,
+      "signed": false,
+      "phoneInstalled": false,
+      "version": "0.2",
+      "build": "2",
+      "stableBundle": true,
+      "binaryHashMatchesValidation": true,
+      "debugBackupControlAndPasswordAbsent": true
+    },
+    "upgrade": "Reviewed disposable-Simulator before/after install evidence: three fictional receipts retained, encrypted SQLite byte-identical. Main did not repeat this upgrade on a phone.",
+    "preservation": {
+      "privateFilesUnchanged": 3625,
+      "normalSimulatorWalletUnchanged": true,
+      "exactPreexistingPersonalTeamDiffPreserved": true,
+      "taskSimulatorsRemoved": 2,
+      "existingSimulatorsPreserved": true
+    }
+  },
+  "retainedLimits": [
+    "Original failed native runs and their fixes remain in validation.json.",
+    "Full unit run retains a priority inversion warning and one hardware-only skip.",
+    "P2-04 physical shortcut/source/accessibility checks and retained runtime warnings remain open.",
+    "No hardware file-protection, phone provider, real biometric or latency certification from Simulator.",
+    "Recognition unchanged; five exposed development purchases, zero held-out purchases.",
+    "95 percent purchase accuracy, 90 percent merchant/date/total accuracy and median human correction under 30 seconds are unmet or unmeasured."
+  ],
+  "nextTask": "Guided personal v0.2 iPhone upgrade/backup/offline-import/correction walkthrough, awaiting user approval.",
+  "commitMessage": "feat: add portable encrypted receipt backups"
+}

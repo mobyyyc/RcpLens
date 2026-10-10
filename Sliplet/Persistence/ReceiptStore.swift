@@ -395,5 +395,180 @@ actor ReceiptStore {
         try database.transaction { _ = try database.run("DELETE FROM receipts") }
     }
 
+
+    /// Snapshot records and encoded originals under one database lock; only encrypted frames touch disk.
+    func exportBackup(to url: URL, password: String, permit: ReceiptOperationPermit) throws {
+        try permit.check()
+        guard !FileManager.default.fileExists(atPath: url.path) else { throw ReceiptBackupError.unavailable }
+        do {
+            try database.transaction(permit: permit) {
+                let count = try database.integer("SELECT count(*) FROM receipts")
+                guard count <= ReceiptBackupArchive.maximumReceipts else { throw ReceiptBackupError.limit }
+                let writer = try ReceiptBackupArchive.Writer(url: url, password: password)
+                let manifest = ReceiptBackupManifest(version: 1, storeSchema: Self.schemaVersion, createdAt: Date(),
+                    receiptCount: Int(count), walletSettings: try walletSettings())
+                try writer.write(JSONEncoder().encode(manifest), maximum: 16_384, permit: permit)
+                // Query identities only. Never load every encrypted image into memory at once.
+                for row in try database.run("SELECT id FROM receipts ORDER BY id") {
+                    try permit.check()
+                    guard case .text(let text) = row[0], let id = UUID(uuidString: text), let record = try load(id) else {
+                        throw ReceiptStoreError.corruptStore
+                    }
+                    let bytes = try Self.asset(record, db: database, cipher: cipher)
+                    try Self.validateBackupEntry(record, bytes: bytes)
+                    try writer.write(JSONEncoder().encode(record), maximum: Self.maximumRecordBytes, permit: permit)
+                    try writer.write(bytes, maximum: Self.maximumAssetBytes, permit: permit)
+                }
+                try writer.finish()
+            }
+        } catch { try? FileManager.default.removeItem(at: url); throw error }
+    }
+
+    private static func validateBackupEntry(_ record: ReceiptRecord, bytes: Data) throws {
+        try record.validate()
+        guard bytes.count <= maximumAssetBytes, bytes.count == record.asset.byteCount,
+              Data(SHA256.hash(data: bytes)) == record.asset.sha256,
+              ["image/png", "image/jpeg", "image/heic", "image/heif"].contains(record.asset.mediaType) else {
+            throw ReceiptBackupError.invalidArchive
+        }
+        // Validate encoded originals, retaining the exact bytes/metadata; never re-encode or OCR them.
+        let decoded = try ReceiptImage.decode(bytes)
+        guard decoded.mediaType == record.asset.mediaType else { throw ReceiptBackupError.invalidArchive }
+        guard record.original.rawOCR.count <= 10_000, record.original.issues.count <= 10_000,
+              record.original.rawParserOutput.count <= 2 * 1024 * 1024, record.revisions.count <= 1_000 else {
+            throw ReceiptBackupError.limit
+        }
+        _ = try milliseconds(record.createdAt); _ = try milliseconds(record.updatedAt)
+        _ = try milliseconds(record.original.capturedAt)
+        for revision in record.revisions {
+            _ = try milliseconds(revision.createdAt)
+            guard revision.fields.items.count + revision.fields.adjustments.count <= 10_000 else { throw ReceiptBackupError.limit }
+            if let input = revision.reviewInput {
+                guard input.count <= 2 * 1024 * 1024 else { throw ReceiptBackupError.limit }
+                let draft: ReceiptReviewDraft
+                do { draft = try JSONDecoder().decode(ReceiptReviewDraft.self, from: input) }
+                catch { throw ReceiptBackupError.invalidArchive }
+                guard draft.lines.count <= 10_000, (draft.guidanceChecks?.count ?? 0) <= 10_000,
+                      draft.guidanceChecks?.allSatisfy({ $0.key.utf8.count <= 1_024 && $0.value.utf8.count <= 1_024 }) ?? true else {
+                    throw ReceiptBackupError.limit
+                }
+                guard draft.fields == revision.fields, draft.canSaveDraft,
+                      revision.review != .sourceReviewed || draft.canFinalize else { throw ReceiptBackupError.invalidArchive }
+            }
+        }
+        if let plan = record.splitPlan, let finalized = plan.finalizedRevision {
+            guard finalized == record.current.id else { throw ReceiptBackupError.invalidArchive }
+            _ = try ReceiptSplitEngine.compute(record, plan: plan)
+        }
+    }
+
+    /// Import into a task-owned empty encrypted store. The caller closes it before preview/merge.
+    func stageBackup(from url: URL, password: String, permit: ReceiptOperationPermit) throws -> ReceiptBackupManifest {
+        try permit.check()
+        guard try database.integer("SELECT count(*) FROM receipts") == 0 else { throw ReceiptBackupError.invalidArchive }
+        let reader = try ReceiptBackupArchive.Reader(url: url, password: password)
+        let manifest: ReceiptBackupManifest
+        do { manifest = try JSONDecoder().decode(ReceiptBackupManifest.self, from: reader.read(maximum: 16_384, permit: permit)) }
+        catch let error as ReceiptBackupError { throw error }
+        catch is CancellationError { throw CancellationError() }
+        catch { throw ReceiptBackupError.invalidArchive }
+        guard manifest.version == 1, manifest.storeSchema == Self.schemaVersion else { throw ReceiptBackupError.unsupported }
+        guard (0...ReceiptBackupArchive.maximumReceipts).contains(manifest.receiptCount),
+              manifest.createdAt.timeIntervalSince1970.isFinite else { throw ReceiptBackupError.limit }
+        try database.transaction(permit: permit) {
+            var ids = Set<UUID>(), assets = Set<UUID>()
+            for _ in 0..<manifest.receiptCount {
+                try permit.check()
+                let record: ReceiptRecord
+                do { record = try JSONDecoder().decode(ReceiptRecord.self, from: reader.read(maximum: Self.maximumRecordBytes, permit: permit)) }
+                catch let error as ReceiptBackupError { throw error }
+                catch is CancellationError { throw CancellationError() }
+                catch { throw ReceiptBackupError.invalidArchive }
+                let bytes = try reader.read(maximum: Self.maximumAssetBytes, permit: permit)
+                guard ids.insert(record.id).inserted, assets.insert(record.asset.id).inserted else { throw ReceiptBackupError.invalidArchive }
+                try Self.validateBackupEntry(record, bytes: bytes)
+                try insertBackupEntry(record, bytes: bytes)
+            }
+            try reader.finish()
+            let payload = try cipher.seal(JSONEncoder().encode(manifest.walletSettings), context: "RcpLens/wallet-settings/v1")
+            try database.run("INSERT INTO metadata(name, value) VALUES ('wallet-settings', ?)", [.blob(payload)])
+            try permit.check()
+        }
+        return manifest
+    }
+    private func insertBackupEntry(_ record: ReceiptRecord, bytes: Data) throws {
+        try database.run("INSERT INTO receipts (id, payload, updated_at) VALUES (?, ?, ?)",
+            [.text(record.id.uuidString), .blob(try encode(record)), .integer(try Self.milliseconds(record.updatedAt))])
+        #if DEBUG
+        try fault?(.afterReceiptWrite)
+        #endif
+        let image = try cipher.seal(bytes, context: ReceiptStoreCipher.assetContext(record.asset.id, owner: record.id))
+        try database.run("INSERT INTO assets (id, receipt_id, payload) VALUES (?, ?, ?)",
+            [.text(record.asset.id.uuidString), .text(record.id.uuidString), .blob(image)])
+    }
+    private func withPrepared<T>(_ prepared: ReceiptPreparedBackup, _ body: (ReceiptSQLiteDatabase, ReceiptStoreCipher) throws -> T) throws -> T {
+        let staged = try ReceiptSQLiteDatabase(url: prepared.directory.appendingPathComponent("receipts.sqlite"), create: false)
+        defer { try? staged.close() }
+        let stagingCipher = try ReceiptStoreCipher(key: prepared.key)
+        try Self.verifyManifest(staged, stagingCipher)
+        return try staged.transaction { try body(staged, stagingCipher) }
+    }
+    private func backupPreview(_ prepared: ReceiptPreparedBackup, staged: ReceiptSQLiteDatabase,
+                               stagingCipher: ReceiptStoreCipher, permit: ReceiptOperationPermit) throws -> ReceiptBackupPreview {
+        let rows = try staged.run("SELECT id FROM receipts ORDER BY id")
+        guard rows.count == prepared.manifest.receiptCount else { throw ReceiptBackupError.invalidArchive }
+        var added = 0, skipped = 0, conflicts = 0
+        for row in rows {
+            try permit.check()
+            guard case .text(let text) = row[0], let id = UUID(uuidString: text),
+                  let payloadRow = try staged.run("SELECT payload FROM receipts WHERE id = ?", [.text(text)]).first,
+                  case .blob(let payload) = payloadRow[0] else { throw ReceiptBackupError.invalidArchive }
+            let incoming = try Self.decode(payload, id: id, cipher: stagingCipher)
+            if let existing = try load(id) {
+                skipped += 1
+                if incoming != existing { conflicts += 1 }
+            } else {
+                guard try database.run("SELECT id FROM assets WHERE id = ?", [.text(incoming.asset.id.uuidString)]).isEmpty else {
+                    throw ReceiptBackupError.assetCollision
+                }
+                added += 1
+            }
+        }
+        return ReceiptBackupPreview(total: rows.count, added: added, skipped: skipped, conflicts: conflicts)
+    }
+    func previewBackup(_ prepared: ReceiptPreparedBackup, permit: ReceiptOperationPermit) throws -> ReceiptBackupPreview {
+        try withPrepared(prepared) { staged, stagingCipher in
+            try database.transaction(permit: permit) { try backupPreview(prepared, staged: staged, stagingCipher: stagingCipher, permit: permit) }
+        }
+    }
+    /// Merge only. Existing records always win, including divergent revisions. Preferences stay local.
+    /// Every new record/asset is re-encrypted with this device's key in one atomic transaction.
+    func mergeBackup(_ prepared: ReceiptPreparedBackup, expected: ReceiptBackupPreview,
+                     permit: ReceiptOperationPermit) throws -> ReceiptBackupPreview {
+        try permit.check()
+        return try withPrepared(prepared) { staged, stagingCipher in
+            try database.transaction(permit: permit) {
+                let preview = try backupPreview(prepared, staged: staged, stagingCipher: stagingCipher, permit: permit)
+                guard preview == expected else { throw ReceiptBackupError.changedPreview }
+                for row in try staged.run("SELECT id FROM receipts ORDER BY id") {
+                    try permit.check()
+                    guard case .text(let text) = row[0], let id = UUID(uuidString: text) else { throw ReceiptBackupError.invalidArchive }
+                    if try load(id) != nil { continue }
+                    guard let payloadRow = try staged.run("SELECT payload FROM receipts WHERE id = ?", [.text(text)]).first,
+                          case .blob(let payload) = payloadRow[0] else { throw ReceiptBackupError.invalidArchive }
+                    let record = try Self.decode(payload, id: id, cipher: stagingCipher)
+                    let bytes = try Self.asset(record, db: staged, cipher: stagingCipher)
+                    try Self.validateBackupEntry(record, bytes: bytes)
+                    try insertBackupEntry(record, bytes: bytes)
+                }
+                #if DEBUG
+                try fault?(.beforeCommit)
+                #endif
+                try permit.check()
+                return preview
+            }
+        }
+    }
+
     func close() throws { try database.close() }
 }

@@ -1,0 +1,269 @@
+{
+  "task": "P2-05",
+  "date": "2026-10-09",
+  "timezone": "America/Toronto",
+  "status": "Implemented and ready for independent Main acceptance; physical release checks pending",
+  "acceptedPriorCommit": "50e1fb08d117aae4b17a0be92daefdba0a56b8cf",
+  "productChoices": {
+    "password": "User chosen, confirmation at export; never persisted",
+    "restore": "Merge only; existing IDs always win; divergent versions counted as skipped conflicts",
+    "walletPreferences": "Included in archive but local preferences preserved during merge",
+    "securityPreferences": "Never exported/restored"
+  },
+  "format": {
+    "magic": "SLIPLETBK001",
+    "saltBytes": 16,
+    "kdf": "PBKDF2-HMAC-SHA256",
+    "rounds": 600000,
+    "keyBytes": 32,
+    "cipher": "AES-256-GCM",
+    "aad": "28-byte header + UInt64BE frame index",
+    "frames": "manifest then record/original pairs",
+    "archiveMaximumBytes": 268435456,
+    "maximumReceipts": 1000,
+    "recordMaximumBytes": 8388608,
+    "originalMaximumBytes": 33554432
+  },
+  "unitVerification": {
+    "fullRun": {
+      "path": "/tmp/sliplet-p205-final-unit.xcresult",
+      "passed": 139,
+      "skipped": 1,
+      "failed": 0,
+      "runtimeWarnings": [
+        {
+          "issueType": "Runtime Warning",
+          "message": "[Internal] Thread running at User-initiated quality-of-service class waiting on a lower QoS thread running at Default quality-of-service class. Investigate ways to avoid priority inversions"
+        }
+      ],
+      "note": "Full baseline plus 12 new backup cases; subsequent UI presentation/picker refinements are covered separately."
+    },
+    "scopedRun": {
+      "path": "/tmp/sliplet-p205-current-unit.xcresult",
+      "passed": 14,
+      "skipped": 0,
+      "failed": 0,
+      "runtimeWarnings": [],
+      "scope": "12 backup tests plus successful/failed v1 migration; persistence/domain/test source unchanged after this run. Only picker coordinator source changed afterward and has final native verification."
+    }
+  },
+  "nativeVerification": {
+    "uniqueCasesCovered": 8,
+    "fullSevenCaseRun": {
+      "path": "/tmp/sliplet-p205-ui6.xcresult",
+      "passed": 6,
+      "failed": 1,
+      "runtimeWarnings": [],
+      "remainingFailure": "Local-file test was still in empty Recents; scoped navigation fix then exposed dismissal-before-password-callback bug, which is fixed."
+    },
+    "finalAffectedRun": {
+      "path": "/tmp/sliplet-p205-session-final.xcresult",
+      "passed": 4,
+      "failed": 0,
+      "runtimeWarnings": [],
+      "scope": [
+        "Actual On My iPhone encrypted export/save and explicit browse/select to duplicate preview",
+        "Explicit picker cancel with dark form",
+        "Prepared restore swipe-dismiss then fresh export",
+        "Background while Files open discards old session/password"
+      ]
+    },
+    "otherPassedScope": [
+      "Password confirmation/export native dismiss and usable wallet",
+      "Fictional differing-version preview/Add, kept existing receipt, completed merge and restart",
+      "Prepared restore Close discards without adding",
+      "Background password form clearing"
+    ],
+    "countsAreDistinctRuns": true,
+    "finalExportRun": {
+      "path": "/tmp/sliplet-p205-export-lifecycle-final.xcresult",
+      "passed": 2,
+      "failed": 0,
+      "runtimeWarnings": [],
+      "scope": "Actual local save/select and native export swipe cancellation after adding stale-session/file guards and separating presentation dismissal from delegate cleanup."
+    }
+  },
+  "retainedEarlierEvidence": [
+    {
+      "path": "/tmp/sliplet-p205-ui2.xcresult",
+      "note": "Initial Section-mounted sheet failed to present; presentation moved to Settings owner."
+    },
+    {
+      "path": "/tmp/sliplet-p205-ui3.xcresult",
+      "note": "4 passes/1 export Cancel selector failure; native host lacks tappable button and standard sheet swipe dismissal is verified."
+    },
+    {
+      "path": "/tmp/sliplet-p205-ui4.xcresult",
+      "note": "4 passes/2 driver failures; export save succeeded, Recents selection and Cancel selector were still incorrect."
+    },
+    {
+      "path": "/tmp/sliplet-p205-ui5.xcresult",
+      "note": "6 passes/1 existing-name save-driver failure; test now chooses a unique fictional name."
+    },
+    {
+      "path": "/tmp/sliplet-p205-local-files.xcresult",
+      "note": "Actual selection exposed password State clearing before delegate callback; coordinator captures secret at presentation."
+    },
+    {
+      "path": "/tmp/sliplet-p205-picker-final.xcresult",
+      "note": "3 passes before final old-session guard; superseded for affected flows by 4-pass final run."
+    },
+    {
+      "path": "/tmp/sliplet-p205-unit3.xcresult",
+      "note": "Fictional completed fixture lacked explicit subtotal-not-printed confirmation; fixed fixture passed real completion gate."
+    },
+    {
+      "path": "/tmp/sliplet-p205-export-final.xcresult",
+      "note": "1 pass/1 failure: synchronous dismiss cancellation preceded save delegate, so success was ignored. Separate presentation state plus guarded coordinator cleanup now passes both affected paths."
+    }
+  ],
+  "independentFixture": {
+    "archive": "/tmp/P205-independent-fictional.slipletbackup",
+    "privateTestOnlyPasswordAndExpectedHashes": "/tmp/P205-independent-fictional.json",
+    "mainReport": "/tmp/sliplet-p205-main-independent-decrypt.json",
+    "mainReportedChecks": 12,
+    "mainReportedResult": "Passed; independently decoded without device key; image/reviewInput hashes, two revisions, 304 cents, star/archive/current finalized split preserved. Main owns final independent report."
+  },
+  "upgrade": {
+    "beforeCount": 3,
+    "beforeReady": true,
+    "beforeSHA256": "90478acb6e47595fc0037742572ccfe942580e0ca7309f20bce717fed3cf9dc8",
+    "storeRelativePath": "Library/Application Support/T05SyntheticPreviewStore/receipts.sqlite",
+    "beforeSource": "50e1fb0",
+    "beforeBundle": "com.mobyyyc.RcpLens",
+    "beforeVersion": "0.1",
+    "afterVersion": "0.2",
+    "afterCount": 3,
+    "afterReady": true,
+    "afterMode": "resume",
+    "afterSHA256": "90478acb6e47595fc0037742572ccfe942580e0ca7309f20bce717fed3cf9dc8",
+    "encryptedStoreByteIdentical": true,
+    "sameReceiptCount": true,
+    "installedOverPriorApp": true,
+    "fictionalOnly": true,
+    "upgradeSimulatorID": "F88BB64E-F6CE-4806-B5B5-4992146DE6EF",
+    "afterSourceIncludesBackupImplementation": true,
+    "finalSourceUpgradeVerified": true,
+    "afterBuild": "2",
+    "afterBundle": "com.mobyyyc.RcpLens"
+  },
+  "releaseBuild": {
+    "result": "BUILD SUCCEEDED",
+    "log": "/tmp/sliplet-p205-final-release6.log",
+    "app": "/tmp/sliplet-p205-final-release/Build/Products/Release-iphoneos/Sliplet.app",
+    "signed": false,
+    "installedOnPhone": false,
+    "bundle": "com.mobyyyc.RcpLens",
+    "version": "0.2",
+    "build": "2",
+    "versionSetByBuildOverrides": true,
+    "debugFictionalBackupControlAbsent": true,
+    "debugFictionalPasswordAbsent": true,
+    "binarySHA256": "9264ec86041f9a1dbd8d18e105f132535dd5c7519f25cced19f97907ccfb610b"
+  },
+  "preservation": {
+    "baselineFiles": 3677,
+    "changedBaselineFiles": [
+      "Sliplet/UI/ReceiptWorkspace.swift",
+      "Sliplet/UI/ReceiptWalletScene.swift",
+      "Sliplet/Persistence/ReceiptStore.swift"
+    ],
+    "privateFilesChecked": 3625,
+    "privateFilesChanged": 0,
+    "exactPreexistingSigningDiffPreserved": true,
+    "noNormalStoreOrPhoneInstallations": true,
+    "noCommitsPushAgentsChatsOrOutgoingMessages": true
+  },
+  "sourceHashes": {
+    "Sliplet/App/ReceiptAppLock.swift": "12a91e24997c890fac5238a5ea794fa29d7b09ffadf864481aabb9cb46b97f42",
+    "Sliplet/App/ReceiptPrivacyDelegate.swift": "7a83ff4530d657f7c170bf4e1a244c7fee42283712b5fd77f8ca6895fc6ef9a1",
+    "Sliplet/App/SlipletApp.swift": "a9a5984bc6136f59e2828fc27e055e10fc6f76a961830bc590e5b8682f60966f",
+    "Sliplet/Diagnostics/DiagnosticsView.swift": "0d8ca4b17e86454df0b9313a933e8b5f4f7790f470b12d1118b8f99f57b5956c",
+    "Sliplet/Diagnostics/ReceiptAppLockFixture.swift": "55da113bca7aaff7d63dace078466310cb7325fdb6819818785d8ea5f1aa14b4",
+    "Sliplet/Diagnostics/SyntheticCorrectionPreview.swift": "18692eae55e2b21d65de14ac52a77fc8466e0079f104f1eebfa864cfd8c4c23c",
+    "Sliplet/Diagnostics/SyntheticDiagnostics.swift": "59ad7413bb0ac1772fba4b5cc17895b21c0b049d6e6772438a27a75a87f27983",
+    "Sliplet/Diagnostics/SyntheticNativePreview.swift": "cef4c8cfc7e7363cb1ab779d6e8a57ca444b3bf3cd49cb3c23de266473a8456b",
+    "Sliplet/Diagnostics/SyntheticSearchPreview.swift": "172b19aa0d68f87742831379d5af8e30c87dd53b61676ecc70336dc3cbae3375",
+    "Sliplet/Diagnostics/SyntheticStorageDiagnostics.swift": "3aba7612a2fac62ed92bf88ff81ccc05e8272a5ce531a4c4afffd63a483a84c2",
+    "Sliplet/Diagnostics/WorkflowTestControls.swift": "40961f3474d7d0751c39ad2d206f4e21ee364049c0e3a004bbcc4c2977ca110f",
+    "Sliplet/Domain/Receipt.swift": "2686a3364a00784c4520b7fbbe5f99d250e945b12465b6be34291f3a63e13766",
+    "Sliplet/Domain/ReceiptReview.swift": "a8d82159859512f5a44610881fdc7e80f8b72775799e713ae113a83e92fc9849",
+    "Sliplet/Domain/ReceiptReviewGuidance.swift": "cb1c3bba33f1ff4dc313df5cb58f30fb7bb64352973bc4b3b517777eb9ddfab3",
+    "Sliplet/Domain/ReceiptSearch.swift": "a4196c4bf038207dbdab7ac1b5982b4a5305f0341ee6488f76cbc353ecacc3f3",
+    "Sliplet/Domain/ReceiptSplit.swift": "4e81f57f311d43bd21055ecceb8855efc4aaa9b0d9724a34162a1fb6de26c482",
+    "Sliplet/Domain/RecognizedText.swift": "6ada986903723b6f95af98299ef2e3a3dbe2c9818de729aa918f40cac43d90b9",
+    "Sliplet/Parsing/Parsing.swift": "6b9b5a7371777763863ecc633b8ed3a94ca26b68c04e804b01970c07c5c35325",
+    "Sliplet/Persistence/ReceiptBackup.swift": "b7f39a369c755dbd93d2f12bb09a8c9d72f90a190bb97ef4bda63a6a20562df3",
+    "Sliplet/Persistence/ReceiptStore.swift": "3d4798eb7d91c9ec11c1d6511a1a95acf38a64af500d8f0d8c5b7222b5ec65a2",
+    "Sliplet/Persistence/SQLiteDatabase.swift": "10bf2455fdabc3933ced20ce54c3e4d2b81cd7389a44b3c957bc81104bdad8ed",
+    "Sliplet/Persistence/StoreCipher.swift": "59261a591ec5c488aaa89d32333927f2f3e683d69d8f40b8073a4feb384d1c9a",
+    "Sliplet/Persistence/StoreKey.swift": "5fd815e7bb0d48470fd08ebfd7c8fbec4b502e27e52329541eda43f485b476fc",
+    "Sliplet/Recognition/ReceiptImage.swift": "db41851944626c6daca911b695e51ddaa2b0fd2a3a68669493bc6f08da084c5e",
+    "Sliplet/Recognition/VisionTextRecognizer.swift": "da751a819d8b3aec9e552d2c11874bef885e7e1b3984fab12d38829628686d37",
+    "Sliplet/UI/FoundationView.swift": "65f799ca9a4e69fa6bf39d478780279fd037f36e9446f2575f3fc8a72ffb1b17",
+    "Sliplet/UI/ReceiptAccessibility.swift": "86d83766fafcae18d7e42858aedbf54d1dabd7a92821e8e0e21f087c8f0f3752",
+    "Sliplet/UI/ReceiptBackupView.swift": "ca2eb042b96a75f1e7cf432623a309cb6ee5837a352885f11d7d6bddb86aff50",
+    "Sliplet/UI/ReceiptCamera.swift": "b9caa68e3ec3db4d48aff1bfaa9b6f6ad45197785d3d00b1b6af304beab92f25",
+    "Sliplet/UI/ReceiptFocusedCorrectionView.swift": "885aa91c8f00aa77383710eee93bbf77db364d158053291a0147a3e37967a400",
+    "Sliplet/UI/ReceiptHome.swift": "05b485d656d9f626d70180e1c310152d5ad7e5fb597a0ad0f9b2726d857350ef",
+    "Sliplet/UI/ReceiptPhotoPicker.swift": "0a7fffce0b215d486015fdbd8d8353c04fed28792a542dbbab60a27437caf166",
+    "Sliplet/UI/ReceiptReviewView.swift": "3f2fc753056ef161545e93c75ab73c223f9605cba189d070c16061096df8a945",
+    "Sliplet/UI/ReceiptSearchViews.swift": "92ba57fc7d248f77f8f6280c05cd0e94dd4328776ba58c37e8fb0863be84f8dd",
+    "Sliplet/UI/ReceiptSourceView.swift": "c474ebec37c8a03438faae6d9d6cd071a617957a226f56b0087ea581b278df90",
+    "Sliplet/UI/ReceiptSplitView.swift": "be6807e2629d084d2f5d22ea211ca5e2dba881e633d84a1fb7e833b53c4294a6",
+    "Sliplet/UI/ReceiptWalletScene.swift": "362a9141961016ca5ad3ac3faaa2aa150c896827f39a4e5a41acf9a3ba6e056a",
+    "Sliplet/UI/ReceiptWorkspace.swift": "ad146224d9eb026d4a4520d8aee7b70baea22fcabd3268106c0c9db951553653",
+    "SlipletTests/FoundationTests.swift": "6bff6bce4a8fceea1e7133abe65cc6ee40e5b18fdfc29d7816b581a4bf81a7af",
+    "SlipletTests/PersistenceTests.swift": "2d1506a78928c9e1f1b5ed6865c6cf480d8468bb37de2e98557194494876142a",
+    "SlipletTests/ReceiptAppLockTests.swift": "e0533c3d8536ae73aa181b6689d682406b0e2a3741a7a0939433e9be5034fcfd",
+    "SlipletTests/ReceiptBackupTests.swift": "599290f46195f7482d1e3c69fd0b1dd6d641145d9de6ea130c34decd91a31e49",
+    "SlipletTests/ReceiptCorrectionTests.swift": "b6494688baeaa2b72b173c2315e63495bc906c3531d6a5d2f11ce3c28b26695e",
+    "SlipletTests/ReceiptRetailerParserTests.swift": "0cc0e65ed2968c93d6917646fa5d9e880ae6766ed3fc8322a9bbe2d58dd91e4e",
+    "SlipletTests/ReceiptSearchTests.swift": "dc1f49e6712bce3999bf50800ec67957d21703edefe5f9fdc6db78847490f368",
+    "SlipletTests/ReceiptSplitTests.swift": "aaa8ed569586ffbd59017e757361b3514951ba5b623524759921966e9b35773b",
+    "SlipletTests/ReceiptWorkflowTests.swift": "806b8c45788593909ceab1e2e32c9a5591aecc4fdd3bc33edc95a3110b122a64",
+    "SlipletTests/SplitPersistenceTests.swift": "bb56dd664a0264cd7f34a154cd02835f713bb7009bc609356f85a3e81a2b0979",
+    "SlipletUITests/ReceiptAppLockUITests.swift": "aff42bd7eb0e0f34629631e134d46dcbee7e78232b17b0f7a97192212f3f8432",
+    "SlipletUITests/ReceiptBackupUITests.swift": "d299cac96d9edf79b7e87be8fdd2fd3f928d9bf660d6a41a358e9237c029f2ca",
+    "SlipletUITests/ReceiptCameraUITests.swift": "688d18457eaa85e3b041cba09960abf512da6795e2ca4c855aff75fc9b727afb",
+    "SlipletUITests/ReceiptCorrectionUITests.swift": "66cdb2361eca6de3b5d36d8e703ebd98d127e0d1d666bea95c02131df446ac7f",
+    "SlipletUITests/ReceiptSearchUITests.swift": "a6b3c7fd73bcc61f7b06ffef8bf199b34ff58ec681d6f9d3f2d4711aa724d28e",
+    "SlipletUITests/ReceiptSplitUITests.swift": "c136af5224f2f00c8d77830576b93e8e6f56f4a60f9630da11f4c1bacb9603ac",
+    "SlipletUITests/ReceiptUIWorkflowTests.swift": "acfe4fdfa0999a27a3e7883469d75c401f6e9e98aaa1c83cd4b58931c0e84b0e"
+  },
+  "screenshots": {
+    "docs/evidence/p2-05/fictional-backup-after-background-password-cleared.png": "57157101ebc0f16956e383dc5d7a1a64f9a6d88d0b8170715e662cad92dfa4f1",
+    "docs/evidence/p2-05/fictional-explicit-restore-files-picker.png": "925e1fc847a1460a48c26437c685c5229c4f4f28fd52f0aca015b63ddc662405",
+    "docs/evidence/p2-05/fictional-backup-restore-dark.png": "2c4db221bb6572d757876221b28d13816c342206da1990e178e5dc1cea487157",
+    "docs/evidence/p2-05/fictional-local-export-destination.png": "4bd39642a2ee37df5696215999d19f0db5d1ec1eeccb734bb535b6b82d1be931",
+    "docs/evidence/p2-05/fictional-merge-complete.png": "5ad2d32b23432f80aac10c17ac910b5267ce73901ac5e07b5b4643fc727e8fa2",
+    "docs/evidence/p2-05/fictional-merge-preview.png": "ed887dc20ef59bcf36f1efd3c1862d48d7a3f7dae2b0bbf2a748bd340dad1744",
+    "docs/evidence/p2-05/fictional-encrypted-export-files-picker.png": "6df784556c02cfa467f9397b97f8f4d7f0f486c3574aed52de231c809012fe2f",
+    "docs/evidence/p2-05/fictional-backup-export-form.png": "cb8a3bbbe5545174d1c83e63c1463f9d4fb0dfc466d0bb82625008419a460f28",
+    "docs/evidence/p2-05/fictional-files-roundtrip-duplicate-preview.png": "dd9fb50c4d524b75a8a6f0c45f879a298dc2cf52e1dd6e260ce7f6bddfe75c39",
+    "docs/evidence/p2-05/fictional-explicit-local-backup-selection.png": "936843ace7f3798b1e3e85fadbbec1f138b31a817805d179fe6303837b8ad431"
+  },
+  "pendingPhysicalChecks": [
+    "Offline airplane-mode camera/import and real Files-provider sessions",
+    "Successful/cancelled Face ID/passcode, lock/background privacy and hardware protection",
+    "Original access and long receipt bottom/source geometry, VoiceOver/large text",
+    "Immediate Split Done to Edit and retained P2-04 invalid-frame warning",
+    "Actual repeated shopping/review/history/search/exact split sessions",
+    "Human correction effort/time, phone processing latency budget",
+    "Held-out accuracy with store denominators, omissions/extra lines and quantity/unit accuracy"
+  ],
+  "releaseTargets": {
+    "exactPurchaseRecovery95Percent": "Unmet/not certified; unchanged exposed baseline 57/66",
+    "merchantDatePrintedTotal90Percent": "Not certified",
+    "medianHumanCorrectionUnder30Seconds": "Unmeasured",
+    "heldOutPurchaseCount": 0
+  },
+  "cleanup": {
+    "taskSimulatorIDs": [
+      "FE331DEE-4DB6-439B-A670-9B73BCD6AC63",
+      "F88BB64E-F6CE-4806-B5B5-4992146DE6EF"
+    ],
+    "removed": true,
+    "normalSimulatorsPreserved": true
+  }
+}

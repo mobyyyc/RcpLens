@@ -27,6 +27,14 @@ final class ReceiptWorkspace {
     var errorMessage: String?
     var notice: String?
     var saving = false
+    var backupBusy = false
+    var backupPreview: ReceiptBackupPreview?
+    var backupExportURL: URL?
+    var backupMessage: String?
+    @ObservationIgnored private var preparedBackup: ReceiptPreparedBackup?
+    @ObservationIgnored private var backupTask: Task<Void, Never>?
+    @ObservationIgnored private var backupPermit: ReceiptOperationPermit?
+    @ObservationIgnored private var backupExportDirectory: URL?
     var sessionID = UUID()
     var privacyCovered = false
     var library = false
@@ -79,7 +87,7 @@ final class ReceiptWorkspace {
     /// Synchronous revocation precedes any actor hop. Queued writes fail or roll back before commit.
     func suspend() {
         active = false; privacyCovered = true; sessionID = UUID()
-        permit.revoke(); task?.cancel(); worker?.cancel(); recognition?.cancel()
+        permit.revoke(); cancelBackup(); task?.cancel(); worker?.cancel(); recognition?.cancel()
         task = nil; worker = nil; recognition = nil
         let closing = store; store = nil
         let previous = shutdown
@@ -371,6 +379,97 @@ final class ReceiptWorkspace {
         }
     }
 
+
+    /// Backup cancellation has its own lease so cancelling a file chooser never locks the wallet.
+    func cancelBackup() {
+        let restoring = preparedBackup != nil && backupBusy
+        if restoring { saving = false }
+        backupPermit?.revoke(); backupTask?.cancel(); backupTask = nil; backupPermit = nil
+        preparedBackup = nil; backupPreview = nil; backupExportURL = nil
+        if let directory = backupExportDirectory { try? FileManager.default.removeItem(at: directory) }
+        backupExportDirectory = nil; backupBusy = false; backupMessage = nil
+        // A revoke may follow an already completed commit. Refresh after the actor finishes rather
+        // than leaving a stale wallet or claiming that cancellation undid committed receipts.
+        if restoring, active, let store {
+            let session = sessionID
+            Task { [weak self] in
+                if let records = try? await store.receipts(), let self, self.isCurrent(session) { self.receipts = records }
+            }
+        }
+    }
+    func beginBackupExport(password: String) {
+        guard active, availability == .ready, !privacyCovered, !saving, !backupBusy, let store else { return }
+        cancelBackup()
+        let lease = ReceiptOperationPermit(), session = sessionID
+        backupPermit = lease; backupBusy = true
+        backupTask = Task { [weak self] in
+            var outputDirectory: URL?
+            do {
+                let directory = try ReceiptBackupArchive.temporaryDirectory(); outputDirectory = directory
+                let url = directory.appendingPathComponent("Sliplet-backup.slipletbackup")
+                try await store.exportBackup(to: url, password: password, permit: lease)
+                try lease.check()
+                guard let self, self.isCurrent(session) else { try? FileManager.default.removeItem(at: directory); return }
+                self.backupExportDirectory = directory; self.backupExportURL = url; self.backupBusy = false
+            } catch {
+                if let outputDirectory { try? FileManager.default.removeItem(at: outputDirectory) }
+                guard let self, self.isCurrent(session), self.backupPermit === lease else { return }
+                self.backupBusy = false
+                if !(error is CancellationError) { self.backupMessage = Self.backupErrorMessage(error) }
+            }
+        }
+    }
+    func finishBackupExport(saved: Bool) {
+        cancelBackup(); backupMessage = saved ? "Encrypted backup saved. Keep its password separately." : "Export cancelled. No backup was saved by Sliplet."
+    }
+    func prepareBackupRestore(url: URL, password: String) {
+        guard active, availability == .ready, !privacyCovered, !saving, !backupBusy, let store else { return }
+        cancelBackup()
+        let lease = ReceiptOperationPermit(), session = sessionID
+        backupPermit = lease; backupBusy = true
+        let work = Task.detached(priority: .userInitiated) {
+            try await ReceiptBackupPreparation.prepare(url: url, password: password, permit: lease)
+        }
+        backupTask = Task { [weak self] in
+            do {
+                let prepared = try await withTaskCancellationHandler { try await work.value } onCancel: { lease.revoke(); work.cancel() }
+                let preview = try await store.previewBackup(prepared, permit: lease)
+                try lease.check()
+                guard let self, self.isCurrent(session), self.backupPermit === lease else { return }
+                self.preparedBackup = prepared; self.backupPreview = preview; self.backupBusy = false
+            } catch {
+                guard let self, self.isCurrent(session), self.backupPermit === lease else { return }
+                self.backupBusy = false
+                if !(error is CancellationError) { self.backupMessage = Self.backupErrorMessage(error) }
+            }
+        }
+    }
+    func confirmBackupRestore() {
+        guard active, !privacyCovered, !saving, !backupBusy, let store, let preparedBackup,
+              let expected = backupPreview, let lease = backupPermit else { return }
+        let session = sessionID
+        backupBusy = true; saving = true; backupMessage = nil
+        backupTask = Task { [weak self] in
+            var result: ReceiptBackupPreview?
+            do {
+                result = try await store.mergeBackup(preparedBackup, expected: expected, permit: lease)
+                let records = try await store.receipts(); try lease.check()
+                guard let self, self.isCurrent(session), self.backupPermit === lease, let result else { return }
+                self.receipts = records; self.preparedBackup = nil; self.backupPreview = nil
+                self.saving = false; self.backupBusy = false
+                self.backupMessage = "Restored \(result.added) \(result.added == 1 ? "receipt" : "receipts"). Kept \(result.skipped) existing \(result.skipped == 1 ? "receipt" : "receipts") unchanged."
+            } catch {
+                guard let self, self.isCurrent(session), self.backupPermit === lease else { return }
+                self.saving = false; self.backupBusy = false
+                self.preparedBackup = nil; self.backupPreview = nil
+                self.backupMessage = result == nil ? Self.backupErrorMessage(error) : "Receipts restored, but the wallet could not refresh. Close Settings and reopen Sliplet."
+            }
+        }
+    }
+    static func backupErrorMessage(_ error: Error) -> String {
+        (error as? ReceiptBackupError)?.errorDescription ?? "The backup action could not finish safely. Existing receipts have not been replaced. Try again with an available file after unlocking."
+    }
+
     func backToWallet() { cancelImport(showNotice: false) }
     var orderedReceipts: [ReceiptRecord] {
         receipts.sorted {
@@ -394,6 +493,55 @@ final class ReceiptWorkspace {
         }
     }
     #if DEBUG
+    /// DEBUG-only selected-file fixture, available solely after a synthetic-preview launch.
+    /// Creates a conflicting fictional version and one new finalized fictional receipt in a temporary store.
+    func prepareFictionalBackupForNativeCheck() {
+        guard SyntheticNativePreview.enabled, ProcessInfo.processInfo.arguments.contains("--p205-backup-fixture"),
+              active, !saving, !backupBusy, let store, let existing = receipts.first else { return }
+        cancelBackup()
+        let session = sessionID, lease = ReceiptOperationPermit()
+        backupPermit = lease; backupBusy = true
+        let (image, draft) = SyntheticNativePreview.fixture(index: 2)
+        backupTask = Task { [weak self] in
+            var directory: URL?
+            do {
+                let root = try ReceiptBackupArchive.temporaryDirectory(); directory = root
+                let key = try ReceiptBackupArchive.randomKey()
+                let source = try ReceiptStore(directory: root, keyProvider: ReceiptBackupTemporaryKey(bytes: key))
+                let now = Date()
+                let extraction = ReceiptExtraction(capturedAt: now, recognizer: "FICTIONAL", recognizerVersion: "1",
+                    parser: "FICTIONAL", parserVersion: "1", rawOCR: [], rawParserOutput: Data("{}".utf8), fields: draft.fields, issues: [])
+                let created = try await source.create(extraction: extraction, originalImage: image, mediaType: "image/png",
+                    correction: draft.fields, review: .sourceReviewed, reviewInput: JSONEncoder().encode(draft), permit: lease)
+                let person = SplitParticipant(id: UUID(), name: "FICTIONAL PERSON")
+                let plan = ReceiptSplitPlan(participants: [person], assignments: Dictionary(uniqueKeysWithValues: created.current.fields.items.map { ($0.id, [person.id]) }))
+                let added = try await source.saveSplit(id: created.id, expectedRevision: created.current.id, expectedPlan: nil, plan: plan, finalize: true, permit: lease)
+                try await source.close()
+                let oldImage = try await store.originalImage(receiptID: existing.id)
+                var fields = existing.current.fields; fields.merchant = "FICTIONAL DIFFERING BACKUP VERSION"
+                let revision = ReceiptRevision(id: UUID(), createdAt: now, fields: fields, review: .draft)
+                let conflict = ReceiptRecord(id: existing.id, createdAt: existing.createdAt, updatedAt: now, original: existing.original,
+                    asset: existing.asset, revisions: existing.revisions + [revision], organization: existing.organization)
+                let url = root.appendingPathComponent("native-fixture.slipletbackup")
+                let writer = try ReceiptBackupArchive.Writer(url: url, password: "fictional-backup-password")
+                try writer.write(JSONEncoder().encode(ReceiptBackupManifest(version: 1, storeSchema: ReceiptStore.schemaVersion,
+                    createdAt: now, receiptCount: 2, walletSettings: ReceiptWalletSettings())), maximum: 16_384, permit: lease)
+                for (record, bytes) in [(conflict, oldImage), (added, image)] {
+                    try writer.write(JSONEncoder().encode(record), maximum: ReceiptStore.maximumRecordBytes, permit: lease)
+                    try writer.write(bytes, maximum: ReceiptStore.maximumAssetBytes, permit: lease)
+                }
+                try writer.finish(); try lease.check()
+                guard let self, self.isCurrent(session), self.backupPermit === lease else { try? FileManager.default.removeItem(at: root); return }
+                self.backupBusy = false
+                self.prepareBackupRestore(url: url, password: "fictional-backup-password")
+                self.backupExportDirectory = root // Keep the encrypted fixture until this backup session closes.
+            } catch {
+                if let directory { try? FileManager.default.removeItem(at: directory) }
+                guard let self, self.isCurrent(session), self.backupPermit === lease else { return }
+                self.backupBusy = false; self.backupMessage = "Fictional backup setup failed."
+            }
+        }
+    }
     /// Explicit simulator action only; append ten marked samples without resetting records or settings.
     func addFictionalDemoReceipts() async -> Int {
         guard let store, active, !saving else { return 0 }

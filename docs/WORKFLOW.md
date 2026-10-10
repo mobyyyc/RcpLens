@@ -45,3 +45,7 @@ Give design preferences, receipt-folder locations, corrections and demo feedback
 ## Phase 2 preparation
 
 The user requested the old-task cleanup and five corresponding Phase 2 chats on 2026-10-09. These chats have only read the roadmap/workflow and acknowledged their pending status; this request does not start the recognition audit. Detailed scopes, acceptance criteria and chat identities are in TASKS.md. The actual repository is /Users/moby/Desktop/cs/Sliplet, even if the saved desktop project still displays its former RcpLens name/path. Always use the actual path for repository work.
+
+## Current handoff · 2026-10-09
+
+P2-01 through P2-05 implementations have been individually approved and accepted in Main. P2-05 adds password-encrypted portable backups and merge-only restore. Next is the guided personal v0.2 iPhone walkthrough, requiring separate user approval; stay in Main. Follow [personal release protocol](PERSONAL_RELEASE.md). Real accuracy, human correction time and phone acceptance remain open.

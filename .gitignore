@@ -35,3 +35,6 @@ private-receipts/
 /receipts/
 /test-data/private/
 /fixtures/private/
+
+# Portable backups contain receipt data; never commit user exports.
+*.slipletbackup

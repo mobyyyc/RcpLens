@@ -1,0 +1,44 @@
+{
+  "format": "SLIPLETBK001",
+  "independentImplementation": "Node built-in crypto",
+  "deviceStorageKeyUsed": false,
+  "receiptCount": 1,
+  "encryptedFrames": 3,
+  "archiveBytes": 23441,
+  "passwordKeyDerivation": "PBKDF2-HMAC-SHA256 / 600000",
+  "authentication": "AES-256-GCM",
+  "checks": [
+    "password-only decrypt",
+    "original byte count and SHA256",
+    "manifest/frame count",
+    "revision and reviewInput preservation",
+    "tag tampering rejected",
+    "sequence tampering rejected",
+    "wrong password rejected",
+    "header tampering rejected",
+    "no plaintext markers",
+    "independent expected image/reviewInput hashes match",
+    "revisionCount/exactCents/finalizedSplit preserved",
+    "archived and starred preserved"
+  ],
+  "records": [
+    {
+      "id": "01027449-B0CD-4A0C-A930-A9D6431D5738",
+      "imageSha256": "c79d6ff5f6583232e8d25f7fe83e9c3f3388e10d9c714a83f1d774fc7f594408",
+      "imageBytes": 18508,
+      "revisionCount": 2,
+      "sourceLines": 0,
+      "rawParserSha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+      "reviewInputSha256": [
+        null,
+        "8be5da00bc2351baa4cb59be3452316b458a666a2a95093f720b9572a8375b1b"
+      ],
+      "organization": {
+        "starred": true,
+        "archived": true
+      },
+      "totalMinorUnits": 304,
+      "finalized": true
+    }
+  ]
+}

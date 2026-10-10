@@ -841,11 +841,13 @@ struct PaperRule: Shape {
 
 struct ReceiptWalletSettingsView: View {
     @Bindable var workspace: ReceiptWorkspace
+    @State private var backupMode: ReceiptBackupMode?
     @Environment(\.dismiss) private var dismiss
     var body: some View {
         NavigationStack {
             Form {
                 ReceiptAppLockSettings()
+                ReceiptBackupSettingsSection(workspace: workspace, mode: $backupMode)
                 Section {
                     Picker("Receipt paper", selection: Binding(get: { workspace.walletSettings.paperAppearance }, set: { appearance in
                         var settings = workspace.walletSettings
@@ -871,8 +873,10 @@ struct ReceiptWalletSettingsView: View {
             }
             .navigationTitle("Settings").navigationBarTitleDisplayMode(.inline)
             .toolbar { ToolbarItem(placement: .confirmationAction) { Button("Done") { dismiss() } } }
-            .disabled(workspace.saving)
+            .disabled(workspace.saving && !workspace.backupBusy)
         }.tint(.primary)
+            .sheet(item: $backupMode, onDismiss: { workspace.cancelBackup() }) { mode in ReceiptBackupView(workspace: workspace, mode: mode) }
+            .onChange(of: workspace.active) { _, active in if !active { backupMode = nil } }
     }
     private func actionPicker(_ label: String, left: Bool) -> some View {
         Picker(label, selection: Binding(get: { left ? workspace.walletSettings.leftSwipe : workspace.walletSettings.rightSwipe }, set: { action in

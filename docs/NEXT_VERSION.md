@@ -1,6 +1,6 @@
 # Proposed next test version — Sliplet v0.2
 
-Draft for user approval. Prepared 2026-10-09, America/Toronto. This is a roadmap proposal, not authorization to begin the next implementation task or upload receipts. The user confirmed entirely on-device recognition and a personal test build on 2026-10-09. P2-01 was separately approved and accepted; P2-02 was then separately approved, completed its experiments and independently accepted. P2-03 was separately approved and independently accepted. P2-04 was separately approved and has an implementation/native handoff for independent Main review, with human phone timing pending. P2-05 still requires task-specific approval.
+Approved Phase 2 roadmap. Updated 2026-10-09, America/Toronto. This is a roadmap proposal, not authorization to begin the next implementation task or upload receipts. The user confirmed entirely on-device recognition and a personal test build on 2026-10-09. P2-01 was separately approved and accepted; P2-02 was then separately approved, completed its experiments and independently accepted. P2-03 was separately approved and independently accepted. P2-04 and P2-05 were separately approved and their implementations are independently accepted. Human phone timing and release checks remain pending.
 
 ## Current position
 
@@ -28,7 +28,7 @@ Photograph a normal No Frills, Costco or T&T receipt, correct a small number of 
 | 4. Make corrections faster | Compact issue-first review, convenient original-image comparison and focused edits/retries for uncertain rows. Preserve normal review and Save draft. | Timed phone walkthroughs: fewer edits and faster review, including long receipts and one deliberately bad image. Fully reconciled does not automatically mean fully accurate. |
 | 5. Prepare the personal v0.2 build | Portable encrypted export/restore for receipts and originals, safe upgrades, offline/lifecycle checks and a repeatable release checklist. | Restore into an isolated test store, confirm original images and revisions, retain existing data across an upgrade, and complete repeated real shopping/import/review/search/split sessions on the iPhone. |
 
-The first task, **Recognition failure audit and expanded baseline**, is accepted; see [measured audit](RECOGNITION_AUDIT.md). The approved P2-02 capture/document-layout experiments are complete and accepted: document/association alternatives did not pass the no-regression gate, so P2-02 promoted no production change. See [comparison and limits](CAPTURE_LAYOUT_EVALUATION.md). P2-03 is also accepted; P2-04 faster corrections was separately approved and implemented, with Main implementation acceptance and phone measurement pending. The user requested five corresponding Phase 2 chats on 2026-10-09; they are recorded in TASKS.md. Subsequent task details should use measured findings; do not dispatch all milestones at once.
+The first task, **Recognition failure audit and expanded baseline**, is accepted; see [measured audit](RECOGNITION_AUDIT.md). The approved P2-02 capture/document-layout experiments are complete and accepted: document/association alternatives did not pass the no-regression gate, so P2-02 promoted no production change. See [comparison and limits](CAPTURE_LAYOUT_EVALUATION.md). P2-03 is also accepted; P2-04 faster corrections and P2-05 portable backups were separately approved and independently accepted; physical measurements remain pending. The user requested five corresponding Phase 2 chats on 2026-10-09; they are recorded in TASKS.md. Subsequent task details should use measured findings; do not dispatch all milestones at once.
 
 ## Measurement and release gates
 
@@ -54,7 +54,7 @@ Then consider a small trusted-tester release and feedback workflow. Multiple wal
 
 ## Working rhythm
 
-Keep the user in this main chat. For each approved task, report the preceding task, current milestone, verification, actual commit message/hash and proposed next task, then ask for approval. The requested five Phase 2 chats exist; P2-01 is accepted, P2-02 is accepted, P2-03 is accepted, P2-04 was separately approved, and P2-05 waits for its own approval. Creating these chats does not authorize implementation. Do not create additional chats unless explicitly requested.
+Keep the user in this main chat. For each approved task, report the preceding task, current milestone, verification, actual commit message/hash and proposed next task, then ask for approval. The requested five Phase 2 chats exist; P2-01 is accepted, P2-02 is accepted, P2-03 is accepted, P2-04 and P2-05 implementations are independently accepted; the guided personal-phone walkthrough is the next approval. Creating these chats does not authorize implementation. Do not create additional chats unless explicitly requested.
 
 
 ## P2-03 implementation handoff · 2026-10-09
@@ -73,3 +73,13 @@ Human correction time, actual phone correction effort/latency and physical acces
 ## P2-04 Main implementation acceptance · 2026-10-09
 
 Main independently verified final source/screenshot hashes, compiled guidance on the five frozen checked captures, read native results and inspected fictional light/dark/large-text/source-return evidence. Accepted the correction implementation with the broader timeout and runtime warnings retained; timed phone acceptance and release accuracy/latency targets remain pending. The task Simulator is removed, normal Simulators remain, and the local signing diff and original/private references are preserved. Commit message: `feat: add focused receipt corrections`. P2-05 portable encrypted export/restore and personal release checks are proposed next, requiring separate approval. [Main review](evidence/p2-04/main-chat-review.json).
+
+## P2-05 personal readiness handoff · 2026-10-09
+
+Main conveyed the user's separate P2-05 approval after accepting focused corrections (`50e1fb0`). Password-protected portable backup and merge-only restore preserve originals, revisions/review input/guidance checks, archive/star and exact split data independently of the device Keychain key. Native Files selection, bounded authenticated frames, isolated encrypted staging and transactional insertion prevent silent replacement. Current local/security settings stay intact; differing existing versions are skipped and counted. [Format, behavior and personal-phone protocol](PERSONAL_RELEASE.md), [exact validation](evidence/p2-05/validation.json).
+
+An unsigned personal v0.2/build 2 iPhone candidate is prepared without modifying signing/bundle/Keychain identities or installing on a phone/normal Simulator. Main owns independent acceptance, signing, commit/push and actual-phone checks. Real shopping/offline-camera/provider sessions, Face ID/passcode/hardware protection, human correction time, held-out accuracy, phone latency, physical source alignment/accessibility and immediate Split Done → Edit remain pending. Native tests do not certify the 95%/90%/under-30-second targets. Recognition is unchanged; five exposed purchases and zero held-out purchases remain the baseline.
+
+## P2-05 Main implementation acceptance · 2026-10-09
+
+Portable password backups and merge-only restore are independently accepted. Main verified 12 password-only decryption checks, final source/evidence hashes, native Files save/cancel results and the unsigned v0.2/build 2 candidate. Isolated upgrade evidence preserves the encrypted store byte-for-byte. Existing private data, normal wallet and Personal Team changes remain intact; disposable devices are removed. Earlier failures/warnings and physical release gates remain documented. [Main review](evidence/p2-05/main-chat-review.json). Next: guided personal v0.2 iPhone walkthrough, awaiting user approval.
